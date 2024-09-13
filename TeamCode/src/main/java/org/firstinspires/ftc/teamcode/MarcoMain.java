@@ -25,6 +25,8 @@ abstract class driveTrainFunctions {
 }
 
 class driveFunctions extends driveTrainFunctions {
+
+    // Copy of the functions from DriveTrainFunctions.java
     void initdriveTrain() {
         runtime.reset();
 
