@@ -26,6 +26,8 @@ abstract class driveTrainFunctions {
 
 class driveFunctions extends driveTrainFunctions {
     void initdriveTrain() {
+        runtime.reset();
+
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
         leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
