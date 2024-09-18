@@ -74,10 +74,13 @@ public abstract class DriveTrainFunctions extends LinearOpMode {
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
         */
-
+        double[] motorPower;
         motorPower = new double[4];
-        motorPower[0] = leftFrontPower
+        motorPower[0] = leftFrontPower;
+        motorPower[1] = rightFrontPower;
+        motorPower[2] = leftBackPower;
+        motorPower[3] = rightBackPower;
 
-        return max;
+        return motorPower;
     }
 }

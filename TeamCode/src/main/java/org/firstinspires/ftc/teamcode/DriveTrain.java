@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.Robot;
 
 public class DriveTrain extends LinearOpMode {
 
@@ -39,14 +38,18 @@ public class DriveTrain extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double gamepad1LeftStickY = gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
             double gamepad1LeftStickX = gamepad1.left_stick_x;
             double gamepad1RightStickX = gamepad1.right_stick_x;
 
-            double max = DriveTrainFunctions.updateDriveTrain();
+            double[] motorPower = DriveTrainFunctions.updateDriveTrain(gamepad1LeftStickY,gamepad1LeftStickX,gamepad1RightStickX);
+
+            double leftFrontPower = motorPower[0];
+            double rightFrontPower = motorPower[1];
+            double leftBackPower =  motorPower[2];
+            double rightBackPower = motorPower[3];
 
             // Send calculated power to wheels
             leftFrontDrive.setPower(leftFrontPower);
