@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public abstract class DriveTrainFunctions extends LinearOpMode {
-
     // Declare OpMode members for each of the 4 motors.
     public ElapsedTime runtime = new ElapsedTime();
     public DcMotor leftFrontDrive = null;
@@ -36,13 +35,15 @@ public abstract class DriveTrainFunctions extends LinearOpMode {
 
 
     // Call to update current motor power
-    public void updateDriveTrain() {
+    public static double[] updateDriveTrain(double left_stick_y, double left_stick_x, double right_stick_x) {
+
         double max;
 
+
         // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-        double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-        double lateral =  gamepad1.left_stick_x;
-        double yaw     =  gamepad1.right_stick_x;
+        double axial   = -left_stick_y;  // Note: pushing stick forward gives negative value
+        double lateral =  left_stick_x;
+        double yaw     =  right_stick_x;
         // Possible future change: replace game-pad inputs with inputs into function for
         // centralized adjustment of controls
 
@@ -67,15 +68,16 @@ public abstract class DriveTrainFunctions extends LinearOpMode {
         }
 
         // Send calculated power to wheels
+        /*
         leftFrontDrive.setPower(leftFrontPower);
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
+        */
 
-        // Show the elapsed game time and wheel power.
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
-        telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
-        telemetry.update();
+        motorPower = new double[4];
+        motorPower[0] = leftFrontPower
+
+        return max;
     }
 }

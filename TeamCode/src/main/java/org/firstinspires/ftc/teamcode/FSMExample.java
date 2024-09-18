@@ -34,6 +34,10 @@ public class FSMExample extends OpMode {
 
     // Some hardware access boilerplate; these would be initialized in init()
     // the lift motor, it's in RUN_TO_POSITION mode
+    private DcMotor leftFrontDrive = null;
+    private DcMotor leftBackDrive = null;
+    private DcMotor rightFrontDrive = null;
+    private DcMotor rightBackDrive = null;
     public DcMotorEx liftMotor;
 
     // the dump servo
@@ -55,8 +59,19 @@ public class FSMExample extends OpMode {
 
         // hardware initialization code goes here
         // this needs to correspond with the configuration used
+        leftFrontDrive  = hardwareMap.get(DcMotor.class, "left_front_drive");
+        leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+
         liftMotor = hardwareMap.get(DcMotorEx.class, "liftMotor");
         liftDump = hardwareMap.get(Servo.class, "liftDump");
+
+
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         liftMotor.setTargetPosition(LIFT_LOW);
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
