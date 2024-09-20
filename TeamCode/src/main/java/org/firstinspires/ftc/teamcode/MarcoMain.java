@@ -10,6 +10,8 @@ abstract class driveTrainFunctions {
 }
 
 class driveFunctions extends driveTrainFunctions {
+
+    // Calculates the math for the joystick
     double[] driveTrainMath(double left_stick_y, double left_stick_x, double right_stick_x) {
         double max;
 
@@ -90,6 +92,7 @@ public class MarcoMain extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            // Call the abstract function and update it
             double[] motorPower = drivetrainFunctions.driveTrainMath(
                     gamepad1.left_stick_y,
                     gamepad1.left_stick_x,
