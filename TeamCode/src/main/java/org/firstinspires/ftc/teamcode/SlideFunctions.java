@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class SlideFunctions {
 
-    public void SlidePosition(Gamepad gamepad1, Gamepad gamepad2, DcMotor slideMotor, TouchSensor slideSafety, Telemetry telemetry, ElapsedTime runtime){
+    public void SlidePosition(Gamepad gamepad1, Gamepad gamepad2, DcMotor slideMotor, TouchSensor slideSafety, Telemetry telemetry){
 
         double slidePowerConst = 0.7;
         double slidePower = gamepad2.left_stick_y;
@@ -20,12 +20,13 @@ public class SlideFunctions {
 
 
         telemetry.addData("Slide power","%4.2f", slidePower);
-        telemetry.update();
-
     }
 
-    public void ArmPosition(Gamepad gamepad1, Gamepad gamepad2, DcMotor armMotor) {
-        armMotor.setPower(gamepad2.right_stick_y);
+    public void ArmPosition(Gamepad gamepad1, Gamepad gamepad2, DcMotor armMotor, Telemetry telemetry) {
+        double armPower = gamepad2.right_stick_y;
+        armMotor.setPower(armPower);
+
+        telemetry.addData("Slide power","%4.2f", armPower);
     }
 
 

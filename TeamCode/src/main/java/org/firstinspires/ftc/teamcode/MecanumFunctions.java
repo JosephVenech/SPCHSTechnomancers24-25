@@ -57,12 +57,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
         // Assigns power to the motors
 
 
-        public void fullDriveTrainControl(Gamepad gamepad1, Gamepad gamepad2, DcMotor leftFrontDrive, DcMotor leftBackDrive, DcMotor rightFrontDrive, DcMotor rightBackDrive, Telemetry telemetry, ElapsedTime runtime) {
+        public void fullDriveTrainControl(Gamepad gamepad1, Gamepad gamepad2, DcMotor leftFrontDrive, DcMotor leftBackDrive, DcMotor rightFrontDrive, DcMotor rightBackDrive, Telemetry telemetry) {
+
             double[] motorPower = driveTrainMath(gamepad1.left_stick_y,gamepad1.left_stick_x,gamepad1.right_stick_x);
-
             // End of function calls //
-
-
 
             // Send calculated power to motors
             leftFrontDrive.setPower(motorPower[0]);
@@ -71,9 +69,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
             rightBackDrive.setPower(motorPower[3]);
 
             // Telemetry data
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", motorPower[0], motorPower[1]);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", motorPower[2], motorPower[3]);
-            telemetry.update();
         }
     }

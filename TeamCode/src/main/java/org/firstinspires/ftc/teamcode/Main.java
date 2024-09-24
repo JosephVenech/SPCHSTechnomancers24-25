@@ -62,9 +62,9 @@ public class Main extends LinearOpMode {
 
                                 // Functions - Comments can be found in individual files //
 
-                driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry, runtime);
-                slideControl.SlidePosition(gamepad1, gamepad2, slideMotor, slideSafety, telemetry, runtime);
-                slideControl.ArmPosition(gamepad1, gamepad2, armMotor);
+                driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry);
+                slideControl.SlidePosition(gamepad1, gamepad2, slideMotor, slideSafety, telemetry);
+                slideControl.ArmPosition(gamepad1, gamepad2, armMotor, telemetry);
 
                                 // End of function calls //
 
