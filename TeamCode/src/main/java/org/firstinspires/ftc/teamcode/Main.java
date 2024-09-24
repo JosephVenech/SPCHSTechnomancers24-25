@@ -55,7 +55,6 @@ public class Main extends LinearOpMode {
         MecanumFunctions driveTrain = new MecanumFunctions();
         SlideFunctions slideControl = new SlideFunctions();
 
-        double buttonPressed = 0;
 
         if (opModeIsActive()) {
             while(opModeIsActive()){
@@ -71,7 +70,6 @@ public class Main extends LinearOpMode {
 
                 // Telemetry data
                 telemetry.addData("Status", "Run Time: " + runtime.toString());
-                telemetry.addData("Button press","%4.2f", buttonPressed);
                 telemetry.update();
 
 
