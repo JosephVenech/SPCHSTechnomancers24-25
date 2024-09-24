@@ -18,6 +18,7 @@ public class Main extends LinearOpMode {
     public DcMotor rightFrontDrive = null;
     public DcMotor rightBackDrive = null;
     public DcMotor slideMotor = null;
+    public DcMotor armMotor = null;
     public TouchSensor slideSafety = null;
 
     @Override
@@ -31,6 +32,7 @@ public class Main extends LinearOpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
         slideMotor = hardwareMap.get(DcMotor.class, "slide_motor");
+        armMotor = hardwareMap.get(DcMotor.class, "arm_motor");
 
         // Sensors
         slideSafety = hardwareMap.get(TouchSensor.class, "slide_safety");
@@ -39,8 +41,9 @@ public class Main extends LinearOpMode {
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        slideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        slideMotor.setDirection(DcMotor.Direction.REVERSE);
+        armMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -52,30 +55,23 @@ public class Main extends LinearOpMode {
         MecanumFunctions driveTrain = new MecanumFunctions();
         SlideFunctions slideControl = new SlideFunctions();
 
+        double buttonPressed = 0;
+
         if (opModeIsActive()) {
             while(opModeIsActive()){
 
                                 // Functions - Comments can be found in individual files //
 
-                double[] motorPower = driveTrain.driveTrainMath(gamepad1.left_stick_y,gamepad1.left_stick_x,gamepad1.right_stick_x);
-                double slidePower = slideControl.SlidePosition(gamepad1.right_trigger, gamepad1.left_trigger, slideSafety);
+                driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry, runtime);
+                slideControl.SlidePosition(gamepad1, gamepad2, slideMotor, slideSafety, telemetry, runtime);
+                slideControl.ArmPosition(gamepad1, gamepad2, armMotor);
 
                                 // End of function calls //
 
 
-
-                // Send calculated power to motors
-                leftFrontDrive.setPower(motorPower[0]);
-                rightFrontDrive.setPower(motorPower[1]);
-                leftBackDrive.setPower(motorPower[2]);
-                rightBackDrive.setPower(motorPower[3]);
-                slideMotor.setPower(slidePower);
-
                 // Telemetry data
                 telemetry.addData("Status", "Run Time: " + runtime.toString());
-                telemetry.addData("Front left/Right", "%4.2f, %4.2f", motorPower[0], motorPower[1]);
-                telemetry.addData("Back  left/Right", "%4.2f, %4.2f", motorPower[2], motorPower[3]);
-                telemetry.addData("Slide power","%4.2f", slidePower);
+                telemetry.addData("Button press","%4.2f", buttonPressed);
                 telemetry.update();
 
 

@@ -1,26 +1,32 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class SlideFunctions {
 
-    double SlidePosition(double input_1, double input_2, TouchSensor slideSafety){
+    public void SlidePosition(Gamepad gamepad1, Gamepad gamepad2, DcMotor slideMotor, TouchSensor slideSafety, Telemetry telemetry, ElapsedTime runtime){
 
         double slidePowerConst = 0.7;
-        double slidePower;
+        double slidePower = gamepad2.left_stick_y;
 
-        if (input_1 >= input_2) {
-            slidePower = input_1 * slidePowerConst;
-        }
-        else {
-            slidePower = -input_2 * slidePowerConst;
+        if (!slideSafety.isPressed() && slidePower < 0){
+            slideMotor.setPower(slidePower * slidePowerConst);
         }
 
-        // Slide safety
-        if (slideSafety.isPressed() && slidePower < 0){
-            slidePower = 0;
-        }
-        return slidePower;
+
+        telemetry.addData("Slide power","%4.2f", slidePower);
+        telemetry.update();
+
     }
+
+    public void ArmPosition(Gamepad gamepad1, Gamepad gamepad2, DcMotor armMotor) {
+        armMotor.setPower(gamepad2.right_stick_y);
+    }
+
 
 }
