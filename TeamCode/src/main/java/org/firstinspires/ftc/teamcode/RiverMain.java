@@ -2,7 +2,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -36,7 +35,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="River Mecanum", group="Linear OpMode")
+@TeleOp
 public class RiverMain extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
@@ -72,6 +71,8 @@ public class RiverMain extends LinearOpMode {
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
+        MecanumFunctions driveTrain = new MecanumFunctions();
+
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -81,6 +82,22 @@ public class RiverMain extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            DriveTrainFunctions.updateDriveTrain();
+            double[] motorPower = driveTrain.driveTrainMath(gamepad1.left_stick_y,gamepad1.left_stick_x,gamepad1.right_stick_x);
+
+            // End of function calls //
+
+
+
+            // Send calculated power to motors
+            leftFrontDrive.setPower(motorPower[0]);
+            rightFrontDrive.setPower(motorPower[1]);
+            leftBackDrive.setPower(motorPower[2]);
+            rightBackDrive.setPower(motorPower[3]);
+
+            // Telemetry data
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Front left/Right", "%4.2f, %4.2f", motorPower[0], motorPower[1]);
+            telemetry.addData("Back  left/Right", "%4.2f, %4.2f", motorPower[2], motorPower[3]);
+            telemetry.update();
         }
     }}
