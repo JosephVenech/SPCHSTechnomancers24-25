@@ -82,22 +82,8 @@ public class RiverMain extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            double[] motorPower = driveTrain.driveTrainMath(gamepad1.left_stick_y,gamepad1.left_stick_x,gamepad1.right_stick_x);
 
-            // End of function calls //
+            driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry, runtime);
 
-
-
-            // Send calculated power to motors
-            leftFrontDrive.setPower(motorPower[0]);
-            rightFrontDrive.setPower(motorPower[1]);
-            leftBackDrive.setPower(motorPower[2]);
-            rightBackDrive.setPower(motorPower[3]);
-
-            // Telemetry data
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Front left/Right", "%4.2f, %4.2f", motorPower[0], motorPower[1]);
-            telemetry.addData("Back  left/Right", "%4.2f, %4.2f", motorPower[2], motorPower[3]);
-            telemetry.update();
         }
     }}
