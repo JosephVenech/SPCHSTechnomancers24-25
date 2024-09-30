@@ -20,10 +20,16 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
-            double leftFrontPower  = -left_stick_y + left_stick_x + right_stick_x;
-            double rightFrontPower = -left_stick_y - left_stick_x - right_stick_x;
-            double leftBackPower   = -left_stick_y - left_stick_x + right_stick_x;
-            double rightBackPower  = -left_stick_y + left_stick_x - right_stick_x;
+            double axial   = -left_stick_y;  // Note: pushing stick forward gives negative value
+            double lateral =  left_stick_x;
+            double yaw     =  right_stick_x;
+
+            // Combine the joystick requests for each axis-motion to determine each wheel's power.
+            // Set up a variable for each drive wheel to save the power level for telemetry.
+            double leftFrontPower  = axial - lateral + yaw;
+            double rightFrontPower = axial - lateral - yaw;
+            double leftBackPower   = axial + lateral + yaw;
+            double rightBackPower  = axial + lateral - yaw;
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
