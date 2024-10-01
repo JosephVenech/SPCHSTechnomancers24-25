@@ -19,6 +19,8 @@ public class FSMExample extends OpMode {
         LIFT_HIGH = liftHigh;
     }
 
+    MecanumFunctions driveTrain = new MecanumFunctions();
+
     // An Enum is used to represent lift states.
     // (This is one thing enums are designed to do)
     public enum LiftState {
@@ -64,7 +66,7 @@ public class FSMExample extends OpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
 
-        liftMotor = hardwareMap.get(DcMotorEx.class, "liftMotor");
+        liftMotor = hardwareMap.get(DcMotorEx.class, "slide_motor");
         liftDump = hardwareMap.get(Servo.class, "liftDump");
 
 
@@ -134,9 +136,8 @@ public class FSMExample extends OpMode {
         // mecanum drive code goes here
         // But since none of the stuff in the switch case stops
         // the robot, this will always run!
-        updateDrive(gamepad1, gamepad2);
+        driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry);
     }
 
-    private void updateDrive(Gamepad gamepad1, Gamepad gamepad2) {
-    }
+
 }
