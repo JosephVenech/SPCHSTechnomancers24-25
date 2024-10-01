@@ -18,15 +18,20 @@ public class SlideFunctions {
             slideMotor.setPower(slidePower * slidePowerConst);
         }
 
+        int slidePosition = slideMotor.getCurrentPosition();
 
         telemetry.addData("Slide power","%4.2f", slidePower);
+        telemetry.addData("Slide Position", slidePosition);
     }
 
     public void ArmPosition(Gamepad gamepad1, Gamepad gamepad2, DcMotor armMotor, Telemetry telemetry) {
         double armPower = gamepad2.right_stick_y;
         armMotor.setPower(armPower);
 
+        int armPosition = armMotor.getCurrentPosition();
+
         telemetry.addData("Arm power","%4.2f", armPower);
+        telemetry.addData("Arm Position", armPosition);
     }
 
 
