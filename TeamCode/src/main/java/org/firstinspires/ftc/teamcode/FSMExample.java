@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,6 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @TeleOp(name="FSM Example")
+@Disabled
 public class FSMExample extends OpMode {
     public FSMExample(double dumpIdle, double dumpDeposit, double dumpTime, int liftLow, int liftHigh) {
         DUMP_IDLE = dumpIdle;
@@ -18,8 +20,6 @@ public class FSMExample extends OpMode {
         LIFT_LOW = liftLow;
         LIFT_HIGH = liftHigh;
     }
-
-    MecanumFunctions driveTrain = new MecanumFunctions();
 
     // An Enum is used to represent lift states.
     // (This is one thing enums are designed to do)
@@ -66,7 +66,7 @@ public class FSMExample extends OpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
 
-        liftMotor = hardwareMap.get(DcMotorEx.class, "slide_motor");
+        liftMotor = hardwareMap.get(DcMotorEx.class, "liftMotor");
         liftDump = hardwareMap.get(Servo.class, "liftDump");
 
 
@@ -136,8 +136,9 @@ public class FSMExample extends OpMode {
         // mecanum drive code goes here
         // But since none of the stuff in the switch case stops
         // the robot, this will always run!
-        driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry);
+        updateDrive(gamepad1, gamepad2);
     }
 
-
+    private void updateDrive(Gamepad gamepad1, Gamepad gamepad2) {
+    }
 }

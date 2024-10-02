@@ -11,12 +11,15 @@ public class SlideFunctions {
 
     public void SlidePosition(Gamepad gamepad1, Gamepad gamepad2, DcMotor slideMotor, TouchSensor slideSafety, Telemetry telemetry){
 
-        double slidePowerConst = 0.7;
+        double slidePowerConst = 0.95; // Set max speed of slide
         double slidePower = -gamepad2.left_stick_y;
 
-        if (!slideSafety.isPressed() || slidePower > 0){
-            slideMotor.setPower(slidePower * slidePowerConst);
+        // If slide safety is activated prevent slide from retracting
+        if (slideSafety.isPressed() && slidePower < 0 ){
+            slidePower = 0;
         }
+
+        slideMotor.setPower(slidePower * slidePowerConst);
 
         int slidePosition = slideMotor.getCurrentPosition();
 
