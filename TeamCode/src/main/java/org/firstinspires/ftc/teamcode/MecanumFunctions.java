@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 // Call to update current motor power
-    public class MecanumFunctions extends driveTrainFunctions {
+    public class MecanumFunctions {
 
         // Calculates the math for the joystick
         double[] driveTrainMath(double left_stick_y, double left_stick_x, double right_stick_x) {
