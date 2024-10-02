@@ -57,7 +57,7 @@ class driveFunctions extends driveTrainFunctions {
     }
 }
 
-@TeleOp()
+@TeleOp(name="Marco Main", group="User Sandboxes")
 public class MarcoMain extends LinearOpMode {
     // Declare OpMode members for each of the 4 motors.
     public ElapsedTime runtime = new ElapsedTime();

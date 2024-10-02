@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import com.sfdev.assembly.state.*;
 
-@TeleOp
+@TeleOp(name="State Machine test", group="Code Structure")
 public class StateFactoryExample extends LinearOpMode {
     enum States {
         FIRST,
