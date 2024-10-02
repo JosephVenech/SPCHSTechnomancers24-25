@@ -30,6 +30,8 @@ public class StateFactoryExample extends LinearOpMode {
             int slidePosition1 = 100;
             int slidePosition2 = 400;
             int slidePosition3 = 1200;
+            double slideSpeed = 0.95;
+
             slideMotor.setTargetPosition(slidePosition1);
             slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -63,6 +65,7 @@ public class StateFactoryExample extends LinearOpMode {
 
             while(opModeIsActive()) { // autonomous loop
                 machine.update();
+                slideMotor.setPower(slideSpeed);
 
                 telemetry.addData("Slide position", slideMotor.getTargetPosition());
                 telemetry.addData("Slide position 3", slidePosition3);
