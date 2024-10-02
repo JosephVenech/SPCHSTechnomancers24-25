@@ -18,23 +18,43 @@ public class StateFactoryExample extends LinearOpMode {
         THIRD
     }
 
+    public DcMotor slideMotor = null;
+
         @Override
         public void runOpMode() throws InterruptedException {
+
+            slideMotor = hardwareMap.get(DcMotor.class, "slide_motor");
+            slideMotor.setDirection(DcMotor.Direction.REVERSE);
+            slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            int slidePosition1 = 100;
+            int slidePosition2 = 400;
+            int slidePosition3 = 1200;
+            slideMotor.setTargetPosition(slidePosition1);
+            slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             StateMachine machine = new StateMachineBuilder()
                     .state(States.FIRST)
                     .onEnter( () -> {
                         System.out.println( "Entering the first state" );
+                        slideMotor.setTargetPosition(slidePosition2);
                     })
                     .transition( () ->  gamepad1.x ) // transition when gamepad1.x is clicked
                     .onExit( () -> System.out.println("Exiting!") ) // setting check2 to false
 
                     .state(States.SECOND)
-                    .onEnter( () -> System.out.println( "Entering the second state" ) )
+                    .onEnter( () -> {
+                            System.out.println("Entering the second state");
+                            slideMotor.setTargetPosition(slidePosition3);
+                    }
+                    )
                     .transition( () -> gamepad1.b) // if check2 is false transition
 
                     .state(States.THIRD)
-                    .onEnter( () -> System.out.println( "In the third state " ) )
+                    .onEnter( () -> {
+                        System.out.println("In the third state ");
+                        slideMotor.setTargetPosition(slidePosition1);
+                    })
                     .build();
 
             waitForStart();
@@ -43,6 +63,10 @@ public class StateFactoryExample extends LinearOpMode {
 
             while(opModeIsActive()) { // autonomous loop
                 machine.update();
+
+                telemetry.addData("Slide position", slideMotor.getTargetPosition());
+                telemetry.addData("Slide position 3", slidePosition3);
+                telemetry.update();
             }
         }
     }
