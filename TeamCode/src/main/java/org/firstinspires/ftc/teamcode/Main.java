@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import org.firstinspires.ftc.teamcode.RobotFunctions.*;
 
 
 @TeleOp
@@ -67,8 +68,8 @@ public class Main extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        MecanumFunctions driveTrain = new MecanumFunctions();
-        SlideFunctions slideControl = new SlideFunctions();
+        org.firstinspires.ftc.teamcode.MecanumFunctions driveTrain = new org.firstinspires.ftc.teamcode.MecanumFunctions();
+        org.firstinspires.ftc.teamcode.SlideFunctions slideControl = new org.firstinspires.ftc.teamcode.SlideFunctions();
 
 
         if (opModeIsActive()) {
