@@ -43,7 +43,7 @@ public class Main extends LinearOpMode {
         wristServo = hardwareMap.get(Servo.class, "wrist_servo");
         intakeServo = hardwareMap.get(Servo.class, "intake_servo");
 
-        wristServo.setPosition(0);
+        wristServo.setPosition(0.3);
         intakeServo.setPosition(0);
 
         // Sensors

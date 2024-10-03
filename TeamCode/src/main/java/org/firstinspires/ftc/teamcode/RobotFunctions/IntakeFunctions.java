@@ -11,7 +11,7 @@ public class IntakeFunctions {
             wrist.setPosition(1);
         }
         if (gamepad1.b) {
-            wrist.setPosition(0.5);
+            wrist.setPosition(0.3);
         }
         if (gamepad1.y) {
             wrist.setPosition(0);
