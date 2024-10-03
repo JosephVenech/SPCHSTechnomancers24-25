@@ -43,7 +43,7 @@ public class Main extends LinearOpMode {
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
         slideMotor.setDirection(DcMotor.Direction.REVERSE);
-        armMotor.setDirection(DcMotor.Direction.FORWARD);
+        armMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // Motor encoders
         leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -69,6 +69,7 @@ public class Main extends LinearOpMode {
 
         org.firstinspires.ftc.teamcode.MecanumFunctions driveTrain = new org.firstinspires.ftc.teamcode.MecanumFunctions();
         org.firstinspires.ftc.teamcode.SlideFunctions slideControl = new org.firstinspires.ftc.teamcode.SlideFunctions();
+
 
 
         if (opModeIsActive()) {
