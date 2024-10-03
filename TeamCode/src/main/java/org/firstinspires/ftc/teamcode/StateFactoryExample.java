@@ -37,7 +37,7 @@ public class StateFactoryExample extends LinearOpMode {
             slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             armMotor = hardwareMap.get(DcMotor.class, "arm_motor");
-            armMotor.setDirection(DcMotor.Direction.REVERSE);
+            armMotor.setDirection(DcMotor.Direction.FORWARD);
             armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
