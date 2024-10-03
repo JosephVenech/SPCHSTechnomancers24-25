@@ -126,8 +126,10 @@ public class StateFactoryExample extends LinearOpMode {
             while(opModeIsActive()) { // autonomous loop
                 machine.update();
 
-                telemetry.addData("Slide position", slideMotor.getTargetPosition());
-                telemetry.addData("Arm position", armMotor.getTargetPosition());
+                telemetry.addData("Slide position", slideMotor.getCurrentPosition());
+                telemetry.addData("Arm position", armMotor.getCurrentPosition());
+                telemetry.addData("Slide target position", slideMotor.getTargetPosition());
+                telemetry.addData("Arm target position", armMotor.getTargetPosition());
                 telemetry.addData("Current State", machine.getState());
                 telemetry.update();
             }
