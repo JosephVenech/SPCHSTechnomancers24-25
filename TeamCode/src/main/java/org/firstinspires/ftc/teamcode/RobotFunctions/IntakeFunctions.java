@@ -16,6 +16,10 @@ public class IntakeFunctions {
         if (gamepad1.y) {
             wrist.setPosition(0);
         }
+
+        double wristPosition = wrist.getPosition();
+
+        telemetry.addData("Wrist Position", wristPosition);
     }
 
     public void intakeSpin (Gamepad gamepad1, Gamepad gamepad2, Servo intake, Telemetry telemetry){
@@ -25,5 +29,9 @@ public class IntakeFunctions {
         if (gamepad1.dpad_down) {
             intake.setPosition(0);
         }
+
+        double intakePosition = intake.getPosition();
+
+        telemetry.addData("Wrist Position", intakePosition);
     }
 }

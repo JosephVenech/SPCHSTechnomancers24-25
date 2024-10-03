@@ -5,8 +5,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+
+import org.firstinspires.ftc.teamcode.RobotFunctions.IntakeFunctions;
 
 
 @TeleOp
@@ -19,6 +22,8 @@ public class Main extends LinearOpMode {
     public DcMotor rightBackDrive = null;
     public DcMotor slideMotor = null;
     public DcMotor armMotor = null;
+    public Servo wristServo = null;
+    public Servo intakeServo = null;
     public TouchSensor slideSafety = null;
 
     @Override
@@ -33,6 +38,13 @@ public class Main extends LinearOpMode {
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
         slideMotor = hardwareMap.get(DcMotor.class, "slide_motor");
         armMotor = hardwareMap.get(DcMotor.class, "arm_motor");
+
+        // Servos
+        wristServo = hardwareMap.get(Servo.class, "wrist_servo");
+        intakeServo = hardwareMap.get(Servo.class, "intake_servo");
+
+        wristServo.setPosition(0);
+        intakeServo.setPosition(0);
 
         // Sensors
         slideSafety = hardwareMap.get(TouchSensor.class, "slide_safety");
@@ -69,7 +81,7 @@ public class Main extends LinearOpMode {
 
         org.firstinspires.ftc.teamcode.MecanumFunctions driveTrain = new org.firstinspires.ftc.teamcode.MecanumFunctions();
         org.firstinspires.ftc.teamcode.SlideFunctions slideControl = new org.firstinspires.ftc.teamcode.SlideFunctions();
-
+        IntakeFunctions intakeControl = new IntakeFunctions();
 
 
         if (opModeIsActive()) {
@@ -80,6 +92,8 @@ public class Main extends LinearOpMode {
                 driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry);
                 slideControl.SlidePosition(gamepad1, gamepad2, slideMotor, slideSafety, telemetry);
                 slideControl.ArmPosition(gamepad1, gamepad2, armMotor, telemetry);
+                intakeControl.intakeAngle(gamepad1, gamepad2, wristServo, telemetry);
+                intakeControl.intakeSpin(gamepad1, gamepad2, intakeServo, telemetry);
 
                                 // End of function calls //
 
