@@ -8,14 +8,15 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import java.util.Map;
 
 import org.firstinspires.ftc.teamcode.RobotFunctions.IntakeFunctions;
-
+import org.firstinspires.ftc.teamcode.RobotFunctions.Robot;
 
 @TeleOp
 public class Main extends LinearOpMode {
-
     public ElapsedTime runtime = new ElapsedTime();
+
     public DcMotor leftFrontDrive = null;
     public DcMotor leftBackDrive = null;
     public DcMotor rightFrontDrive = null;
@@ -28,10 +29,14 @@ public class Main extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        //DriveTrain Motors
-        // Initialize the hardware variables. Note that the strings used here must correspond
-        // to the names assigned during the robot configuration step on the DS or RC devices.
-        // Motors
+        /*
+        Moved to Robot.java
+
+        DriveTrain Motors
+
+         Initialize the hardware variables. Note that the strings used here must correspond
+         to the names assigned during the robot configuration step on the DS or RC devices.
+        Motors
         leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
         leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
@@ -39,17 +44,17 @@ public class Main extends LinearOpMode {
         slideMotor = hardwareMap.get(DcMotor.class, "slide_motor");
         armMotor = hardwareMap.get(DcMotor.class, "arm_motor");
 
-        // Servos
+        Servos
         wristServo = hardwareMap.get(Servo.class, "wrist_servo");
         intakeServo = hardwareMap.get(Servo.class, "intake_servo");
 
         wristServo.setPosition(0.3);
         intakeServo.setPosition(0);
 
-        // Sensors
+        Sensors
         slideSafety = hardwareMap.get(TouchSensor.class, "slide_safety");
 
-        // Set wheels to move forward
+        Set wheels to move forward
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -57,7 +62,7 @@ public class Main extends LinearOpMode {
         slideMotor.setDirection(DcMotor.Direction.REVERSE);
         armMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        // Motor encoders
+        Motor encoders
         leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -71,6 +76,27 @@ public class Main extends LinearOpMode {
         rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+         */
+
+        Robot robot = new Robot(hardwareMap);
+        Map<String, DcMotor> motors = robot.getDriveDictionary();
+        Map<String, Servo> servos = robot.getServoDictionary();
+        Map<String, TouchSensor> sensors = robot.getSensorDictionary();
+
+        // Mapping Motors
+        leftFrontDrive = motors.get("leftFrontDrive");
+        leftBackDrive = motors.get("leftBackDrive");
+        rightFrontDrive = motors.get("rightFrontDrive");
+        rightBackDrive = motors.get("rightBackDrive");
+        slideMotor = motors.get("slideMotor");
+        armMotor = motors.get("armMotor");
+
+        // Mapping Servos
+        wristServo = servos.get("wristServo");
+        intakeServo = servos.get("intakeServo");
+
+        // Mapping TouchSensors
+        slideSafety = sensors.get("slideSafety");
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -83,27 +109,18 @@ public class Main extends LinearOpMode {
         org.firstinspires.ftc.teamcode.SlideFunctions slideControl = new org.firstinspires.ftc.teamcode.SlideFunctions();
         IntakeFunctions intakeControl = new IntakeFunctions();
 
-
         if (opModeIsActive()) {
             while(opModeIsActive()){
-
-                                // Functions - Comments can be found in individual files //
-
+                // Functions - Comments can be found in individual files
                 driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry);
                 slideControl.SlidePosition(gamepad1, gamepad2, slideMotor, slideSafety, telemetry);
                 slideControl.ArmPosition(gamepad1, gamepad2, armMotor, telemetry);
                 intakeControl.intakeAngle(gamepad1, gamepad2, wristServo, telemetry);
                 intakeControl.intakeSpin(gamepad1, gamepad2, intakeServo, telemetry);
 
-                                // End of function calls //
-
-
                 // Telemetry data
                 telemetry.addData("Status", "Run Time: " + runtime.toString());
                 telemetry.update();
-
-
-
             }
         }
     }
