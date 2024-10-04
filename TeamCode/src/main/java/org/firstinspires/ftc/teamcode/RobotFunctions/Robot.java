@@ -24,26 +24,14 @@ public class Robot {
     public Map<String, TouchSensor> sensorDictionary = new HashMap<>();
 
     public Robot(HardwareMap hardwareMap) {
-        // Initialize the hardware variables. Note that the strings used here must correspond
-        // to the names assigned during the robot configuration step on the DS or RC devices.
-        // Motors
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
-        slideMotor = hardwareMap.get(DcMotor.class, "slide_motor");
-        armMotor = hardwareMap.get(DcMotor.class, "arm_motor");
+        appendDictionaries();
+        mapVariables();
 
-        // Servos
-        wristServo = hardwareMap.get(Servo.class, "wrist_servo");
-        intakeServo = hardwareMap.get(Servo.class, "intake_servo");
+        setServos();
+        setMotors();
+    }
 
-        wristServo.setPosition(0.3);
-        intakeServo.setPosition(0);
-
-        // Sensors
-        slideSafety = hardwareMap.get(TouchSensor.class, "slide_safety");
-
+    public void setMotors() {
         // Set wheels to move forward
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -66,7 +54,14 @@ public class Robot {
         rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
 
+    public void setServos() {
+        wristServo.setPosition(0.3);
+        intakeServo.setPosition(0);
+    }
+
+    public void appendDictionaries() {
         driveDictionary.put("leftFrontDrive", leftFrontDrive);
         driveDictionary.put("leftBackDrive", leftBackDrive);
         driveDictionary.put("rightFrontDrive", rightFrontDrive);
@@ -78,6 +73,20 @@ public class Robot {
         servoDictionary.put("intakeServo", intakeServo);
 
         sensorDictionary.put("slideSafety", slideSafety);
+    }
+
+    public void mapVariables() {
+        leftFrontDrive = driveDictionary.get("leftFrontDrive");
+        leftBackDrive = driveDictionary.get("leftBackDrive");
+        rightFrontDrive = driveDictionary.get("rightFrontDrive");
+        rightBackDrive = driveDictionary.get("rightBackDrive");
+        slideMotor = driveDictionary.get("slideMotor");
+        armMotor = driveDictionary.get("armMotor");
+
+        wristServo = servoDictionary.get("wristServo");
+        intakeServo = servoDictionary.get("intakeServo");
+
+        slideSafety = sensorDictionary.get("slideSafety");
     }
 
     public Map<String, DcMotor> getDriveDictionary() {
