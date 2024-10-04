@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+
 import java.util.Map;
 
 import org.firstinspires.ftc.teamcode.RobotFunctions.IntakeFunctions;
@@ -83,20 +84,7 @@ public class Main extends LinearOpMode {
         Map<String, Servo> servos = robot.getServoDictionary();
         Map<String, TouchSensor> sensors = robot.getSensorDictionary();
 
-        // Mapping Motors
-        leftFrontDrive = motors.get("leftFrontDrive");
-        leftBackDrive = motors.get("leftBackDrive");
-        rightFrontDrive = motors.get("rightFrontDrive");
-        rightBackDrive = motors.get("rightBackDrive");
-        slideMotor = motors.get("slideMotor");
-        armMotor = motors.get("armMotor");
-
-        // Mapping Servos
-        wristServo = servos.get("wristServo");
-        intakeServo = servos.get("intakeServo");
-
-        // Mapping TouchSensors
-        slideSafety = sensors.get("slideSafety");
+        mapVariables(motors, servos, sensors);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -123,6 +111,27 @@ public class Main extends LinearOpMode {
                 telemetry.update();
             }
         }
+    }
+
+    public void mapVariables(
+            Map<java.lang.String, DcMotor> motors,
+            Map<java.lang.String, Servo> servos,
+            Map<java.lang.String, TouchSensor> sensors
+    ) {
+        // Mapping Motors
+        leftFrontDrive = motors.get("leftFrontDrive");
+        leftBackDrive = motors.get("leftBackDrive");
+        rightFrontDrive = motors.get("rightFrontDrive");
+        rightBackDrive = motors.get("rightBackDrive");
+        slideMotor = motors.get("slideMotor");
+        armMotor = motors.get("armMotor");
+
+        // Mapping Servos
+        wristServo = servos.get("wristServo");
+        intakeServo = servos.get("intakeServo");
+
+        // Mapping TouchSensors
+        slideSafety = sensors.get("slideSafety");
     }
 }
 
