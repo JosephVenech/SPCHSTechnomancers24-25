@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.ObjectDeclarations;
 
 public class slidePositions extends FSMPositions {
-    public static double motorSpeed = 0.95;
+    public static double motorSpeed = 0.7;
     public static int defaultPosition = 0;
     public static int hangSpecimen = 300;
     public static int sampleBasket = 900;
