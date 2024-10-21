@@ -114,10 +114,12 @@ public class StateFactoryExample extends LinearOpMode {
             slideMotor.setTargetPosition(slidePositions.defaultPosition);
             slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slideMotor.setPower(slidePositions.motorSpeed);
+            slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
             armMotor.setTargetPosition(slidePositions.defaultPosition);
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             armMotor.setPower(armPositions.motorSpeed);
+            armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
             waitForStart();
 
