@@ -12,9 +12,12 @@ import java.util.Map;
 
 import org.firstinspires.ftc.teamcode.RobotFunctions.IntakeFunctions;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Robot;
+import org.firstinspires.ftc.teamcode.RobotFunctions.MecanumFunctions;
+import org.firstinspires.ftc.teamcode.RobotFunctions.SlideFunctions;
+
 
 @TeleOp(name="Manual Control", group="Main")
-public class Main extends LinearOpMode {
+public class ManualTeleOp extends LinearOpMode {
     public ElapsedTime runtime = new ElapsedTime();
 
     public DcMotor leftFrontDrive = null;
@@ -44,8 +47,8 @@ public class Main extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        org.firstinspires.ftc.teamcode.MecanumFunctions driveTrain = new org.firstinspires.ftc.teamcode.MecanumFunctions();
-        org.firstinspires.ftc.teamcode.SlideFunctions slideControl = new org.firstinspires.ftc.teamcode.SlideFunctions();
+        MecanumFunctions driveTrain = new MecanumFunctions();
+        SlideFunctions slideControl = new SlideFunctions();
         IntakeFunctions intakeControl = new IntakeFunctions();
 
         if (opModeIsActive()) {
