@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
     public class MecanumFunctions {
 
         // Calculates the math for the joystick
-        double[] driveTrainMath(double left_stick_y, double left_stick_x, double right_stick_x) {
+        public double[] driveTrainMath(double left_stick_y, double left_stick_x, double right_stick_x) {
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
