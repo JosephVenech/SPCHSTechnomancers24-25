@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.ObjectDeclarations.slidePositions;
 public class StateMachineFunctions {
 
     public void CreateStateDefinitions(Gamepad gamepad1, Gamepad gamepad2, DcMotor armMotor, DcMotor slideMotor, TouchSensor slideSafety, Telemetry telemetry) {
+
         StateMachine machine = new StateMachineBuilder()
 
                 .state(StateFactoryExample.States.DEFAULT)
