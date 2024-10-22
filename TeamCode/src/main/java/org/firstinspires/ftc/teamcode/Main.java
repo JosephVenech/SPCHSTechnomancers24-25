@@ -13,7 +13,7 @@ import java.util.Map;
 import org.firstinspires.ftc.teamcode.RobotFunctions.IntakeFunctions;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Robot;
 
-@TeleOp
+@TeleOp(name="Manual Control", group="Main")
 public class Main extends LinearOpMode {
     public ElapsedTime runtime = new ElapsedTime();
 
