@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.StateMachine;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -37,7 +37,7 @@ public class StateFactoryExample extends LinearOpMode {
             slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             armMotor = hardwareMap.get(DcMotor.class, "arm_motor");
-            armMotor.setDirection(DcMotor.Direction.FORWARD);
+            armMotor.setDirection(DcMotor.Direction.REVERSE);
             armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
@@ -114,10 +114,12 @@ public class StateFactoryExample extends LinearOpMode {
             slideMotor.setTargetPosition(slidePositions.defaultPosition);
             slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slideMotor.setPower(slidePositions.motorSpeed);
+            slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
             armMotor.setTargetPosition(slidePositions.defaultPosition);
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             armMotor.setPower(armPositions.motorSpeed);
+            armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
             waitForStart();
 
