@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class IntakeFunctions {
     public void intakeAngle (Gamepad gamepad1, Gamepad gamepad2, Servo wrist, Telemetry telemetry){
         if (gamepad1.a) {
-            wrist.setPosition(1);
+            wrist.setPosition(0.82);
         }
         if (gamepad1.b) {
             wrist.setPosition(0.3);
