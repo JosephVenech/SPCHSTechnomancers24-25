@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotFunctions;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -23,11 +24,14 @@ public class IntakeFunctions {
     }
 
     public void intakeSpin (Gamepad gamepad1, Gamepad gamepad2, Servo intake, Telemetry telemetry){
-        if (gamepad1.dpad_up) {
+        if (gamepad1.left_trigger > 0) {
             intake.setPosition(1);
         }
-        if (gamepad1.dpad_down) {
+        else if (gamepad1.right_trigger > 0) {
             intake.setPosition(0);
+        }
+        else {
+            intake.setPosition(0.5);
         }
 
         double intakePosition = intake.getPosition();

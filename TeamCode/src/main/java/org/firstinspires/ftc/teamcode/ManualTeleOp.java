@@ -38,6 +38,7 @@ public class ManualTeleOp extends LinearOpMode {
         Map<String, Servo> servos = robot.getServoDictionary();
         Map<String, TouchSensor> sensors = robot.getSensorDictionary();
 
+
         mapVariables(motors, servos, sensors);
 
         // Wait for the game to start (driver presses PLAY)
