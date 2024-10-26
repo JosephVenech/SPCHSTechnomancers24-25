@@ -16,10 +16,10 @@ public class StateMachineFunctions {
 
         StateMachine machine = new StateMachineBuilder()
 
-                .state(StateFactoryExample.States.DEFAULT)
+                .state(StateFactoryExample.States.TRAVEL)
                 .onEnter( () -> {
-                    slideMotor.setTargetPosition(slidePositions.defaultPosition);
-                    armMotor.setTargetPosition(armPositions.defaultPosition);
+                    slideMotor.setTargetPosition(slidePositions.travelPosition);
+                    armMotor.setTargetPosition(armPositions.travelPosition);
                 })
                 .transition( () -> gamepad2.y, StateFactoryExample.States.SAMPLE_BASKET)
                 .transition( () -> gamepad2.x, StateFactoryExample.States.HANG_SPECIMEN)
@@ -33,7 +33,7 @@ public class StateMachineFunctions {
                     slideMotor.setTargetPosition(slidePositions.sampleBasket);
                     armMotor.setTargetPosition(armPositions.sampleBasket);
                 })
-                .transition( () ->  gamepad2.a, StateFactoryExample.States.DEFAULT)
+                .transition( () ->  gamepad2.a, StateFactoryExample.States.TRAVEL)
 
 
                 .state(StateFactoryExample.States.HANG_SPECIMEN)
@@ -41,43 +41,43 @@ public class StateMachineFunctions {
                     slideMotor.setTargetPosition(slidePositions.hangSpecimen);
                     armMotor.setTargetPosition(armPositions.hangSpecimen);
                 })
-                .transition( () ->  gamepad2.a, StateFactoryExample.States.DEFAULT)
+                .transition( () ->  gamepad2.a, StateFactoryExample.States.TRAVEL)
 
                 .state(StateFactoryExample.States.COLLECT_SAMPLE)
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.collectSample);
                     armMotor.setTargetPosition(armPositions.collectSample);
                 })
-                .transition( () ->  gamepad2.a, StateFactoryExample.States.DEFAULT)
+                .transition( () ->  gamepad2.a, StateFactoryExample.States.TRAVEL)
 
                 .state(StateFactoryExample.States.OBSERVATION_DECK)
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.observationDeck);
                     armMotor.setTargetPosition(armPositions.observationDeck);
                 })
-                .transition( () ->  gamepad2.a, StateFactoryExample.States.DEFAULT)
+                .transition( () ->  gamepad2.a, StateFactoryExample.States.TRAVEL)
 
                 .state(StateFactoryExample.States.COLLECT_SPECIMEN)
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.collectSpecimen);
                     armMotor.setTargetPosition(armPositions.collectSpecimen);
                 })
-                .transition( () ->  gamepad2.a, StateFactoryExample.States.DEFAULT)
+                .transition( () ->  gamepad2.a, StateFactoryExample.States.TRAVEL)
 
                 .state(StateFactoryExample.States.CLIMB_STAGE_ONE)
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.climbStageOne);
                     armMotor.setTargetPosition(armPositions.climbStageOne);
                 })
-                .transition( () -> gamepad2.dpad_right, StateFactoryExample.States.STAGE_ONE_LIFT)
-                .transition( () ->  gamepad2.a, StateFactoryExample.States.DEFAULT)
+                .transition( () -> gamepad2.dpad_down, StateFactoryExample.States.STAGE_ONE_LIFT)
+                .transition( () ->  gamepad2.a, StateFactoryExample.States.TRAVEL)
 
                 .state(StateFactoryExample.States.STAGE_ONE_LIFT)
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.stageOneLift);
                     armMotor.setTargetPosition(armPositions.stageOneLift);
                 })
-                .transition( () ->  gamepad2.a, StateFactoryExample.States.DEFAULT)
+                .transition( () ->  gamepad2.dpad_up, StateFactoryExample.States.CLIMB_STAGE_ONE)
 
                 .build();
     }

@@ -65,7 +65,7 @@ public class Robot {
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         slideMotor.setDirection(DcMotor.Direction.REVERSE);
         armMotor.setDirection(DcMotor.Direction.REVERSE);
 

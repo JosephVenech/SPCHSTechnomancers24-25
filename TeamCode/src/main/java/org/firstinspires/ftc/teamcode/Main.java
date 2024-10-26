@@ -36,6 +36,8 @@ public class Main extends LinearOpMode {
     public Servo wristServo = null;
     public Servo intakeServo = null;
     public TouchSensor slideSafety = null;
+    public double driveTrainSpeed = 1;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -62,12 +64,12 @@ public class Main extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        slideMotor.setTargetPosition(slidePositions.defaultPosition);
+        slideMotor.setTargetPosition(slidePositions.startingPosition);
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideMotor.setPower(slidePositions.motorSpeed);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        armMotor.setTargetPosition(slidePositions.defaultPosition);
+        armMotor.setTargetPosition(slidePositions.startingPosition);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(armPositions.motorSpeed);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -77,7 +79,7 @@ public class Main extends LinearOpMode {
         if (opModeIsActive()) {
             while(opModeIsActive()){
                 // Functions - Comments can be found in individual files
-                driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry);
+                driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, driveTrainSpeed, telemetry);
                 intakeControl.intakeAngle(gamepad1, gamepad2, wristServo, telemetry);
                 intakeControl.intakeSpin(gamepad1, gamepad2, intakeServo, telemetry);
 

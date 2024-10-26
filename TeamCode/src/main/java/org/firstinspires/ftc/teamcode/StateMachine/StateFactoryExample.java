@@ -21,9 +21,11 @@ import java.util.Map;
 @TeleOp(name="State Machine test", group="Code Structure")
 public class StateFactoryExample extends LinearOpMode {
     enum States {
-        DEFAULT,
+        STARTING_POSITION,
+        TRAVEL,
         HANG_SPECIMEN,
         SAMPLE_BASKET,
+        HIGH_SAMPLE,
         COLLECT_SAMPLE,
         OBSERVATION_DECK,
         COLLECT_SPECIMEN,
@@ -41,6 +43,7 @@ public class StateFactoryExample extends LinearOpMode {
     public DcMotor armMotor = null;
     public Servo wristServo = null;
     public Servo intakeServo = null;
+    public double driveTrainSpeed = 1;
 
         @Override
         public void runOpMode() throws InterruptedException {
@@ -68,24 +71,35 @@ public class StateFactoryExample extends LinearOpMode {
 
             StateMachine machine = new StateMachineBuilder()
 
-                    .state(States.DEFAULT)
+                    .state(States.STARTING_POSITION)
                     .onEnter( () -> {
-                        slideMotor.setTargetPosition(slidePositions.defaultPosition);
-                        armMotor.setTargetPosition(armPositions.defaultPosition);
+                        slideMotor.setTargetPosition(slidePositions.startingPosition);
+                        armMotor.setTargetPosition(armPositions.startingPosition);
+                    })
+                    .transition( () -> gamepad2.a, States.TRAVEL)
+
+                    .state(States.TRAVEL)
+                    .onEnter( () -> {
+                        slideMotor.setTargetPosition(slidePositions.travelPosition);
+                        armMotor.setTargetPosition(armPositions.travelPosition);
+
+                        driveTrainSpeed = 1;
                     })
                     .transition( () -> gamepad2.y, States.SAMPLE_BASKET)
                     .transition( () -> gamepad2.x, States.HANG_SPECIMEN)
-                    .transition( () -> gamepad2.left_bumper, States.COLLECT_SAMPLE)
+                    .transition( () -> gamepad2.left_bumper, States.HIGH_SAMPLE)
                     .transition( () -> gamepad2.right_bumper, States.OBSERVATION_DECK)
                     .transition( () -> gamepad2.b, States.COLLECT_SPECIMEN)
-                    .transition( () -> gamepad2.dpad_left, States.CLIMB_STAGE_ONE)
+                    .transition( () -> gamepad2.dpad_up, States.CLIMB_STAGE_ONE)
 
                     .state(States.SAMPLE_BASKET)
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.sampleBasket);
                         armMotor.setTargetPosition(armPositions.sampleBasket);
+
+                        driveTrainSpeed = 0.3;
                     })
-                    .transition( () ->  gamepad2.a, States.DEFAULT)
+                    .transition( () ->  gamepad2.a, States.TRAVEL)
 
 
                     .state(States.HANG_SPECIMEN)
@@ -93,55 +107,67 @@ public class StateFactoryExample extends LinearOpMode {
                         slideMotor.setTargetPosition(slidePositions.hangSpecimen);
                         armMotor.setTargetPosition(armPositions.hangSpecimen);
                     })
-                    .transition( () ->  gamepad2.a, States.DEFAULT)
+                    .transition( () ->  gamepad2.a, States.TRAVEL)
+
+                    .state(States.HIGH_SAMPLE)
+                    .onEnter( () -> {
+                        slideMotor.setTargetPosition(slidePositions.highSample);
+                        armMotor.setTargetPosition(armPositions.highSample);
+                    })
+                    .transition( () -> gamepad2.dpad_down, States.COLLECT_SAMPLE)
+                    .transition( () -> gamepad2.a, States.TRAVEL)
 
                     .state(States.COLLECT_SAMPLE)
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.collectSample);
                         armMotor.setTargetPosition(armPositions.collectSample);
+
+                        driveTrainSpeed = 0.5;
                     })
-                    .transition( () ->  gamepad2.a, States.DEFAULT)
+                    .transition( () ->  gamepad2.dpad_up, States.HIGH_SAMPLE)
 
                     .state(States.OBSERVATION_DECK)
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.observationDeck);
                         armMotor.setTargetPosition(armPositions.observationDeck);
                     })
-                    .transition( () ->  gamepad2.a, States.DEFAULT)
+                    .transition( () ->  gamepad2.a, States.TRAVEL)
 
                     .state(States.COLLECT_SPECIMEN)
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.collectSpecimen);
                         armMotor.setTargetPosition(armPositions.collectSpecimen);
                     })
-                    .transition( () ->  gamepad2.a, States.DEFAULT)
+                    .transition( () ->  gamepad2.a, States.TRAVEL)
 
                     .state(States.CLIMB_STAGE_ONE)
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.climbStageOne);
                         armMotor.setTargetPosition(armPositions.climbStageOne);
                     })
-                    .transition( () -> gamepad2.dpad_right, States.STAGE_ONE_LIFT)
-                    .transition( () ->  gamepad2.a, States.DEFAULT)
+                    .transition( () -> gamepad2.dpad_down, States.STAGE_ONE_LIFT)
+                    .transition( () ->  gamepad2.a, States.TRAVEL)
 
                     .state(States.STAGE_ONE_LIFT)
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.stageOneLift);
                         armMotor.setTargetPosition(armPositions.stageOneLift);
                     })
-                    .transition( () ->  gamepad2.a, States.DEFAULT)
+                    .transition( () ->  gamepad2.dpad_up, States.CLIMB_STAGE_ONE)
 
                     .build();
 
-            slideMotor.setTargetPosition(slidePositions.defaultPosition);
+            slideMotor.setTargetPosition(slidePositions.startingPosition);
             slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slideMotor.setPower(slidePositions.motorSpeed);
             slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-            armMotor.setTargetPosition(slidePositions.defaultPosition);
+            armMotor.setTargetPosition(slidePositions.startingPosition);
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             armMotor.setPower(armPositions.motorSpeed);
             armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
 
             waitForStart();
 
@@ -155,7 +181,7 @@ public class StateFactoryExample extends LinearOpMode {
                 
                 intakeControl.intakeAngle(gamepad1, gamepad2, wristServo, telemetry);
                 intakeControl.intakeSpin(gamepad1, gamepad2, intakeServo, telemetry);
-                driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry);
+                driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, driveTrainSpeed, telemetry);
 
                 telemetry.addData("Slide position", slideMotor.getCurrentPosition());
                 telemetry.addData("Arm position", armMotor.getCurrentPosition());

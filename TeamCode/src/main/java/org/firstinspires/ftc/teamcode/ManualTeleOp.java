@@ -29,6 +29,8 @@ public class ManualTeleOp extends LinearOpMode {
     public Servo wristServo = null;
     public Servo intakeServo = null;
     public TouchSensor slideSafety = null;
+    public double driveTrainSpeed = 1;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -55,7 +57,7 @@ public class ManualTeleOp extends LinearOpMode {
         if (opModeIsActive()) {
             while(opModeIsActive()){
                 // Functions - Comments can be found in individual files
-                driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry);
+                driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, driveTrainSpeed, telemetry);
                 slideControl.SlidePosition(gamepad1, gamepad2, slideMotor, slideSafety, telemetry);
                 slideControl.ArmPosition(gamepad1, gamepad2, armMotor, telemetry);
                 intakeControl.intakeAngle(gamepad1, gamepad2, wristServo, telemetry);

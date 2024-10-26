@@ -2,12 +2,14 @@ package org.firstinspires.ftc.teamcode.ObjectDeclarations;
 
 public class armPositions extends FSMPositions {
     public static double motorSpeed = 0.95;
-    public static int defaultPosition = 0;
-    public static int hangSpecimen = -3360;
-    public static int sampleBasket = -3762;
-    public static int collectSample = -235;
-    public static int observationDeck = -706;
-    public static int collectSpecimen = -1414;
-    public static int climbStageOne = -2475;
-    public static int stageOneLift = 1580;
+    public static int startingPosition = 0;
+    public static int hangSpecimen = -2616;
+    public static int sampleBasket = -3910;
+    public static int travelPosition = -1077;
+    public static int highSample = -440;
+    public static int collectSample = -340;
+    public static int observationDeck = -718;
+    public static int collectSpecimen = -322;
+    public static int climbStageOne = -2667;
+    public static int stageOneLift = 1480;
 }
