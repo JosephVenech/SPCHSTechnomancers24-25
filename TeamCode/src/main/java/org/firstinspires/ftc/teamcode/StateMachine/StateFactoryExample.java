@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.RobotFunctions.Robot;
 import com.sfdev.assembly.state.*;
 
 import java.util.Map;
+import java.lang.Math;
 
 
 @TeleOp(name="State Machine test", group="Code Structure")
@@ -24,7 +25,9 @@ public class StateFactoryExample extends LinearOpMode {
         STARTING_POSITION,
         TRAVEL,
         HANG_SPECIMEN,
+        TRANSITION_TO_BASKET,
         SAMPLE_BASKET,
+        TRANSITION_FROM_BASKET,
         HIGH_SAMPLE,
         COLLECT_SAMPLE,
         OBSERVATION_DECK,
@@ -83,14 +86,20 @@ public class StateFactoryExample extends LinearOpMode {
                         slideMotor.setTargetPosition(slidePositions.travelPosition);
                         armMotor.setTargetPosition(armPositions.travelPosition);
 
-                        driveTrainSpeed = 1;
+                        driveTrainSpeed = 0.8;
                     })
-                    .transition( () -> gamepad2.y, States.SAMPLE_BASKET)
+                    .transition( () -> gamepad2.y, States.TRANSITION_TO_BASKET)
                     .transition( () -> gamepad2.x, States.HANG_SPECIMEN)
                     .transition( () -> gamepad2.left_bumper, States.HIGH_SAMPLE)
                     .transition( () -> gamepad2.right_bumper, States.OBSERVATION_DECK)
                     .transition( () -> gamepad2.b, States.COLLECT_SPECIMEN)
                     .transition( () -> gamepad2.dpad_up, States.CLIMB_STAGE_ONE)
+
+                    .state(States.TRANSITION_TO_BASKET)
+                    .onEnter( () -> {
+                        armMotor.setTargetPosition(armPositions.sampleBasket);
+                    })
+                    .transition( () -> armMotor.getCurrentPosition() < (armPositions.sampleBasket + 10), States.SAMPLE_BASKET)
 
                     .state(States.SAMPLE_BASKET)
                     .onEnter( () -> {
@@ -99,7 +108,13 @@ public class StateFactoryExample extends LinearOpMode {
 
                         driveTrainSpeed = 0.3;
                     })
-                    .transition( () ->  gamepad2.a, States.TRAVEL)
+                    .transition( () ->  gamepad2.a, States.TRANSITION_FROM_BASKET)
+
+                    .state(States.TRANSITION_FROM_BASKET)
+                    .onEnter( () -> {
+                        slideMotor.setTargetPosition(slidePositions.travelPosition);
+                    })
+                    .transition( () -> slideMotor.getCurrentPosition() < (slidePositions.travelPosition + 10), States.TRAVEL)
 
 
                     .state(States.HANG_SPECIMEN)
@@ -113,6 +128,8 @@ public class StateFactoryExample extends LinearOpMode {
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.highSample);
                         armMotor.setTargetPosition(armPositions.highSample);
+
+                        driveTrainSpeed = 0.3;
                     })
                     .transition( () -> gamepad2.dpad_down, States.COLLECT_SAMPLE)
                     .transition( () -> gamepad2.a, States.TRAVEL)
