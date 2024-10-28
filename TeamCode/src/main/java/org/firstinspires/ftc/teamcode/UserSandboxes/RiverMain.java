@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.MecanumFunctions;
-import org.firstinspires.ftc.teamcode.SlideFunctions;
+import org.firstinspires.ftc.teamcode.RobotFunctions.MecanumFunctions;
+import org.firstinspires.ftc.teamcode.RobotFunctions.SlideFunctions;
 
 /*
  * This file contains an example of a Linear "OpMode".
@@ -47,6 +47,7 @@ public class RiverMain extends LinearOpMode {
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
+    public double driveTrainSpeed = 1;
 
 
     @Override
@@ -86,7 +87,7 @@ public class RiverMain extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry);
+            driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, driveTrainSpeed, telemetry);
 
         }
     }}

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotFunctions;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -90,7 +91,7 @@ public class Robot {
 
     public void setServos() {
         wristServo.setPosition(0.3);
-        intakeServo.setPosition(0);
+        intakeServo.setPosition(0.5);
     }
 
     public Map<String, DcMotor> getDriveDictionary() {

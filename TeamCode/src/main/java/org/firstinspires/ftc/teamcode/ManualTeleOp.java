@@ -4,27 +4,20 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import java.util.Map;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotFunctions.IntakeFunctions;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Robot;
 import org.firstinspires.ftc.teamcode.RobotFunctions.MecanumFunctions;
 import org.firstinspires.ftc.teamcode.RobotFunctions.SlideFunctions;
-import org.firstinspires.ftc.teamcode.StateMachine.StateMachineFunctions;
-
-import org.firstinspires.ftc.teamcode.ObjectDeclarations.*;
-
-import com.sfdev.assembly.state.*;
 
 
-@TeleOp(name="Main", group="Main")
-public class Main extends LinearOpMode {
+@TeleOp(name="Manual Control", group="Main")
+public class ManualTeleOp extends LinearOpMode {
     public ElapsedTime runtime = new ElapsedTime();
 
     public DcMotor leftFrontDrive = null;
@@ -47,16 +40,9 @@ public class Main extends LinearOpMode {
         Map<String, Servo> servos = robot.getServoDictionary();
         Map<String, TouchSensor> sensors = robot.getSensorDictionary();
 
+
         mapVariables(motors, servos, sensors);
 
-        StateMachine machine = new StateMachineBuilder().build();
-
-        MecanumFunctions driveTrain = new MecanumFunctions();
-        IntakeFunctions intakeControl = new IntakeFunctions();
-        StateMachineFunctions stateMachine = new StateMachineFunctions();
-
-
-        stateMachine.CreateStateDefinitions(gamepad1, gamepad2, armMotor, slideMotor, slideSafety, telemetry);
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -64,28 +50,18 @@ public class Main extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        slideMotor.setTargetPosition(slidePositions.startingPosition);
-        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideMotor.setPower(slidePositions.motorSpeed);
-        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        armMotor.setTargetPosition(slidePositions.startingPosition);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        armMotor.setPower(armPositions.motorSpeed);
-        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        machine.start();
+        MecanumFunctions driveTrain = new MecanumFunctions();
+        SlideFunctions slideControl = new SlideFunctions();
+        IntakeFunctions intakeControl = new IntakeFunctions();
 
         if (opModeIsActive()) {
             while(opModeIsActive()){
                 // Functions - Comments can be found in individual files
                 driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, driveTrainSpeed, telemetry);
+                slideControl.SlidePosition(gamepad1, gamepad2, slideMotor, slideSafety, telemetry);
+                slideControl.ArmPosition(gamepad1, gamepad2, armMotor, telemetry);
                 intakeControl.intakeAngle(gamepad1, gamepad2, wristServo, telemetry);
                 intakeControl.intakeSpin(gamepad1, gamepad2, intakeServo, telemetry);
-
-
-                machine.update();
-
 
                 // Telemetry data
                 telemetry.addData("Status", "Run Time: " + runtime.toString());

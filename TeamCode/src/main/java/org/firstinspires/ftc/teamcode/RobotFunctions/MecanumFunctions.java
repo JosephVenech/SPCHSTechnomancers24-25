@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.RobotFunctions;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
     public class MecanumFunctions {
 
         // Calculates the math for the joystick
-        double[] driveTrainMath(double left_stick_y, double left_stick_x, double right_stick_x) {
+        public double[] driveTrainMath(double left_stick_y, double left_stick_x, double right_stick_x) {
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
@@ -63,16 +63,16 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
         // Assigns power to the motors
 
 
-        public void fullDriveTrainControl(Gamepad gamepad1, Gamepad gamepad2, DcMotor leftFrontDrive, DcMotor leftBackDrive, DcMotor rightFrontDrive, DcMotor rightBackDrive, Telemetry telemetry) {
+        public void fullDriveTrainControl(Gamepad gamepad1, Gamepad gamepad2, DcMotor leftFrontDrive, DcMotor leftBackDrive, DcMotor rightFrontDrive, DcMotor rightBackDrive, double driveTrainSpeed, Telemetry telemetry) {
 
             double[] motorPower = driveTrainMath(gamepad1.left_stick_y,gamepad1.left_stick_x,gamepad1.right_stick_x);
             // End of function calls //
 
             // Send calculated power to motors
-            leftFrontDrive.setPower(motorPower[0]);
-            rightFrontDrive.setPower(motorPower[1]);
-            leftBackDrive.setPower(motorPower[2]);
-            rightBackDrive.setPower(motorPower[3]);
+            leftFrontDrive.setPower(motorPower[0] * driveTrainSpeed);
+            rightFrontDrive.setPower(motorPower[1] * driveTrainSpeed);
+            leftBackDrive.setPower(motorPower[2] * driveTrainSpeed);
+            rightBackDrive.setPower(motorPower[3] * driveTrainSpeed);
 
             // Telemetry data
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", motorPower[0], motorPower[1]);
