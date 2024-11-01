@@ -29,6 +29,7 @@ public class StateFactoryExample extends LinearOpMode {
         SAMPLE_BASKET,
         TRANSITION_FROM_BASKET,
         HIGH_SAMPLE,
+        RELEASE_SAMPLE,
         COLLECT_SAMPLE,
         OBSERVATION_DECK,
         COLLECT_SPECIMEN,
@@ -78,6 +79,7 @@ public class StateFactoryExample extends LinearOpMode {
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.startingPosition);
                         armMotor.setTargetPosition(armPositions.startingPosition);
+                        wristServo.setPosition(wristPositions.sample);
                     })
                     .transition( () -> gamepad2.a, States.TRAVEL)
 
@@ -85,6 +87,8 @@ public class StateFactoryExample extends LinearOpMode {
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.travelPosition);
                         armMotor.setTargetPosition(armPositions.travelPosition);
+                        wristServo.setPosition(wristPositions.sample);
+                        intakeServo.setPosition(intakePositions.intakeOff);
 
                         driveTrainSpeed = 0.8;
                     })
@@ -108,7 +112,14 @@ public class StateFactoryExample extends LinearOpMode {
 
                         driveTrainSpeed = 0.3;
                     })
+                    .transition( () -> gamepad2.right_trigger > 0, States.RELEASE_SAMPLE)
                     .transition( () ->  gamepad2.a, States.TRANSITION_FROM_BASKET)
+
+                    .state(States.RELEASE_SAMPLE)
+                    .onEnter( () -> {
+                        intakeServo.setPosition(intakePositions.intakeReverse);
+                    })
+                    .transitionTimed(.75, States.TRANSITION_FROM_BASKET)
 
                     .state(States.TRANSITION_FROM_BASKET)
                     .onEnter( () -> {
@@ -121,6 +132,7 @@ public class StateFactoryExample extends LinearOpMode {
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.hangSpecimen);
                         armMotor.setTargetPosition(armPositions.hangSpecimen);
+                        wristServo.setPosition(wristPositions.specimen);
                     })
                     .transition( () ->  gamepad2.a, States.TRAVEL)
 
@@ -134,10 +146,13 @@ public class StateFactoryExample extends LinearOpMode {
                     .transition( () -> gamepad2.dpad_down, States.COLLECT_SAMPLE)
                     .transition( () -> gamepad2.a, States.TRAVEL)
 
+
+
                     .state(States.COLLECT_SAMPLE)
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.collectSample);
                         armMotor.setTargetPosition(armPositions.collectSample);
+                        intakeServo.setPosition(intakePositions.intakeOn);
 
                         driveTrainSpeed = 0.5;
                     })
@@ -195,8 +210,7 @@ public class StateFactoryExample extends LinearOpMode {
 
             while(opModeIsActive()) { // autonomous loop
                 machine.update();
-                
-                intakeControl.intakeAngle(gamepad1, gamepad2, wristServo, telemetry);
+
                 intakeControl.intakeSpin(gamepad1, gamepad2, intakeServo, telemetry);
                 driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, driveTrainSpeed, telemetry);
 
@@ -204,6 +218,8 @@ public class StateFactoryExample extends LinearOpMode {
                 telemetry.addData("Arm position", armMotor.getCurrentPosition());
                 telemetry.addData("Slide target position", slideMotor.getTargetPosition());
                 telemetry.addData("Arm target position", armMotor.getTargetPosition());
+                telemetry.addData("Wrist Position", wristServo.getPosition());
+                telemetry.addData("Intake Position", intakeServo.getPosition());
                 telemetry.addData("Current State", machine.getState());
                 telemetry.update();
             }
