@@ -36,7 +36,7 @@ public class Main extends LinearOpMode {
     public Servo wristServo = null;
     public Servo intakeServo = null;
     public TouchSensor slideSafety = null;
-    public double driveTrainSpeed = 1;
+    public double driveTrainSpeed = 1.00;
 
 
     @Override
@@ -49,14 +49,12 @@ public class Main extends LinearOpMode {
 
         mapVariables(motors, servos, sensors);
 
-        StateMachine machine = new StateMachineBuilder().build();
-
         MecanumFunctions driveTrain = new MecanumFunctions();
         IntakeFunctions intakeControl = new IntakeFunctions();
         StateMachineFunctions stateMachine = new StateMachineFunctions();
 
+        StateMachine machine = stateMachine.CreateStateDefinitions(gamepad1, gamepad2, armMotor, slideMotor, slideSafety, telemetry);
 
-        stateMachine.CreateStateDefinitions(gamepad1, gamepad2, armMotor, slideMotor, slideSafety, telemetry);
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
