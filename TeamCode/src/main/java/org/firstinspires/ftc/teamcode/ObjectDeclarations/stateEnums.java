@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.ObjectDeclarations;
 
+/*
+THis file declares names for the states to be used with the state machine
+ */
+
 public class stateEnums {
     public enum States {
         DEFAULT,

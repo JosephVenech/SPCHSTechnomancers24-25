@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 // Call to update current motor power
     public class MecanumFunctions {
 
-        // Calculates the math for the joystick
+        // Takes joystick inputs and calculates math for drivetrain motor power
         public double[] driveTrainMath(double left_stick_y, double left_stick_x, double right_stick_x) {
             double max;
 
@@ -50,6 +50,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
             // leftBackDrive.setPower(leftBackPower);
             // rightBackDrive.setPower(rightBackPower);
 
+            // Create an array with power for each motor
             double[] motorPower;
             motorPower = new double[4];
             motorPower[0] = leftFrontPower;

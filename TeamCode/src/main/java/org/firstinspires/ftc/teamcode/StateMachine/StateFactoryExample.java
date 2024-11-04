@@ -21,6 +21,8 @@ import java.lang.Math;
 
 @TeleOp(name="State Machine test", group="Code Structure")
 public class StateFactoryExample extends LinearOpMode {
+
+    // Name each of the preset states
     enum States {
         STARTING_POSITION,
         TRAVEL,
@@ -37,7 +39,7 @@ public class StateFactoryExample extends LinearOpMode {
         STAGE_ONE_LIFT
     }
 
-
+    // Create objects
     public ElapsedTime runtime = new ElapsedTime();
     public DcMotor leftFrontDrive = null;
     public DcMotor leftBackDrive = null;
@@ -52,15 +54,15 @@ public class StateFactoryExample extends LinearOpMode {
         @Override
         public void runOpMode() throws InterruptedException {
 
-
+            // Call function to handle hardware map
             Robot robot = new Robot(hardwareMap);
             Map<String, DcMotor> motors = robot.getDriveDictionary();
             Map<String, Servo> servos = robot.getServoDictionary();
             Map<String, TouchSensor> sensors = robot.getSensorDictionary();
 
-
             mapVariables(motors, servos, sensors);
 
+            // Hardware map override
             slideMotor = hardwareMap.get(DcMotor.class, "slide_motor");
             slideMotor.setDirection(DcMotor.Direction.REVERSE);
             slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -72,9 +74,12 @@ public class StateFactoryExample extends LinearOpMode {
 
 
 
-
+            // Define details of each state
             StateMachine machine = new StateMachineBuilder()
 
+                    // Starting position, not used during tele-op but to fit in 18-inch cube
+                    // Every position is relative to starting position, starting position is hard
+                    // defined using ResetPosition.java
                     .state(States.STARTING_POSITION)
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.startingPosition);
@@ -83,6 +88,8 @@ public class StateFactoryExample extends LinearOpMode {
                     })
                     .transition( () -> gamepad2.a, States.TRAVEL)
 
+                    // Travel position that can easily access each other position
+                    // Easy and stable for travel, each other position has to return here
                     .state(States.TRAVEL)
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.travelPosition);
@@ -99,12 +106,20 @@ public class StateFactoryExample extends LinearOpMode {
                     .transition( () -> gamepad2.b, States.COLLECT_SPECIMEN)
                     .transition( () -> gamepad2.dpad_up, States.CLIMB_STAGE_ONE)
 
+                    // Intermediate stage, raises arm first then once arm is in position moves to
+                    // next state where slide extends to necessary position.
+                    // This is done to not have the bot tip over, keeping mass above bot instead of
+                    // in front.
                     .state(States.TRANSITION_TO_BASKET)
                     .onEnter( () -> {
                         armMotor.setTargetPosition(armPositions.sampleBasket);
                     })
                     .transition( () -> armMotor.getCurrentPosition() < (armPositions.sampleBasket + 10), States.SAMPLE_BASKET)
+                    // When encoder is within 10 ticks of target position it moves to next state
+                    // Note: 10 is arbitrary but fairly close while not needing exact
 
+                    // State to place samples in the high basket
+                    // This state can transfer to low basket (NOT YET IMPLEMENTED) or back to travel
                     .state(States.SAMPLE_BASKET)
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.sampleBasket);
@@ -115,12 +130,15 @@ public class StateFactoryExample extends LinearOpMode {
                     .transition( () -> gamepad2.right_trigger > 0, States.RELEASE_SAMPLE)
                     .transition( () ->  gamepad2.a, States.TRANSITION_FROM_BASKET)
 
+                    // Releases sample before transitioning back to travel
+                    // Timed transition, ADJUST FOR ACTUAL TIME REQUIRED TO RELEASE SAMPLE
                     .state(States.RELEASE_SAMPLE)
                     .onEnter( () -> {
                         intakeServo.setPosition(intakePositions.intakeReverse);
                     })
                     .transitionTimed(.75, States.TRANSITION_FROM_BASKET)
 
+                    // Transition state
                     .state(States.TRANSITION_FROM_BASKET)
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.travelPosition);
