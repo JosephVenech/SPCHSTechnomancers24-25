@@ -138,14 +138,15 @@ public class StateFactoryExample extends LinearOpMode {
                     })
                     .transitionTimed(.75, States.TRANSITION_FROM_BASKET)
 
-                    // Transition state
+                    // Transition state: Closes slide before lowering arm to prevent bot from
+                    // tipping over
                     .state(States.TRANSITION_FROM_BASKET)
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.travelPosition);
                     })
                     .transition( () -> slideMotor.getCurrentPosition() < (slidePositions.travelPosition + 10), States.TRAVEL)
 
-
+                    // Angle wrist and go to preset position to place a specimen
                     .state(States.HANG_SPECIMEN)
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.hangSpecimen);
@@ -154,6 +155,8 @@ public class StateFactoryExample extends LinearOpMode {
                     })
                     .transition( () ->  gamepad2.a, States.TRAVEL)
 
+                    // Pickup sample position, higher up to not get caught on samples
+                    // Use dpad to lower arm when you're above sample you want to pick up
                     .state(States.HIGH_SAMPLE)
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.highSample);
@@ -165,7 +168,7 @@ public class StateFactoryExample extends LinearOpMode {
                     .transition( () -> gamepad2.a, States.TRAVEL)
 
 
-
+                    // Lower arm and spin intake to pick up sample
                     .state(States.COLLECT_SAMPLE)
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.collectSample);
@@ -176,6 +179,7 @@ public class StateFactoryExample extends LinearOpMode {
                     })
                     .transition( () ->  gamepad2.dpad_up, States.HIGH_SAMPLE)
 
+                    // Preset position to put samples in observation deck to give to human player
                     .state(States.OBSERVATION_DECK)
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.observationDeck);
@@ -183,6 +187,7 @@ public class StateFactoryExample extends LinearOpMode {
                     })
                     .transition( () ->  gamepad2.a, States.TRAVEL)
 
+                    // Preset position to pick up a specimen
                     .state(States.COLLECT_SPECIMEN)
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.collectSpecimen);
@@ -190,6 +195,8 @@ public class StateFactoryExample extends LinearOpMode {
                     })
                     .transition( () ->  gamepad2.a, States.TRAVEL)
 
+                    // Set arm and slide in position allowing driver to drive to submersible to set
+                    // up stage one climb
                     .state(States.CLIMB_STAGE_ONE)
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.climbStageOne);
@@ -198,6 +205,7 @@ public class StateFactoryExample extends LinearOpMode {
                     .transition( () -> gamepad2.dpad_down, States.STAGE_ONE_LIFT)
                     .transition( () ->  gamepad2.a, States.TRAVEL)
 
+                    // Lowers arm to life bot off ground for stage one climb
                     .state(States.STAGE_ONE_LIFT)
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.stageOneLift);
@@ -206,6 +214,11 @@ public class StateFactoryExample extends LinearOpMode {
                     .transition( () ->  gamepad2.dpad_up, States.CLIMB_STAGE_ONE)
 
                     .build();
+
+
+            // Sets starting position and mode to run to position for arm and slide
+            // Needed to make motors run to preset positions
+            // Note: brake does not hard stop, only offers slight resistance
 
             slideMotor.setTargetPosition(slidePositions.startingPosition);
             slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -227,11 +240,15 @@ public class StateFactoryExample extends LinearOpMode {
             MecanumFunctions driveTrain = new MecanumFunctions();
 
             while(opModeIsActive()) { // autonomous loop
-                machine.update();
+                machine.update(); // Checks for inputs and handles state machine presets
 
+                // Call functions and pass inputs to handle intake and drivetrain
+                // NOTE: intake should be part of state machine
                 intakeControl.intakeSpin(gamepad1, gamepad2, intakeServo, telemetry);
                 driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, driveTrainSpeed, telemetry);
 
+                // Telemetry data is basically print functions, these give drivers feedback, mostly
+                // useful for debugging and testing purposes, making sure everything works as intended
                 telemetry.addData("Slide position", slideMotor.getCurrentPosition());
                 telemetry.addData("Arm position", armMotor.getCurrentPosition());
                 telemetry.addData("Slide target position", slideMotor.getTargetPosition());

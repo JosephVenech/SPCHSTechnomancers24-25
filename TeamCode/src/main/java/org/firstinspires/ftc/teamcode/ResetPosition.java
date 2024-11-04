@@ -11,6 +11,15 @@ import java.lang.Math;
 
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.armPositions;
 
+/*
+This file runs arm motor backwards until it hits a touch sensor, then it zeroes out the encoder in
+the motor. Then it runs to a predetermined starting position using the encoders, which will then be
+zeroed out as encoder position 0.
+
+This is crucial for the presets to work properly as it make the starting position of the arm an
+exact position that can be reliably and easily reset to. This way the preset positions are exact and
+accurately tuned based off consistent start position.
+ */
 
 @Autonomous(name="Reset Position", group="Robot Function")
 public class ResetPosition extends LinearOpMode {
