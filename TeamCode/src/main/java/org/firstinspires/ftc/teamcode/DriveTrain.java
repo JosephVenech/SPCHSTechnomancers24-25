@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.RobotFunctions.MecanumFunctions;
 @TeleOp(name="Mecanum Drive Train", group="Subsytems")
 public class DriveTrain extends LinearOpMode {
 
@@ -39,7 +38,7 @@ public class DriveTrain extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        MecanumFunctions driveTrain = new MecanumFunctions();
+        org.firstinspires.ftc.teamcode.RobotFunctions.MecanumFunctions driveTrain = new org.firstinspires.ftc.teamcode.RobotFunctions.MecanumFunctions();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
