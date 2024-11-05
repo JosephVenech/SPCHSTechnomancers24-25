@@ -14,7 +14,7 @@ public class StateMachineFunctions {
 
     public StateMachine CreateStateDefinitions(Gamepad gamepad1, Gamepad gamepad2, DcMotor armMotor, DcMotor slideMotor, TouchSensor slideSafety, Telemetry telemetry) {
 
-        StateMachine machine = new StateMachineBuilder()
+        return new StateMachineBuilder() // returns the statemachine
 
                 .state(StateFactoryExample.States.TRAVEL)
                 .onEnter( () -> {
@@ -80,7 +80,5 @@ public class StateMachineFunctions {
                 .transition( () ->  gamepad2.dpad_up, StateFactoryExample.States.CLIMB_STAGE_ONE)
 
                 .build();
-
-        return machine;
     }
 }

@@ -36,8 +36,7 @@ public class Main extends LinearOpMode {
     public Servo wristServo = null;
     public Servo intakeServo = null;
     public TouchSensor slideSafety = null;
-    public double driveTrainSpeed = 1.00;
-
+    public double driveTrainSpeed = 1;
 
     @Override
     public void runOpMode() throws InterruptedException {
