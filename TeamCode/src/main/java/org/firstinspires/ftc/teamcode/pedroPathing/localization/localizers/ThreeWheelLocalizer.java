@@ -56,7 +56,7 @@ public class ThreeWheelLocalizer extends Localizer {
     private Pose strafeEncoderPose;
     private double totalHeading;
     public static double FORWARD_TICKS_TO_INCHES = 0.0014;//8192 * 1.37795 * 2 * Math.PI * 0.5008239963;
-    public static double STRAFE_TICKS_TO_INCHES = 0.002;//8192 * 1.37795 * 2 * Math.PI * 0.5018874659;
+    public static double STRAFE_TICKS_TO_INCHES = 0.0013;//8192 * 1.37795 * 2 * Math.PI * 0.5018874659;
     public static double TURN_TICKS_TO_RADIANS = .0022;//8192 * 1.37795 * 2 * Math.PI * 0.5;
     //Joseph -- Since negative may need to reverse some encoders
 
