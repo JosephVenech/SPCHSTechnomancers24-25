@@ -29,7 +29,7 @@ public class ResetPosition extends LinearOpMode {
     public TouchSensor armSafety = null;
     public Servo wristServo = null;
     double motorSpeed = -0.8;
-    int defaultPosition = 4250;
+    int defaultPosition = 5225;
 
 
     @Override

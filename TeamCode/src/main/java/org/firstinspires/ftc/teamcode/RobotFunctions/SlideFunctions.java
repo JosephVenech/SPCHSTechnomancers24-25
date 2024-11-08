@@ -33,7 +33,7 @@ public class SlideFunctions {
 
     public void ArmPosition(Gamepad gamepad1, Gamepad gamepad2, DcMotor armMotor, Telemetry telemetry) {
 
-        double armPower = gamepad2.right_stick_y; // Input for arm control
+        double armPower = -gamepad2.right_stick_y; // Input for arm control
         armMotor.setPower(armPower); // Set power to the arm
 
         // Get position and display power of motor and current position on driver station

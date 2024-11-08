@@ -61,12 +61,12 @@ public class Main extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        slideMotor.setTargetPosition(slidePositions.startingPosition);
+        slideMotor.setTargetPosition(slidePositions.travelPosition);
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideMotor.setPower(slidePositions.motorSpeed);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        armMotor.setTargetPosition(slidePositions.startingPosition);
+        armMotor.setTargetPosition(slidePositions.travelPosition);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(armPositions.motorSpeed);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

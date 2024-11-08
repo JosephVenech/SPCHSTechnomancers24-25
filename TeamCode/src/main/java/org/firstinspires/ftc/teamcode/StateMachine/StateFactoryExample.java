@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.StateMachine;
 
+import static java.lang.Math.abs;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -63,12 +65,8 @@ public class StateFactoryExample extends LinearOpMode {
             mapVariables(motors, servos, sensors);
 
             // Hardware map override
-            slideMotor = hardwareMap.get(DcMotor.class, "slide_motor");
-            slideMotor.setDirection(DcMotor.Direction.REVERSE);
             slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-            armMotor = hardwareMap.get(DcMotor.class, "arm_motor");
-            armMotor.setDirection(DcMotor.Direction.REVERSE);
             armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
@@ -161,6 +159,7 @@ public class StateFactoryExample extends LinearOpMode {
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.highSample);
                         armMotor.setTargetPosition(armPositions.highSample);
+                        intakeServo.setPosition(intakePositions.intakeOn);
 
                         driveTrainSpeed = 0.3;
                     })
@@ -236,7 +235,6 @@ public class StateFactoryExample extends LinearOpMode {
 
             machine.start();
             runtime.reset();
-            IntakeFunctions intakeControl = new IntakeFunctions();
             MecanumFunctions driveTrain = new MecanumFunctions();
 
             while(opModeIsActive()) { // autonomous loop
@@ -244,8 +242,20 @@ public class StateFactoryExample extends LinearOpMode {
 
                 // Call functions and pass inputs to handle intake and drivetrain
                 // NOTE: intake should be part of state machine
-                intakeControl.intakeSpin(gamepad1, gamepad2, intakeServo, telemetry);
                 driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, driveTrainSpeed, telemetry);
+
+                if (abs(slideMotor.getCurrentPosition() - slideMotor.getTargetPosition()) < 2){
+                    slideMotor.setPower(0);
+                }
+                else {
+                    slideMotor.setPower(slidePositions.motorSpeed);
+                }
+                if (abs(armMotor.getCurrentPosition() - armMotor.getTargetPosition()) < 2){
+                    armMotor.setPower(0);
+                }
+                else {
+                    armMotor.setPower(armPositions.motorSpeed);
+                }
 
                 // Telemetry data is basically print functions, these give drivers feedback, mostly
                 // useful for debugging and testing purposes, making sure everything works as intended

@@ -11,8 +11,8 @@ this reduces max speed but that is not a problem for us
  */
 
 public class intakePositions {
-    public static double intakeOn = 1;
+    public static double intakeOn = 0;
     public static double intakeOff = 0.5;
-    public static double intakeReverse = 0;
+    public static double intakeReverse = 1;
 
 }

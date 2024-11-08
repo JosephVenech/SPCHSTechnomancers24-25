@@ -17,13 +17,13 @@ readability.
 public class slidePositions {
     public static double motorSpeed = 0.7;
     public static int startingPosition = 0;
-    public static int hangSpecimen = 1121;
-    public static int sampleBasket = 2300;
-    public static int travelPosition = 368;
-    public static int highSample = 1331;
-    public static int collectSample = 1331;
-    public static int observationDeck = 834;
-    public static int collectSpecimen = 739;
+    public static int hangSpecimen = 2720;
+    public static int sampleBasket = 5600;
+    public static int travelPosition = 0;
+    public static int highSample = 2300;
+    public static int collectSample = 2300;
+    public static int observationDeck = 2230;
+    public static int collectSpecimen = 2230;
     public static int climbStageOne = 0;
-    public static int stageOneLift = 0 ;
+    public static int stageOneLift = 0;
 }
