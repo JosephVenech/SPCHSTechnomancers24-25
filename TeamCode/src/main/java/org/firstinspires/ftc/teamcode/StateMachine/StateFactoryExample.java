@@ -237,6 +237,10 @@ public class StateFactoryExample extends LinearOpMode {
             runtime.reset();
             MecanumFunctions driveTrain = new MecanumFunctions();
 
+            // Automatically moves to travel position but only after you press play
+            slideMotor.setTargetPosition(slidePositions.travelPosition);
+            armMotor.setTargetPosition(slidePositions.travelPosition);
+
             while(opModeIsActive()) { // autonomous loop
                 machine.update(); // Checks for inputs and handles state machine presets
 
