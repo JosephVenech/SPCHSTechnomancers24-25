@@ -4,21 +4,22 @@ import static java.lang.Math.abs;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.TouchSensor;
-import org.firstinspires.ftc.teamcode.ObjectDeclarations.*;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.sfdev.assembly.state.StateMachine;
+import com.sfdev.assembly.state.StateMachineBuilder;
+
+import org.firstinspires.ftc.teamcode.ObjectDeclarations.armPositions;
+import org.firstinspires.ftc.teamcode.ObjectDeclarations.intakePositions;
+import org.firstinspires.ftc.teamcode.ObjectDeclarations.slidePositions;
+import org.firstinspires.ftc.teamcode.ObjectDeclarations.wristPositions;
 import org.firstinspires.ftc.teamcode.RobotFunctions.IntakeFunctions;
 import org.firstinspires.ftc.teamcode.RobotFunctions.MecanumFunctions;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Robot;
 
-import com.sfdev.assembly.state.*;
-
 import java.util.Map;
-import java.lang.Math;
 
 
 @TeleOp(name="State Machine test", group="Code Structure")
@@ -125,14 +126,14 @@ public class StateFactoryExample extends LinearOpMode {
 
                         driveTrainSpeed = 0.3;
                     })
-                    .transition( () -> gamepad2.right_trigger > 0, States.RELEASE_SAMPLE)
+                    //.transition( () -> gamepad2.right_trigger > 0, States.RELEASE_SAMPLE)
                     .transition( () ->  gamepad2.a, States.TRANSITION_FROM_BASKET)
 
                     // Releases sample before transitioning back to travel
                     // Timed transition, ADJUST FOR ACTUAL TIME REQUIRED TO RELEASE SAMPLE
                     .state(States.RELEASE_SAMPLE)
                     .onEnter( () -> {
-                        intakeServo.setPosition(intakePositions.intakeReverse);
+                        //intakeServo.setPosition(intakePositions.intakeReverse);
                     })
                     .transitionTimed(.75, States.TRANSITION_FROM_BASKET)
 
@@ -159,7 +160,7 @@ public class StateFactoryExample extends LinearOpMode {
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.highSample);
                         armMotor.setTargetPosition(armPositions.highSample);
-                        intakeServo.setPosition(intakePositions.intakeOn);
+                        //intakeServo.setPosition(intakePositions.intakeOn);
 
                         driveTrainSpeed = 0.3;
                     })
@@ -172,7 +173,7 @@ public class StateFactoryExample extends LinearOpMode {
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.collectSample);
                         armMotor.setTargetPosition(armPositions.collectSample);
-                        intakeServo.setPosition(intakePositions.intakeOn);
+                        //intakeServo.setPosition(intakePositions.intakeOn);
 
                         driveTrainSpeed = 0.5;
                     })
@@ -236,9 +237,10 @@ public class StateFactoryExample extends LinearOpMode {
             machine.start();
             runtime.reset();
             MecanumFunctions driveTrain = new MecanumFunctions();
+            IntakeFunctions intakeContol = new IntakeFunctions();
 
             // Automatically moves to travel position but only after you press play
-            slideMotor.setTargetPosition(slidePositions.travelPosition);
+            //slideMotor.setTargetPosition(slidePositions.travelPosition);
             armMotor.setTargetPosition(slidePositions.travelPosition);
 
             while(opModeIsActive()) { // autonomous loop
@@ -247,6 +249,7 @@ public class StateFactoryExample extends LinearOpMode {
                 // Call functions and pass inputs to handle intake and drivetrain
                 // NOTE: intake should be part of state machine
                 driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, driveTrainSpeed, telemetry);
+                intakeContol.intakeSpin(gamepad1,gamepad2, intakeServo, telemetry);
 
                 if (abs(slideMotor.getCurrentPosition() - slideMotor.getTargetPosition()) < 2){
                     slideMotor.setPower(0);

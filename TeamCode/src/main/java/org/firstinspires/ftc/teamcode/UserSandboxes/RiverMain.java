@@ -1,20 +1,12 @@
 package org.firstinspires.ftc.teamcode.UserSandboxes;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.sfdev.assembly.state.StateMachine;
-import com.sfdev.assembly.state.StateMachineBuilder;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.ObjectDeclarations.*;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Robot;
 
 import java.util.Map;
@@ -90,7 +82,7 @@ public class RiverMain extends LinearOpMode {
                 telemetry.addData("drivetrain position", leftFrontDrive.getCurrentPosition());
                 telemetry.update();
             }
-
+        /*
         armMotor.setPower(armPositions.motorSpeed);
         armMotor.setTargetPosition(armPositions.sampleBasket);
 
@@ -119,7 +111,7 @@ public class RiverMain extends LinearOpMode {
             telemetry.update();
         }
         armMotor.setTargetPosition(armPositions.startingPosition);
-
+        */
     }
     public void mapVariables(
                 Map<java.lang.String, DcMotor> motors,

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 @Config
 @Autonomous(name = "Move Left")
-public abstract class Test extends OpMode {
+public class Test extends OpMode {
     private Follower follower;
     private Path left;
 
@@ -18,9 +18,21 @@ public abstract class Test extends OpMode {
     public void init() {
         follower = new Follower(hardwareMap);
 
+
         left = new Path(new BezierLine(new Point(0, 0, Point.CARTESIAN), new Point(0, 40, Point.CARTESIAN)));
+
+        //    left = follower.pathBuilder().addPath(new BezierLine(new Point(0, 0, Point.CARTESIAN), new Point(10, 0, Point.CARTESIAN)));
         left.setConstantHeadingInterpolation(0);
 
         follower.followPath(left);
     }
-}
+
+    @Override
+    public void loop(){
+        follower.update();
+        if (!follower.isBusy()) {
+            follower.followPath(left);
+        }
+
+        }
+    }
