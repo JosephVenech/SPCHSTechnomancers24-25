@@ -5,6 +5,7 @@ import static java.lang.Math.abs;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.ObjectDeclarations.armPositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.intakePositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.slidePositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.wristPositions;
+import org.firstinspires.ftc.teamcode.RobotFunctions.ColorSensorFunctions;
 import org.firstinspires.ftc.teamcode.RobotFunctions.IntakeFunctions;
 import org.firstinspires.ftc.teamcode.RobotFunctions.MecanumFunctions;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Robot;
@@ -52,6 +54,7 @@ public class StateFactoryExample extends LinearOpMode {
     public DcMotor armMotor = null;
     public Servo wristServo = null;
     public Servo intakeServo = null;
+    public NormalizedColorSensor intakeColorSensor = null;
     public double driveTrainSpeed = 1;
 
         @Override
@@ -69,6 +72,9 @@ public class StateFactoryExample extends LinearOpMode {
             slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            // Temporary set up in Robot hardware map
+            intakeColorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensor_color");
 
 
 
@@ -237,7 +243,8 @@ public class StateFactoryExample extends LinearOpMode {
             machine.start();
             runtime.reset();
             MecanumFunctions driveTrain = new MecanumFunctions();
-            IntakeFunctions intakeContol = new IntakeFunctions();
+            IntakeFunctions intakeControl = new IntakeFunctions();
+            ColorSensorFunctions colorSensorFunctions = new ColorSensorFunctions();
 
             // Automatically moves to travel position but only after you press play
             //slideMotor.setTargetPosition(slidePositions.travelPosition);
@@ -249,7 +256,9 @@ public class StateFactoryExample extends LinearOpMode {
                 // Call functions and pass inputs to handle intake and drivetrain
                 // NOTE: intake should be part of state machine
                 driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, driveTrainSpeed, telemetry);
-                intakeContol.intakeSpin(gamepad1,gamepad2, intakeServo, telemetry);
+                intakeControl.intakeSpin(gamepad1,gamepad2, intakeServo, telemetry);
+                colorSensorFunctions.colorSensorGetColor(intakeColorSensor, telemetry);
+
 
                 if (abs(slideMotor.getCurrentPosition() - slideMotor.getTargetPosition()) < 2){
                     slideMotor.setPower(0);
