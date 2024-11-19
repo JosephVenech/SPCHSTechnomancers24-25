@@ -15,6 +15,7 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.armPositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.intakePositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.slidePositions;
+import org.firstinspires.ftc.teamcode.ObjectDeclarations.colorSensorVariables;
 import org.firstinspires.ftc.teamcode.RobotFunctions.ColorSensorFunctions;
 import org.firstinspires.ftc.teamcode.RobotFunctions.IntakeFunctions;
 import org.firstinspires.ftc.teamcode.RobotFunctions.MecanumFunctions;
@@ -69,6 +70,8 @@ public class StateFactoryExample extends LinearOpMode {
 
             // Temporary set up in Robot hardware map
             intakeColorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensor_color");
+            intakeColorSensor.setGain(colorSensorVariables.gain);
+
 
 
 

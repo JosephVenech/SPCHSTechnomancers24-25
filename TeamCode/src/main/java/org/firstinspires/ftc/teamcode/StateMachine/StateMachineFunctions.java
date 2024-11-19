@@ -23,10 +23,7 @@ public class StateMachineFunctions {
                     armMotor.setTargetPosition(armPositions.travelPosition);
                 })
                 .transition( () -> gamepad2.y, StateFactoryExample.States.SAMPLE_BASKET)
-                .transition( () -> gamepad2.x, StateFactoryExample.States.HANG_SPECIMEN)
                 .transition( () -> gamepad2.left_bumper, StateFactoryExample.States.COLLECT_SAMPLE)
-                .transition( () -> gamepad2.right_bumper, StateFactoryExample.States.OBSERVATION_DECK)
-                .transition( () -> gamepad2.b, StateFactoryExample.States.COLLECT_SPECIMEN)
                 .transition( () -> gamepad2.dpad_left, StateFactoryExample.States.CLIMB_STAGE_ONE)
 
                 .state(StateFactoryExample.States.SAMPLE_BASKET)
@@ -36,32 +33,10 @@ public class StateMachineFunctions {
                 })
                 .transition( () ->  gamepad2.a, StateFactoryExample.States.TRAVEL)
 
-
-                .state(StateFactoryExample.States.HANG_SPECIMEN)
-                .onEnter( () -> {
-                    slideMotor.setTargetPosition(slidePositions.hangSpecimen);
-                    armMotor.setTargetPosition(armPositions.hangSpecimen);
-                })
-                .transition( () ->  gamepad2.a, StateFactoryExample.States.TRAVEL)
-
                 .state(StateFactoryExample.States.COLLECT_SAMPLE)
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.collectSample);
                     armMotor.setTargetPosition(armPositions.collectSample);
-                })
-                .transition( () ->  gamepad2.a, StateFactoryExample.States.TRAVEL)
-
-                .state(StateFactoryExample.States.OBSERVATION_DECK)
-                .onEnter( () -> {
-                    slideMotor.setTargetPosition(slidePositions.observationDeck);
-                    armMotor.setTargetPosition(armPositions.observationDeck);
-                })
-                .transition( () ->  gamepad2.a, StateFactoryExample.States.TRAVEL)
-
-                .state(StateFactoryExample.States.COLLECT_SPECIMEN)
-                .onEnter( () -> {
-                    slideMotor.setTargetPosition(slidePositions.collectSpecimen);
-                    armMotor.setTargetPosition(armPositions.collectSpecimen);
                 })
                 .transition( () ->  gamepad2.a, StateFactoryExample.States.TRAVEL)
 

@@ -67,7 +67,7 @@ public class Robot {
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         slideMotor.setDirection(DcMotor.Direction.REVERSE);
-        armMotor.setDirection(DcMotor.Direction.FORWARD);
+        armMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // Motor encoders
         leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

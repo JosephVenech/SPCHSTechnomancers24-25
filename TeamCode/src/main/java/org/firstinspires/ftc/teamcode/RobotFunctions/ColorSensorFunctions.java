@@ -25,7 +25,7 @@ public class ColorSensorFunctions {
         NormalizedRGBA colors = colorSensor.getNormalizedColors();
 
         // Compare to thresholds to detect color
-        if (colors.blue >= colorSensorVariables.blueThreshold) {
+        if (colors.blue > colorSensorVariables.blueThreshold) {
             detectedColor = "Blue";
         }
         else if (colors.green >= colorSensorVariables.yellowThreshold) {
