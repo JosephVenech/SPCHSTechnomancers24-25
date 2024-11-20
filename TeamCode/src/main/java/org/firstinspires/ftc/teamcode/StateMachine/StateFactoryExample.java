@@ -5,6 +5,7 @@ import static java.lang.Math.abs;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -14,7 +15,8 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.armPositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.intakePositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.slidePositions;
-import org.firstinspires.ftc.teamcode.ObjectDeclarations.wristPositions;
+import org.firstinspires.ftc.teamcode.ObjectDeclarations.colorSensorVariables;
+import org.firstinspires.ftc.teamcode.RobotFunctions.ColorSensorFunctions;
 import org.firstinspires.ftc.teamcode.RobotFunctions.IntakeFunctions;
 import org.firstinspires.ftc.teamcode.RobotFunctions.MecanumFunctions;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Robot;
@@ -27,17 +29,13 @@ public class StateFactoryExample extends LinearOpMode {
 
     // Name each of the preset states
     enum States {
-        STARTING_POSITION,
         TRAVEL,
-        HANG_SPECIMEN,
         TRANSITION_TO_BASKET,
         SAMPLE_BASKET,
         TRANSITION_FROM_BASKET,
         HIGH_SAMPLE,
         RELEASE_SAMPLE,
         COLLECT_SAMPLE,
-        OBSERVATION_DECK,
-        COLLECT_SPECIMEN,
         CLIMB_STAGE_ONE,
         STAGE_ONE_LIFT
     }
@@ -50,8 +48,8 @@ public class StateFactoryExample extends LinearOpMode {
     public DcMotor rightBackDrive = null;
     public DcMotor slideMotor = null;
     public DcMotor armMotor = null;
-    public Servo wristServo = null;
     public Servo intakeServo = null;
+    public NormalizedColorSensor intakeColorSensor = null;
     public double driveTrainSpeed = 1;
 
         @Override
@@ -70,22 +68,19 @@ public class StateFactoryExample extends LinearOpMode {
 
             armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+            // Temporary set up in Robot hardware map
+            intakeColorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensor_color");
+            intakeColorSensor.setGain(colorSensorVariables.gain);
+
+
 
 
 
             // Define details of each state
             StateMachine machine = new StateMachineBuilder()
 
-                    // Starting position, not used during tele-op but to fit in 18-inch cube
                     // Every position is relative to starting position, starting position is hard
                     // defined using ResetPosition.java
-                    .state(States.STARTING_POSITION)
-                    .onEnter( () -> {
-                        slideMotor.setTargetPosition(slidePositions.startingPosition);
-                        armMotor.setTargetPosition(armPositions.startingPosition);
-                        wristServo.setPosition(wristPositions.sample);
-                    })
-                    .transition( () -> gamepad2.a, States.TRAVEL)
 
                     // Travel position that can easily access each other position
                     // Easy and stable for travel, each other position has to return here
@@ -93,16 +88,12 @@ public class StateFactoryExample extends LinearOpMode {
                     .onEnter( () -> {
                         slideMotor.setTargetPosition(slidePositions.travelPosition);
                         armMotor.setTargetPosition(armPositions.travelPosition);
-                        wristServo.setPosition(wristPositions.sample);
                         intakeServo.setPosition(intakePositions.intakeOff);
 
                         driveTrainSpeed = 0.8;
                     })
                     .transition( () -> gamepad2.y, States.TRANSITION_TO_BASKET)
-                    .transition( () -> gamepad2.x, States.HANG_SPECIMEN)
                     .transition( () -> gamepad2.left_bumper, States.HIGH_SAMPLE)
-                    .transition( () -> gamepad2.right_bumper, States.OBSERVATION_DECK)
-                    .transition( () -> gamepad2.b, States.COLLECT_SPECIMEN)
                     .transition( () -> gamepad2.dpad_up, States.CLIMB_STAGE_ONE)
 
                     // Intermediate stage, raises arm first then once arm is in position moves to
@@ -145,15 +136,6 @@ public class StateFactoryExample extends LinearOpMode {
                     })
                     .transition( () -> slideMotor.getCurrentPosition() < (slidePositions.travelPosition + 10), States.TRAVEL)
 
-                    // Angle wrist and go to preset position to place a specimen
-                    .state(States.HANG_SPECIMEN)
-                    .onEnter( () -> {
-                        slideMotor.setTargetPosition(slidePositions.hangSpecimen);
-                        armMotor.setTargetPosition(armPositions.hangSpecimen);
-                        wristServo.setPosition(wristPositions.specimen);
-                    })
-                    .transition( () ->  gamepad2.a, States.TRAVEL)
-
                     // Pickup sample position, higher up to not get caught on samples
                     // Use dpad to lower arm when you're above sample you want to pick up
                     .state(States.HIGH_SAMPLE)
@@ -178,22 +160,6 @@ public class StateFactoryExample extends LinearOpMode {
                         driveTrainSpeed = 0.5;
                     })
                     .transition( () ->  gamepad2.dpad_up, States.HIGH_SAMPLE)
-
-                    // Preset position to put samples in observation deck to give to human player
-                    .state(States.OBSERVATION_DECK)
-                    .onEnter( () -> {
-                        slideMotor.setTargetPosition(slidePositions.observationDeck);
-                        armMotor.setTargetPosition(armPositions.observationDeck);
-                    })
-                    .transition( () ->  gamepad2.a, States.TRAVEL)
-
-                    // Preset position to pick up a specimen
-                    .state(States.COLLECT_SPECIMEN)
-                    .onEnter( () -> {
-                        slideMotor.setTargetPosition(slidePositions.collectSpecimen);
-                        armMotor.setTargetPosition(armPositions.collectSpecimen);
-                    })
-                    .transition( () ->  gamepad2.a, States.TRAVEL)
 
                     // Set arm and slide in position allowing driver to drive to submersible to set
                     // up stage one climb
@@ -237,7 +203,8 @@ public class StateFactoryExample extends LinearOpMode {
             machine.start();
             runtime.reset();
             MecanumFunctions driveTrain = new MecanumFunctions();
-            IntakeFunctions intakeContol = new IntakeFunctions();
+            IntakeFunctions intakeControl = new IntakeFunctions();
+            ColorSensorFunctions colorSensorFunctions = new ColorSensorFunctions();
 
             // Automatically moves to travel position but only after you press play
             //slideMotor.setTargetPosition(slidePositions.travelPosition);
@@ -249,7 +216,9 @@ public class StateFactoryExample extends LinearOpMode {
                 // Call functions and pass inputs to handle intake and drivetrain
                 // NOTE: intake should be part of state machine
                 driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, driveTrainSpeed, telemetry);
-                intakeContol.intakeSpin(gamepad1,gamepad2, intakeServo, telemetry);
+                intakeControl.intakeSpin(gamepad1,gamepad2, intakeServo, telemetry);
+                colorSensorFunctions.colorSensorGetColor(intakeColorSensor, telemetry);
+
 
                 if (abs(slideMotor.getCurrentPosition() - slideMotor.getTargetPosition()) < 2){
                     slideMotor.setPower(0);
@@ -270,7 +239,6 @@ public class StateFactoryExample extends LinearOpMode {
                 telemetry.addData("Arm position", armMotor.getCurrentPosition());
                 telemetry.addData("Slide target position", slideMotor.getTargetPosition());
                 telemetry.addData("Arm target position", armMotor.getTargetPosition());
-                telemetry.addData("Wrist Position", wristServo.getPosition());
                 telemetry.addData("Intake Position", intakeServo.getPosition());
                 telemetry.addData("Current State", machine.getState());
                 telemetry.update();
@@ -291,7 +259,6 @@ public class StateFactoryExample extends LinearOpMode {
         armMotor = motors.get("armMotor");
 
         // Mapping Servos
-        wristServo = servos.get("wristServo");
         intakeServo = servos.get("intakeServo");
 
     }
