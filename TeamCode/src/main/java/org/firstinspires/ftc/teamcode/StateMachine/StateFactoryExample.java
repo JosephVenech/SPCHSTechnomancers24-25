@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.ObjectDeclarations.armPositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.intakePositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.slidePositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.colorSensorVariables;
+import org.firstinspires.ftc.teamcode.ObjectDeclarations.driveTrainVariables;
 import org.firstinspires.ftc.teamcode.RobotFunctions.ColorSensorFunctions;
 import org.firstinspires.ftc.teamcode.RobotFunctions.IntakeFunctions;
 import org.firstinspires.ftc.teamcode.RobotFunctions.MecanumFunctions;
@@ -50,7 +51,6 @@ public class StateFactoryExample extends LinearOpMode {
     public DcMotor armMotor = null;
     public Servo intakeServo = null;
     public NormalizedColorSensor intakeColorSensor = null;
-    public double driveTrainSpeed = 1;
 
         @Override
         public void runOpMode() throws InterruptedException {
@@ -90,7 +90,7 @@ public class StateFactoryExample extends LinearOpMode {
                         armMotor.setTargetPosition(armPositions.travelPosition);
                         intakeServo.setPosition(intakePositions.intakeOff);
 
-                        driveTrainSpeed = 0.8;
+                        driveTrainVariables.driveTrainSpeed = 0.8;
                     })
                     .transition( () -> gamepad2.y, States.TRANSITION_TO_BASKET)
                     .transition( () -> gamepad2.left_bumper, States.HIGH_SAMPLE)
@@ -115,7 +115,7 @@ public class StateFactoryExample extends LinearOpMode {
                         slideMotor.setTargetPosition(slidePositions.sampleBasket);
                         armMotor.setTargetPosition(armPositions.sampleBasket);
 
-                        driveTrainSpeed = 0.3;
+                        driveTrainVariables.driveTrainSpeed = 0.3;
                     })
                     //.transition( () -> gamepad2.right_trigger > 0, States.RELEASE_SAMPLE)
                     .transition( () ->  gamepad2.a, States.TRANSITION_FROM_BASKET)
@@ -144,7 +144,7 @@ public class StateFactoryExample extends LinearOpMode {
                         armMotor.setTargetPosition(armPositions.highSample);
                         //intakeServo.setPosition(intakePositions.intakeOn);
 
-                        driveTrainSpeed = 0.3;
+                        driveTrainVariables.driveTrainSpeed = 0.3;
                     })
                     .transition( () -> gamepad2.dpad_down, States.COLLECT_SAMPLE)
                     .transition( () -> gamepad2.a, States.TRAVEL)
@@ -157,7 +157,7 @@ public class StateFactoryExample extends LinearOpMode {
                         armMotor.setTargetPosition(armPositions.collectSample);
                         //intakeServo.setPosition(intakePositions.intakeOn);
 
-                        driveTrainSpeed = 0.5;
+                        driveTrainVariables.driveTrainSpeed = 0.5;
                     })
                     .transition( () ->  gamepad2.dpad_up, States.HIGH_SAMPLE)
 
@@ -215,7 +215,7 @@ public class StateFactoryExample extends LinearOpMode {
 
                 // Call functions and pass inputs to handle intake and drivetrain
                 // NOTE: intake should be part of state machine
-                driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, driveTrainSpeed, telemetry);
+                driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry);
                 intakeControl.intakeSpin(gamepad1,gamepad2, intakeServo, telemetry);
                 colorSensorFunctions.colorSensorGetColor(intakeColorSensor, telemetry);
 

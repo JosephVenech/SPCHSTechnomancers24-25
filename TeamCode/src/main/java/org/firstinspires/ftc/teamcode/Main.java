@@ -52,7 +52,7 @@ public class Main extends LinearOpMode {
         IntakeFunctions intakeControl = new IntakeFunctions();
         StateMachineFunctions stateMachine = new StateMachineFunctions();
 
-        StateMachine machine = stateMachine.CreateStateDefinitions(gamepad1, gamepad2, armMotor, slideMotor, slideSafety, telemetry);
+        StateMachine machine = stateMachine.CreateStateDefinitions(gamepad1, gamepad2, armMotor, slideMotor, intakeServo, slideSafety, telemetry);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -76,7 +76,7 @@ public class Main extends LinearOpMode {
         if (opModeIsActive()) {
             while(opModeIsActive()){
                 // Functions - Comments can be found in individual files
-                driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, driveTrainSpeed, telemetry);
+                driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry);
                 intakeControl.intakeAngle(gamepad1, gamepad2, wristServo, telemetry);
                 intakeControl.intakeSpin(gamepad1, gamepad2, intakeServo, telemetry);
 
