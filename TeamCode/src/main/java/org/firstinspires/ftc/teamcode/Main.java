@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
@@ -42,6 +43,8 @@ public class Main extends LinearOpMode {
     public NormalizedColorSensor intakeColorSensor = null;
     public String intakeSampleColor = "Null";
     public Boolean isBlueAlliance = false; // Default team is red alliance
+    public Boolean xButtonCurrentlyPressed = false;
+    public Boolean xButtonPreviouslyPressed = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -69,11 +72,20 @@ public class Main extends LinearOpMode {
         telemetry.update();
 
         while (!opModeIsActive()) {
+
             telemetry.addData("Press game pad 2 X to toggle team alliance", "Current: " + (isBlueAlliance ? "Red" : "Blue"));
 
-            if (gamepad2.x) {
-                isBlueAlliance = !isBlueAlliance;
+            xButtonCurrentlyPressed = gamepad2.x;
+
+            // If the button state is different than what it was, then act
+            if (xButtonCurrentlyPressed != xButtonPreviouslyPressed) {
+                // If the button is (now) down, then toggle alliance color
+                if (xButtonCurrentlyPressed) {
+                    isBlueAlliance = !isBlueAlliance;
+                }
             }
+            xButtonPreviouslyPressed = xButtonCurrentlyPressed;
+
         }
         waitForStart();
         runtime.reset();
