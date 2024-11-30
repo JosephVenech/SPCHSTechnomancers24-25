@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.StateMachine;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.sfdev.assembly.state.StateMachine;
@@ -28,7 +29,7 @@ public class StateMachineFunctions {
         STAGE_ONE_LIFT
     }
 
-    public StateMachine CreateStateDefinitions(Gamepad gamepad1, Gamepad gamepad2, DcMotor armMotor, DcMotor slideMotor, Servo intakeServo, TouchSensor slideSafety, Telemetry telemetry) {
+    public StateMachine CreateStateDefinitions(Gamepad gamepad1, Gamepad gamepad2, DcMotor armMotor, DcMotor slideMotor, Servo intakeServo, TouchSensor slideSafety, String intakeSampleColor, Telemetry telemetry) {
 
 
 
@@ -114,6 +115,8 @@ public class StateMachineFunctions {
 
                     driveTrainVariables.driveTrainSpeed = 0.5;
                 })
+                // Automatically transition to travel when intake has sample in it
+                .transition( () -> (intakeSampleColor != "Null"), States.TRAVEL)
                 .transition( () ->  gamepad2.dpad_up, States.HIGH_SAMPLE)
 
                 // Set arm and slide in position allowing driver to drive to submersible to set

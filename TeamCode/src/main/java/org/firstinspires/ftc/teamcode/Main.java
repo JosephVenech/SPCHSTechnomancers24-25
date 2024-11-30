@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.Math.abs;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -15,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotFunctions.IntakeFunctions;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Robot;
 import org.firstinspires.ftc.teamcode.RobotFunctions.MecanumFunctions;
-import org.firstinspires.ftc.teamcode.RobotFunctions.SlideFunctions;
+import org.firstinspires.ftc.teamcode.RobotFunctions.ColorSensorFunctions;
 import org.firstinspires.ftc.teamcode.StateMachine.StateMachineFunctions;
 
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.*;
@@ -36,7 +39,8 @@ public class Main extends LinearOpMode {
     public Servo wristServo = null;
     public Servo intakeServo = null;
     public TouchSensor slideSafety = null;
-    public double driveTrainSpeed = 1;
+    public NormalizedColorSensor intakeColorSensor = null;
+    public String intakeSampleColor = "Nulls";
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -48,11 +52,16 @@ public class Main extends LinearOpMode {
 
         mapVariables(motors, servos, sensors);
 
+        // TEMPORARY TODO: set up in Robot hardware map
+        intakeColorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensor_color");
+        intakeColorSensor.setGain(colorSensorVariables.gain);
+
         MecanumFunctions driveTrain = new MecanumFunctions();
         IntakeFunctions intakeControl = new IntakeFunctions();
         StateMachineFunctions stateMachine = new StateMachineFunctions();
+        ColorSensorFunctions colorSensorFunctions = new ColorSensorFunctions();
 
-        StateMachine machine = stateMachine.CreateStateDefinitions(gamepad1, gamepad2, armMotor, slideMotor, intakeServo, slideSafety, telemetry);
+        StateMachine machine = stateMachine.CreateStateDefinitions(gamepad1, gamepad2, armMotor, slideMotor, intakeServo, slideSafety, intakeSampleColor, telemetry);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -77,8 +86,23 @@ public class Main extends LinearOpMode {
             while(opModeIsActive()){
                 // Functions - Comments can be found in individual files
                 driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry);
-                intakeControl.intakeAngle(gamepad1, gamepad2, wristServo, telemetry);
                 intakeControl.intakeSpin(gamepad1, gamepad2, intakeServo, telemetry);
+
+                intakeSampleColor = colorSensorFunctions.colorSensorGetColor(intakeColorSensor, telemetry);
+
+
+                if (abs(slideMotor.getCurrentPosition() - slideMotor.getTargetPosition()) < 2){
+                    slideMotor.setPower(0);
+                }
+                else {
+                    slideMotor.setPower(slidePositions.motorSpeed);
+                }
+                if (abs(armMotor.getCurrentPosition() - armMotor.getTargetPosition()) < 2){
+                    armMotor.setPower(0);
+                }
+                else {
+                    armMotor.setPower(armPositions.motorSpeed);
+                }
 
 
                 machine.update();
