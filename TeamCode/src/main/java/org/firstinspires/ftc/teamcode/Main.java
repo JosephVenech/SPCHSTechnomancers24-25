@@ -40,7 +40,8 @@ public class Main extends LinearOpMode {
     public Servo intakeServo = null;
     public TouchSensor slideSafety = null;
     public NormalizedColorSensor intakeColorSensor = null;
-    public String intakeSampleColor = "Nulls";
+    public String intakeSampleColor = "Null";
+    public Boolean isBlueAlliance = false; // Default team is red alliance
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -67,6 +68,13 @@ public class Main extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
+        while (!opModeIsActive()) {
+            telemetry.addData("Press game pad 2 X to toggle team alliance", "Current: " + (isBlueAlliance ? "Red" : "Blue"));
+
+            if (gamepad2.x) {
+                isBlueAlliance = !isBlueAlliance;
+            }
+        }
         waitForStart();
         runtime.reset();
 
@@ -86,9 +94,10 @@ public class Main extends LinearOpMode {
             while(opModeIsActive()){
                 // Functions - Comments can be found in individual files
                 driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry);
-                intakeControl.intakeSpin(gamepad1, gamepad2, intakeServo, telemetry);
+                // intakeControl.intakeSpin(gamepad1, gamepad2, intakeServo, telemetry);
 
-                intakeSampleColor = colorSensorFunctions.colorSensorGetColor(intakeColorSensor, telemetry);
+                intakeSampleColor = colorSensorFunctions.colorSensorGetColor(intakeColorSensor, isBlueAlliance, telemetry);
+
 
 
                 if (abs(slideMotor.getCurrentPosition() - slideMotor.getTargetPosition()) < 2){

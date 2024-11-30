@@ -217,7 +217,7 @@ public class StateMachineLegacy extends LinearOpMode {
                 // NOTE: intake should be part of state machine
                 driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry);
                 intakeControl.intakeSpin(gamepad1,gamepad2, intakeServo, telemetry);
-                colorSensorFunctions.colorSensorGetColor(intakeColorSensor, telemetry);
+                //colorSensorFunctions.colorSensorGetColor(intakeColorSensor, telemetry);
 
 
                 if (abs(slideMotor.getCurrentPosition() - slideMotor.getTargetPosition()) < 2){

@@ -25,6 +25,7 @@ public class StateMachineFunctions {
         HIGH_SAMPLE,
         RELEASE_SAMPLE,
         COLLECT_SAMPLE,
+        EJECT_SAMPLE,
         CLIMB_STAGE_ONE,
         STAGE_ONE_LIFT
     }
@@ -73,16 +74,17 @@ public class StateMachineFunctions {
 
                     driveTrainVariables.driveTrainSpeed = 0.3;
                 })
-                //.transition( () -> gamepad2.right_trigger > 0, States.RELEASE_SAMPLE)
+                .transition( () -> gamepad2.right_trigger > 0, States.RELEASE_SAMPLE)
                 .transition( () ->  gamepad2.a, States.TRANSITION_FROM_BASKET)
 
                 // Releases sample before transitioning back to travel
                 // Timed transition, ADJUST FOR ACTUAL TIME REQUIRED TO RELEASE SAMPLE
                 .state(States.RELEASE_SAMPLE)
                 .onEnter( () -> {
-                    //intakeServo.setPosition(intakePositions.intakeReverse);
+                    intakeServo.setPosition(intakePositions.intakeReverse);
                 })
-                .transitionTimed(.75, States.TRANSITION_FROM_BASKET)
+                .transitionTimed(.75, States.TRANSITION_FROM_BASKET,
+                        () -> armMotor.setTargetPosition(armPositions.safeReturnTransition))
 
                 // Transition state: Closes slide before lowering arm to prevent bot from
                 // tipping over
@@ -98,7 +100,7 @@ public class StateMachineFunctions {
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.highSample);
                     armMotor.setTargetPosition(armPositions.highSample);
-                    //intakeServo.setPosition(intakePositions.intakeOn);
+                    intakeServo.setPosition(intakePositions.intakeOn);
 
                     driveTrainVariables.driveTrainSpeed = 0.3;
                 })
@@ -111,13 +113,20 @@ public class StateMachineFunctions {
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.collectSample);
                     armMotor.setTargetPosition(armPositions.collectSample);
-                    //intakeServo.setPosition(intakePositions.intakeOn);
+                    intakeServo.setPosition(intakePositions.intakeOn);
 
-                    driveTrainVariables.driveTrainSpeed = 0.5;
                 })
                 // Automatically transition to travel when intake has sample in it
+                .transition( () -> (intakeSampleColor == "EJECT_SAMPLE"), States.EJECT_SAMPLE)
                 .transition( () -> (intakeSampleColor != "Null"), States.TRAVEL)
                 .transition( () ->  gamepad2.dpad_up, States.HIGH_SAMPLE)
+
+                // Eject Sample if it is the wrong color
+                .state(States.EJECT_SAMPLE)
+                .onEnter( () -> {
+                    intakeServo.setPosition(intakePositions.intakeReverse);
+                })
+                .transitionTimed(0.7, States.HIGH_SAMPLE)
 
                 // Set arm and slide in position allowing driver to drive to submersible to set
                 // up stage one climb

@@ -16,7 +16,7 @@ public class ColorSensorFunctions {
 
     This is specifically used to determine what sample is held in the intake or if it is empty
      */
-    public String colorSensorGetColor (NormalizedColorSensor colorSensor, Telemetry telemetry) {
+    public String colorSensorGetColor (NormalizedColorSensor colorSensor, Boolean isBlueAlliance, Telemetry telemetry) {
 
         // Create variable for detected color and set default as null and empty
         String detectedColor = "Null";
@@ -35,7 +35,13 @@ public class ColorSensorFunctions {
             detectedColor = "Red";
         }
 
+        // If wrong alliance sample color EJECT sample
+        if ((detectedColor == "Red" && isBlueAlliance) || (detectedColor == "Blue" && !isBlueAlliance)) {
+            detectedColor = "EJECT_SAMPLE";
+        }
+
         telemetry.addData("Intake Sample Color", detectedColor);
         return detectedColor;
     }
+
 }
