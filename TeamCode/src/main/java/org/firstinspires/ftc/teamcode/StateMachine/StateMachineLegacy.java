@@ -29,7 +29,7 @@ import java.util.Map;
 public class StateMachineLegacy extends LinearOpMode {
 
     // Name each of the preset states
-    enum States {
+    private enum States {
         TRAVEL,
         TRANSITION_TO_BASKET,
         SAMPLE_BASKET,
