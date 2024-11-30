@@ -8,7 +8,6 @@ import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Main;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.armPositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.intakePositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.slidePositions;
@@ -19,14 +18,14 @@ public class StateMachineFunctions {
 
     public StateMachine CreateStateDefinitions(Gamepad gamepad1, Gamepad gamepad2, DcMotor armMotor, DcMotor slideMotor, Servo intakeServo, TouchSensor slideSafety, Telemetry telemetry) {
 
-        return new StateMachineBuilder() // returns the statemachine
+        return new StateMachineBuilder() // returns the state machine states
 
                 // Every position is relative to starting position, starting position is hard
                 // defined using ResetPosition.java
 
                 // Travel position that can easily access each other position
                 // Easy and stable for travel, each other position has to return here
-                .state(StateFactoryExample.States.TRAVEL)
+                .state(StateMachineLegacy.States.TRAVEL)
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.travelPosition);
                     armMotor.setTargetPosition(armPositions.travelPosition);
@@ -34,25 +33,25 @@ public class StateMachineFunctions {
 
                     driveTrainVariables.driveTrainSpeed = 0.8;
                 })
-                .transition( () -> gamepad2.y, StateFactoryExample.States.TRANSITION_TO_BASKET)
-                .transition( () -> gamepad2.left_bumper, StateFactoryExample.States.HIGH_SAMPLE)
-                .transition( () -> gamepad2.dpad_up, StateFactoryExample.States.CLIMB_STAGE_ONE)
+                .transition( () -> gamepad2.y, StateMachineLegacy.States.TRANSITION_TO_BASKET)
+                .transition( () -> gamepad2.left_bumper, StateMachineLegacy.States.HIGH_SAMPLE)
+                .transition( () -> gamepad2.dpad_up, StateMachineLegacy.States.CLIMB_STAGE_ONE)
 
                 // Intermediate stage, raises arm first then once arm is in position moves to
                 // next state where slide extends to necessary position.
                 // This is done to not have the bot tip over, keeping mass above bot instead of
                 // in front.
-                .state(StateFactoryExample.States.TRANSITION_TO_BASKET)
+                .state(StateMachineLegacy.States.TRANSITION_TO_BASKET)
                 .onEnter( () -> {
                     armMotor.setTargetPosition(armPositions.sampleBasket);
                 })
-                .transition( () -> armMotor.getCurrentPosition() < (armPositions.sampleBasket + 10), StateFactoryExample.States.SAMPLE_BASKET)
+                .transition( () -> armMotor.getCurrentPosition() < (armPositions.sampleBasket + 10), StateMachineLegacy.States.SAMPLE_BASKET)
                 // When encoder is within 10 ticks of target position it moves to next state
                 // Note: 10 is arbitrary but fairly close while not needing exact
 
                 // State to place samples in the high basket
                 // This state can transfer to low basket (NOT YET IMPLEMENTED) or back to travel
-                .state(StateFactoryExample.States.SAMPLE_BASKET)
+                .state(StateMachineLegacy.States.SAMPLE_BASKET)
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.sampleBasket);
                     armMotor.setTargetPosition(armPositions.sampleBasket);
@@ -60,27 +59,27 @@ public class StateMachineFunctions {
                     driveTrainVariables.driveTrainSpeed = 0.3;
                 })
                 //.transition( () -> gamepad2.right_trigger > 0, States.RELEASE_SAMPLE)
-                .transition( () ->  gamepad2.a, StateFactoryExample.States.TRANSITION_FROM_BASKET)
+                .transition( () ->  gamepad2.a, StateMachineLegacy.States.TRANSITION_FROM_BASKET)
 
                 // Releases sample before transitioning back to travel
                 // Timed transition, ADJUST FOR ACTUAL TIME REQUIRED TO RELEASE SAMPLE
-                .state(StateFactoryExample.States.RELEASE_SAMPLE)
+                .state(StateMachineLegacy.States.RELEASE_SAMPLE)
                 .onEnter( () -> {
                     //intakeServo.setPosition(intakePositions.intakeReverse);
                 })
-                .transitionTimed(.75, StateFactoryExample.States.TRANSITION_FROM_BASKET)
+                .transitionTimed(.75, StateMachineLegacy.States.TRANSITION_FROM_BASKET)
 
                 // Transition state: Closes slide before lowering arm to prevent bot from
                 // tipping over
-                .state(StateFactoryExample.States.TRANSITION_FROM_BASKET)
+                .state(StateMachineLegacy.States.TRANSITION_FROM_BASKET)
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.travelPosition);
                 })
-                .transition( () -> slideMotor.getCurrentPosition() < (slidePositions.travelPosition + 10), StateFactoryExample.States.TRAVEL)
+                .transition( () -> slideMotor.getCurrentPosition() < (slidePositions.travelPosition + 10), StateMachineLegacy.States.TRAVEL)
 
                 // Pickup sample position, higher up to not get caught on samples
                 // Use dpad to lower arm when you're above sample you want to pick up
-                .state(StateFactoryExample.States.HIGH_SAMPLE)
+                .state(StateMachineLegacy.States.HIGH_SAMPLE)
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.highSample);
                     armMotor.setTargetPosition(armPositions.highSample);
@@ -88,12 +87,12 @@ public class StateMachineFunctions {
 
                     driveTrainVariables.driveTrainSpeed = 0.3;
                 })
-                .transition( () -> gamepad2.dpad_down, StateFactoryExample.States.COLLECT_SAMPLE)
-                .transition( () -> gamepad2.a, StateFactoryExample.States.TRAVEL)
+                .transition( () -> gamepad2.dpad_down, StateMachineLegacy.States.COLLECT_SAMPLE)
+                .transition( () -> gamepad2.a, StateMachineLegacy.States.TRAVEL)
 
 
                 // Lower arm and spin intake to pick up sample
-                .state(StateFactoryExample.States.COLLECT_SAMPLE)
+                .state(StateMachineLegacy.States.COLLECT_SAMPLE)
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.collectSample);
                     armMotor.setTargetPosition(armPositions.collectSample);
@@ -101,25 +100,25 @@ public class StateMachineFunctions {
 
                     driveTrainVariables.driveTrainSpeed = 0.5;
                 })
-                .transition( () ->  gamepad2.dpad_up, StateFactoryExample.States.HIGH_SAMPLE)
+                .transition( () ->  gamepad2.dpad_up, StateMachineLegacy.States.HIGH_SAMPLE)
 
                 // Set arm and slide in position allowing driver to drive to submersible to set
                 // up stage one climb
-                .state(StateFactoryExample.States.CLIMB_STAGE_ONE)
+                .state(StateMachineLegacy.States.CLIMB_STAGE_ONE)
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.climbStageOne);
                     armMotor.setTargetPosition(armPositions.climbStageOne);
                 })
-                .transition( () -> gamepad2.dpad_down, StateFactoryExample.States.STAGE_ONE_LIFT)
-                .transition( () ->  gamepad2.a, StateFactoryExample.States.TRAVEL)
+                .transition( () -> gamepad2.dpad_down, StateMachineLegacy.States.STAGE_ONE_LIFT)
+                .transition( () ->  gamepad2.a, StateMachineLegacy.States.TRAVEL)
 
                 // Lowers arm to life bot off ground for stage one climb
-                .state(StateFactoryExample.States.STAGE_ONE_LIFT)
+                .state(StateMachineLegacy.States.STAGE_ONE_LIFT)
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.stageOneLift);
                     armMotor.setTargetPosition(armPositions.stageOneLift);
                 })
-                .transition( () ->  gamepad2.dpad_up, StateFactoryExample.States.CLIMB_STAGE_ONE)
+                .transition( () ->  gamepad2.dpad_up, StateMachineLegacy.States.CLIMB_STAGE_ONE)
 
                 .build();
     }

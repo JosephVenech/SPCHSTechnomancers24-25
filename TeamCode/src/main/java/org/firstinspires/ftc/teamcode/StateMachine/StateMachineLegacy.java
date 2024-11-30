@@ -25,8 +25,8 @@ import org.firstinspires.ftc.teamcode.RobotFunctions.Robot;
 import java.util.Map;
 
 
-@TeleOp(name="State Machine test", group="Code Structure")
-public class StateFactoryExample extends LinearOpMode {
+@TeleOp(name="State Machine Legacy", group="Code Structure")
+public class StateMachineLegacy extends LinearOpMode {
 
     // Name each of the preset states
     enum States {
