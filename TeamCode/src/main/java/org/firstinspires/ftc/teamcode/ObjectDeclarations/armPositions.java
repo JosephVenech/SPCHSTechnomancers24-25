@@ -18,12 +18,12 @@ public class armPositions {
     public static double motorSpeed = 0.95;
     public static int startingPosition = 0;
     public static int hangSpecimen = 4108;
-    public static int sampleBasket = 5001;
-    public static int travelPosition = 1982;
-    public static int highSample = 1222;
-    public static int collectSample = 843;
+    public static int sampleBasket = 3854;
+    public static int travelPosition = 2046;
+    public static int highSample = 1262;
+    public static int collectSample = 869;
     public static int observationDeck = 1684;
     public static int collectSpecimen = 2184;
-    public static int climbStageOne = 4026;
-    public static int stageOneLift = -1201;
+    public static int climbStageOne = 3174;
+    public static int stageOneLift = -336;
 }

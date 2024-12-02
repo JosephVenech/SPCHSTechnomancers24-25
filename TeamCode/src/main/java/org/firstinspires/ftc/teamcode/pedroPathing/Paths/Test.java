@@ -19,7 +19,7 @@ public class Test extends OpMode {
         follower = new Follower(hardwareMap);
 
 
-        left = new Path(new BezierLine(new Point(0, 0, Point.CARTESIAN), new Point(0, 40, Point.CARTESIAN)));
+        left = new Path(new BezierLine(new Point(0, 0, Point.CARTESIAN), new Point(0, 10, Point.CARTESIAN)));
 
         //    left = follower.pathBuilder().addPath(new BezierLine(new Point(0, 0, Point.CARTESIAN), new Point(10, 0, Point.CARTESIAN)));
         left.setConstantHeadingInterpolation(0);
@@ -30,9 +30,10 @@ public class Test extends OpMode {
     @Override
     public void loop(){
         follower.update();
-        if (!follower.isBusy()) {
+        /*if (!follower.isBusy()) {
             follower.followPath(left);
-        }
 
+        }
+        */
         }
     }

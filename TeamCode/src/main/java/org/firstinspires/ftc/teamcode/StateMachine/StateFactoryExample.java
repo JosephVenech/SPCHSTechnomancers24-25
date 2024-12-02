@@ -185,20 +185,20 @@ public class StateFactoryExample extends LinearOpMode {
             // Sets starting position and mode to run to position for arm and slide
             // Needed to make motors run to preset positions
             // Note: brake does not hard stop, only offers slight resistance
+            waitForStart();
 
-            slideMotor.setTargetPosition(slidePositions.startingPosition);
+            slideMotor.setTargetPosition(slidePositions.travelPosition);
             slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slideMotor.setPower(slidePositions.motorSpeed);
             slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-            armMotor.setTargetPosition(slidePositions.startingPosition);
+            armMotor.setTargetPosition(slidePositions.travelPosition);
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             armMotor.setPower(armPositions.motorSpeed);
             armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
 
-            waitForStart();
 
             machine.start();
             runtime.reset();
@@ -208,7 +208,7 @@ public class StateFactoryExample extends LinearOpMode {
 
             // Automatically moves to travel position but only after you press play
             //slideMotor.setTargetPosition(slidePositions.travelPosition);
-            armMotor.setTargetPosition(slidePositions.travelPosition);
+            //armMotor.setTargetPosition(slidePositions.travelPosition);
 
             while(opModeIsActive()) { // autonomous loop
                 machine.update(); // Checks for inputs and handles state machine presets
