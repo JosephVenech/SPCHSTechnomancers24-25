@@ -36,7 +36,7 @@ public class ColorSensorFunctions {
         }
 
         // If wrong alliance sample color EJECT sample
-        if ((detectedColor == "Red" && isBlueAlliance) || (detectedColor == "Blue" && !isBlueAlliance)) {
+        if ((detectedColor == "Red" && !isBlueAlliance) || (detectedColor == "Blue" && isBlueAlliance)) {
             detectedColor = "EJECT_SAMPLE";
         }
 

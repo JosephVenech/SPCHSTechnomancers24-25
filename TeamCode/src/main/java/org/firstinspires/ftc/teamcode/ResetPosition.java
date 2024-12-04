@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -29,7 +30,7 @@ public class ResetPosition extends LinearOpMode {
     public TouchSensor armSafety = null;
     public Servo wristServo = null;
     double motorSpeed = -0.8;
-    int defaultPosition = 5225;
+    int defaultPosition = 3918;
 
 
     @Override
@@ -37,7 +38,7 @@ public class ResetPosition extends LinearOpMode {
 
 
         armMotor = hardwareMap.get(DcMotor.class, "arm_motor");
-        armMotor.setDirection(DcMotor.Direction.REVERSE);
+        armMotor.setDirection(DcMotor.Direction.FORWARD);
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 

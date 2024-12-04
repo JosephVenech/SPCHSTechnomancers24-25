@@ -117,8 +117,8 @@ public class StateMachineFunctions {
 
                 })
                 // Automatically transition to travel when intake has sample in it
-                .transition( () -> (intakeSampleColor == "EJECT_SAMPLE"), States.EJECT_SAMPLE)
-                .transition( () -> (intakeSampleColor != "Null"), States.TRAVEL)
+                .transition( () -> (intakeSampleColor.equals("EJECT_SAMPLE")), States.EJECT_SAMPLE)
+                .transition( () -> (!intakeSampleColor.equals("Null")), States.TRAVEL)
                 .transition( () ->  gamepad2.dpad_up, States.HIGH_SAMPLE)
 
                 // Eject Sample if it is the wrong color
@@ -147,5 +147,6 @@ public class StateMachineFunctions {
                 .transition( () ->  gamepad2.dpad_up, States.CLIMB_STAGE_ONE)
 
                 .build();
+
     }
 }

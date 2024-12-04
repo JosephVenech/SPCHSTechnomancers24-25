@@ -85,6 +85,7 @@ public class Main extends LinearOpMode {
                 }
             }
             xButtonPreviouslyPressed = xButtonCurrentlyPressed;
+            telemetry.update();
 
         }
         waitForStart();
@@ -131,6 +132,8 @@ public class Main extends LinearOpMode {
 
                 // Telemetry data
                 telemetry.addData("Status", "Run Time: " + runtime.toString());
+                telemetry.addData("intake color sample reading", intakeSampleColor);
+                telemetry.addData("Current State", machine.getState());
                 telemetry.update();
             }
         }

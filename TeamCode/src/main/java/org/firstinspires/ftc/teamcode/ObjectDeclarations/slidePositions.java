@@ -18,12 +18,12 @@ public class slidePositions {
     public static double motorSpeed = 0.7;
     public static int startingPosition = 0;
     public static int hangSpecimen = 2720;
-    public static int sampleBasket = 5118;
-    public static int travelPosition = 331;
-    public static int highSample = 1673;
-    public static int collectSample = 1645;
+    public static int sampleBasket = 5424;
+    public static int travelPosition = 0;
+    public static int highSample = 2258;
+    public static int collectSample = 2252;
     public static int observationDeck = 2230;
     public static int collectSpecimen = 2230;
-    public static int climbStageOne = -170;
-    public static int stageOneLift = -188;
+    public static int climbStageOne = -228;
+    public static int stageOneLift = -211;
 }
