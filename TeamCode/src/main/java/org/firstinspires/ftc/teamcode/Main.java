@@ -45,6 +45,7 @@ public class Main extends LinearOpMode {
     public Boolean isBlueAlliance = false; // Default team is red alliance
     public Boolean xButtonCurrentlyPressed = false;
     public Boolean xButtonPreviouslyPressed = false;
+    public double intakeSampleState = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -65,7 +66,7 @@ public class Main extends LinearOpMode {
         StateMachineFunctions stateMachine = new StateMachineFunctions();
         ColorSensorFunctions colorSensorFunctions = new ColorSensorFunctions();
 
-        StateMachine machine = stateMachine.CreateStateDefinitions(gamepad1, gamepad2, armMotor, slideMotor, intakeServo, slideSafety, intakeSampleColor, telemetry);
+        StateMachine machine = stateMachine.CreateStateDefinitions(gamepad1, gamepad2, armMotor, slideMotor, intakeServo, slideSafety, intakeSampleColor, intakeSampleState, telemetry);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -124,6 +125,18 @@ public class Main extends LinearOpMode {
                 }
                 else {
                     armMotor.setPower(armPositions.motorSpeed);
+                }
+
+                if (intakeSampleColor.equals("EJECT_SAMPLE")) {
+                    telemetry.addData("Sample should be ejected", intakeSampleColor);
+                    intakeSampleState = 1;
+                }
+                else if (!intakeSampleColor.equals("Null")) {
+                    telemetry.addData("Should return to travel", intakeSampleColor);
+                    intakeSampleState = -1;
+                }
+                else {
+                    intakeSampleState = 0;
                 }
 
 

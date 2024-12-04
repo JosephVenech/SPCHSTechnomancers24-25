@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.StateMachine;
 
 import static java.lang.Math.abs;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -26,6 +27,7 @@ import java.util.Map;
 
 
 @TeleOp(name="State Machine Legacy", group="Code Structure")
+@Disabled
 public class StateMachineLegacy extends LinearOpMode {
 
     // Name each of the preset states

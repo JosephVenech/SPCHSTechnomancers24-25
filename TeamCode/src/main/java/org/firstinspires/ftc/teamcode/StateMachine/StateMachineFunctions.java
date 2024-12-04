@@ -30,7 +30,7 @@ public class StateMachineFunctions {
         STAGE_ONE_LIFT
     }
 
-    public StateMachine CreateStateDefinitions(Gamepad gamepad1, Gamepad gamepad2, DcMotor armMotor, DcMotor slideMotor, Servo intakeServo, TouchSensor slideSafety, String intakeSampleColor, Telemetry telemetry) {
+    public StateMachine CreateStateDefinitions(Gamepad gamepad1, Gamepad gamepad2, DcMotor armMotor, DcMotor slideMotor, Servo intakeServo, TouchSensor slideSafety, String intakeSampleColor, double intakeSampleState, Telemetry telemetry) {
 
 
 
@@ -117,8 +117,8 @@ public class StateMachineFunctions {
 
                 })
                 // Automatically transition to travel when intake has sample in it
-                .transition( () -> (intakeSampleColor.equals("EJECT_SAMPLE")), States.EJECT_SAMPLE)
-                .transition( () -> (!intakeSampleColor.equals("Null")), States.TRAVEL)
+                .transition( () -> intakeSampleState < 0, States.EJECT_SAMPLE)
+                .transition( () -> intakeSampleState > 0, States.TRAVEL)
                 .transition( () ->  gamepad2.dpad_up, States.HIGH_SAMPLE)
 
                 // Eject Sample if it is the wrong color
