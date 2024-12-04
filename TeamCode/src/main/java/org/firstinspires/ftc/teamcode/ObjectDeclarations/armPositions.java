@@ -21,7 +21,7 @@ public class armPositions {
     public static int sampleBasket = 3854;
     public static int safeReturnTransition = 3900;
     public static int travelPosition = 2046;
-    public static int highSample = 1200;
+    public static int highSample = 1300;
     public static int collectSample = 900;
     public static int observationDeck = 1684;
     public static int collectSpecimen = 2184;

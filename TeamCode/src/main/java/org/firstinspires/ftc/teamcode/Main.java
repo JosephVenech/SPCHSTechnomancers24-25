@@ -66,7 +66,7 @@ public class Main extends LinearOpMode {
         StateMachineFunctions stateMachine = new StateMachineFunctions();
         ColorSensorFunctions colorSensorFunctions = new ColorSensorFunctions();
 
-        StateMachine machine = stateMachine.CreateStateDefinitions(gamepad1, gamepad2, armMotor, slideMotor, intakeServo, slideSafety, intakeSampleColor, intakeSampleState, telemetry);
+        StateMachine machine = stateMachine.CreateStateDefinitions(gamepad1, gamepad2, armMotor, slideMotor, intakeServo, intakeColorSensor, isBlueAlliance, slideSafety, telemetry);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -129,14 +129,16 @@ public class Main extends LinearOpMode {
 
                 if (intakeSampleColor.equals("EJECT_SAMPLE")) {
                     telemetry.addData("Sample should be ejected", intakeSampleColor);
-                    intakeSampleState = 1;
+                    //machine.setState(StateMachineFunctions.States.HIGH_SAMPLE);
+                    // Thread.sleep(1000);
+                    // machine.setState(StateMachineFunctions.States.EJECT_SAMPLE);
                 }
                 else if (!intakeSampleColor.equals("Null")) {
                     telemetry.addData("Should return to travel", intakeSampleColor);
-                    intakeSampleState = -1;
+                    //machine.setState(StateMachineFunctions.States.TRAVEL);
                 }
                 else {
-                    intakeSampleState = 0;
+                    // intakeSampleState = 0;
                 }
 
 
@@ -145,7 +147,7 @@ public class Main extends LinearOpMode {
 
                 // Telemetry data
                 telemetry.addData("Status", "Run Time: " + runtime.toString());
-                telemetry.addData("intake color sample reading", intakeSampleColor);
+                telemetry.addData("intake color sample reading main", intakeSampleColor);
                 telemetry.addData("Current State", machine.getState());
                 telemetry.update();
             }

@@ -14,10 +14,12 @@ import org.firstinspires.ftc.teamcode.ObjectDeclarations.intakePositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.slidePositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.driveTrainVariables;
 
+import org.firstinspires.ftc.teamcode.RobotFunctions.ColorSensorFunctions;
 
 public class StateMachineFunctions {
+    ColorSensorFunctions colorSensorFunctions = new ColorSensorFunctions();
 
-    private enum States {
+    public enum States {
         TRAVEL,
         TRANSITION_TO_BASKET,
         SAMPLE_BASKET,
@@ -25,12 +27,13 @@ public class StateMachineFunctions {
         HIGH_SAMPLE,
         RELEASE_SAMPLE,
         COLLECT_SAMPLE,
-        EJECT_SAMPLE,
+        EJECT_SAMPLE_PHASE_ONE,
+        EJECT_SAMPLE_PHASE_TWO,
         CLIMB_STAGE_ONE,
         STAGE_ONE_LIFT
     }
 
-    public StateMachine CreateStateDefinitions(Gamepad gamepad1, Gamepad gamepad2, DcMotor armMotor, DcMotor slideMotor, Servo intakeServo, TouchSensor slideSafety, String intakeSampleColor, double intakeSampleState, Telemetry telemetry) {
+    public StateMachine CreateStateDefinitions(Gamepad gamepad1, Gamepad gamepad2, DcMotor armMotor, DcMotor slideMotor, Servo intakeServo, NormalizedColorSensor intakeColorSensor, Boolean isBlueAlliance, TouchSensor slideSafety, Telemetry telemetry) {
 
 
 
@@ -100,10 +103,12 @@ public class StateMachineFunctions {
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.highSample);
                     armMotor.setTargetPosition(armPositions.highSample);
-                    intakeServo.setPosition(intakePositions.intakeOn);
+                    intakeServo.setPosition(intakePositions.intakeOff);
 
                     driveTrainVariables.driveTrainSpeed = 0.3;
                 })
+                //.transition( () -> (armMotor.getCurrentPosition() >= armPositions.highSample - 10)  && intakeSampleColor.equals("EJECT_SAMPLE"),States.EJECT_SAMPLE)
+
                 .transition( () -> gamepad2.dpad_down, States.COLLECT_SAMPLE)
                 .transition( () -> gamepad2.a, States.TRAVEL)
 
@@ -116,13 +121,22 @@ public class StateMachineFunctions {
                     intakeServo.setPosition(intakePositions.intakeOn);
 
                 })
+                // .loop( () -> telemetry.addData("intake color sample reading state machine", intakeSampleState))
+
                 // Automatically transition to travel when intake has sample in it
-                .transition( () -> intakeSampleState < 0, States.EJECT_SAMPLE)
-                .transition( () -> intakeSampleState > 0, States.TRAVEL)
+                .transition( () -> (colorSensorFunctions.colorSensorGetColor(intakeColorSensor, isBlueAlliance, telemetry) == "EJECT_SAMPLE"), States.EJECT_SAMPLE_PHASE_ONE)
+                .transition( () -> (colorSensorFunctions.colorSensorGetColor(intakeColorSensor, isBlueAlliance, telemetry) != "Null" && colorSensorFunctions.colorSensorGetColor(intakeColorSensor, isBlueAlliance, telemetry) != "EJECT_SAMPLE"), States.TRAVEL)
                 .transition( () ->  gamepad2.dpad_up, States.HIGH_SAMPLE)
 
+                .state(States.EJECT_SAMPLE_PHASE_ONE)
+                .onEnter( () -> {
+                    armMotor.setTargetPosition(armPositions.highSample);
+                    intakeServo.setPosition(intakePositions.intakeOff);
+                })
+                .transition( () -> armMotor.getCurrentPosition() >= (armPositions.highSample - 3) , States.EJECT_SAMPLE_PHASE_TWO)
+
                 // Eject Sample if it is the wrong color
-                .state(States.EJECT_SAMPLE)
+                .state(States.EJECT_SAMPLE_PHASE_TWO)
                 .onEnter( () -> {
                     intakeServo.setPosition(intakePositions.intakeReverse);
                 })
