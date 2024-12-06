@@ -126,7 +126,7 @@ public class Main extends LinearOpMode {
                 else {
                     armMotor.setPower(armPositions.motorSpeed);
                 }
-//
+
                 if (intakeSampleColor.equals("EJECT_SAMPLE")) {
                     telemetry.addData("Sample should be ejected", intakeSampleColor);
                     //machine.setState(StateMachineFunctions.States.HIGH_SAMPLE);
