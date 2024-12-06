@@ -14,6 +14,8 @@ import org.firstinspires.ftc.teamcode.ObjectDeclarations.intakePositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.slidePositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.driveTrainVariables;
 
+import org.firstinspires.ftc.teamcode.RobotFunctions.ColorSensorFunctions;
+
 import java.util.Map;
 
 public class StateMachineFunctions {
@@ -31,9 +33,9 @@ public class StateMachineFunctions {
         STAGE_ONE_LIFT
     }
 
-    public org.firstinspires.ftc.teamcode.RobotFunctions.ColorSensorFunctions colorSensorFunctions = null;
+    public ColorSensorFunctions colorSensorFunctions = null;
 
-    public StateMachine CreateStateDefinitions(Gamepad gamepad1, Gamepad gamepad2, DcMotor armMotor, DcMotor slideMotor, Servo intakeServo, org.firstinspires.ftc.teamcode.RobotFunctions.ColorSensorFunctions cF, NormalizedColorSensor intakeColorSensor, Boolean isBlueAlliance, TouchSensor slideSafety, Telemetry telemetry) {
+    public StateMachine CreateStateDefinitions(Gamepad gamepad1, Gamepad gamepad2, DcMotor armMotor, DcMotor slideMotor, Servo intakeServo, ColorSensorFunctions cF, NormalizedColorSensor intakeColorSensor, Boolean isBlueAlliance, TouchSensor slideSafety, Telemetry telemetry) {
         colorSensorFunctions = cF;
 
         return new StateMachineBuilder() // returns the state machine states
