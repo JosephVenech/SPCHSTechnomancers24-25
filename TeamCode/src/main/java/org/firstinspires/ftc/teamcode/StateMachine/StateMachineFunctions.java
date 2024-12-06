@@ -114,7 +114,7 @@ public class StateMachineFunctions {
                 .transition( () -> gamepad2.dpad_down, States.COLLECT_SAMPLE)
                 .transition( () -> gamepad2.a, States.TRAVEL)
 
-
+//
                 // Lower arm and spin intake to pick up sample
                 .state(States.COLLECT_SAMPLE)
                 .onEnter( () -> {
