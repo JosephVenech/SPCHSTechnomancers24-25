@@ -14,11 +14,9 @@ import org.firstinspires.ftc.teamcode.ObjectDeclarations.intakePositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.slidePositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.driveTrainVariables;
 
-import org.firstinspires.ftc.teamcode.RobotFunctions.ColorSensorFunctions;
+import java.util.Map;
 
 public class StateMachineFunctions {
-    ColorSensorFunctions colorSensorFunctions = new ColorSensorFunctions();
-
     public enum States {
         TRAVEL,
         TRANSITION_TO_BASKET,
@@ -33,9 +31,10 @@ public class StateMachineFunctions {
         STAGE_ONE_LIFT
     }
 
-    public StateMachine CreateStateDefinitions(Gamepad gamepad1, Gamepad gamepad2, DcMotor armMotor, DcMotor slideMotor, Servo intakeServo, NormalizedColorSensor intakeColorSensor, Boolean isBlueAlliance, TouchSensor slideSafety, Telemetry telemetry) {
+    public org.firstinspires.ftc.teamcode.RobotFunctions.ColorSensorFunctions colorSensorFunctions = null;
 
-
+    public StateMachine CreateStateDefinitions(Gamepad gamepad1, Gamepad gamepad2, DcMotor armMotor, DcMotor slideMotor, Servo intakeServo, org.firstinspires.ftc.teamcode.RobotFunctions.ColorSensorFunctions cF, NormalizedColorSensor intakeColorSensor, Boolean isBlueAlliance, TouchSensor slideSafety, Telemetry telemetry) {
+        colorSensorFunctions = cF;
 
         return new StateMachineBuilder() // returns the state machine states
 
@@ -124,8 +123,8 @@ public class StateMachineFunctions {
                 // .loop( () -> telemetry.addData("intake color sample reading state machine", intakeSampleState))
 
                 // Automatically transition to travel when intake has sample in it
-                .transition( () -> (colorSensorFunctions.colorSensorGetColor(intakeColorSensor, isBlueAlliance, telemetry) == "EJECT_SAMPLE"), States.EJECT_SAMPLE_PHASE_ONE)
-                .transition( () -> (colorSensorFunctions.colorSensorGetColor(intakeColorSensor, isBlueAlliance, telemetry) != "Null" && colorSensorFunctions.colorSensorGetColor(intakeColorSensor, isBlueAlliance, telemetry) != "EJECT_SAMPLE"), States.TRAVEL)
+                .transition( () -> (GetSampleColor(intakeColorSensor, isBlueAlliance, telemetry).equals("EJECT_SAMPLE")), States.EJECT_SAMPLE_PHASE_ONE)
+                .transition( () -> (!GetSampleColor(intakeColorSensor, isBlueAlliance, telemetry).equals("Null") && !GetSampleColor(intakeColorSensor, isBlueAlliance, telemetry).equals("EJECT_SAMPLE")), States.TRAVEL)
                 .transition( () ->  gamepad2.dpad_up, States.HIGH_SAMPLE)
 
                 .state(States.EJECT_SAMPLE_PHASE_ONE)
@@ -140,7 +139,7 @@ public class StateMachineFunctions {
                 .onEnter( () -> {
                     intakeServo.setPosition(intakePositions.intakeReverse);
                 })
-                .transitionTimed(0.7, States.HIGH_SAMPLE)
+                .transitionTimed(0.6, States.HIGH_SAMPLE)
 
                 // Set arm and slide in position allowing driver to drive to submersible to set
                 // up stage one climb
@@ -163,4 +162,5 @@ public class StateMachineFunctions {
                 .build();
 
     }
+    public String GetSampleColor(NormalizedColorSensor intakeColorSensor, Boolean isBlueAlliance, Telemetry telemetry) { return colorSensorFunctions.colorSensorGetColor(intakeColorSensor, isBlueAlliance, telemetry); }
 }

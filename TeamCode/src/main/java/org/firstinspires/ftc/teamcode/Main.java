@@ -66,7 +66,7 @@ public class Main extends LinearOpMode {
         StateMachineFunctions stateMachine = new StateMachineFunctions();
         ColorSensorFunctions colorSensorFunctions = new ColorSensorFunctions();
 
-        StateMachine machine = stateMachine.CreateStateDefinitions(gamepad1, gamepad2, armMotor, slideMotor, intakeServo, intakeColorSensor, isBlueAlliance, slideSafety, telemetry);
+        StateMachine machine = stateMachine.CreateStateDefinitions(gamepad1, gamepad2, armMotor, slideMotor, intakeServo, colorSensorFunctions, intakeColorSensor, isBlueAlliance, slideSafety, telemetry);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
