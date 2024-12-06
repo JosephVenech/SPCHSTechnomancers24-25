@@ -53,6 +53,7 @@ public class StateMachineFunctions {
 
                     driveTrainVariables.driveTrainSpeed = 0.8;
                 })
+                .transition( () -> (GetSampleColor(intakeColorSensor, isBlueAlliance, telemetry).equals("EJECT_SAMPLE")), States.EJECT_SAMPLE_PHASE_ONE)
                 .transition( () -> gamepad2.y, States.TRANSITION_TO_BASKET)
                 .transition( () -> gamepad2.left_bumper, States.HIGH_SAMPLE)
                 .transition( () -> gamepad2.dpad_up, States.CLIMB_STAGE_ONE)
@@ -120,7 +121,6 @@ public class StateMachineFunctions {
                     slideMotor.setTargetPosition(slidePositions.collectSample);
                     armMotor.setTargetPosition(armPositions.collectSample);
                     intakeServo.setPosition(intakePositions.intakeOn);
-
                 })
                 // .loop( () -> telemetry.addData("intake color sample reading state machine", intakeSampleState))
 
@@ -134,7 +134,8 @@ public class StateMachineFunctions {
                     armMotor.setTargetPosition(armPositions.highSample);
                     intakeServo.setPosition(intakePositions.intakeOff);
                 })
-                .transition( () -> armMotor.getCurrentPosition() >= (armPositions.highSample - 3) , States.EJECT_SAMPLE_PHASE_TWO)
+                // .transition( () -> armMotor.getCurrentPosition() >= (armPositions.highSample - 10), States.EJECT_SAMPLE_PHASE_TWO)
+                .transitionTimed(0.3, States.EJECT_SAMPLE_PHASE_TWO)
 
                 // Eject Sample if it is the wrong color
                 .state(States.EJECT_SAMPLE_PHASE_TWO)
