@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import static java.lang.Math.abs;
 
+import android.text.method.Touch;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -12,6 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 
 import java.util.Map;
 
@@ -53,20 +56,14 @@ public class Main extends LinearOpMode {
         Robot robot = new Robot(hardwareMap);
         Map<String, DcMotor> motors = robot.getDriveDictionary();
         Map<String, Servo> servos = robot.getServoDictionary();
-        Map<String, TouchSensor> sensors = robot.getSensorDictionary();
+        Map<String, String> misc = robot.getMiscDictionary();
 
-        mapVariables(motors, servos, sensors);
-
-        // TEMPORARY TODO: set up in Robot hardware map
-        intakeColorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensor_color");
-        intakeColorSensor.setGain(colorSensorVariables.gain);
+        mapVariables(motors, servos, misc);
 
         MecanumFunctions driveTrain = new MecanumFunctions();
         IntakeFunctions intakeControl = new IntakeFunctions();
         StateMachineFunctions stateMachine = new StateMachineFunctions();
         ColorSensorFunctions colorSensorFunctions = new ColorSensorFunctions();
-
-        StateMachine machine = stateMachine.CreateStateDefinitions(gamepad1, gamepad2, armMotor, slideMotor, intakeServo, colorSensorFunctions, intakeColorSensor, isBlueAlliance, slideSafety, telemetry);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -92,6 +89,8 @@ public class Main extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        StateMachine machine = stateMachine.CreateStateDefinitions(gamepad1, gamepad2, armMotor, slideMotor, intakeServo, colorSensorFunctions, intakeColorSensor, isBlueAlliance, slideSafety, telemetry);
+
         slideMotor.setTargetPosition(slidePositions.travelPosition);
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideMotor.setPower(slidePositions.motorSpeed);
@@ -111,8 +110,6 @@ public class Main extends LinearOpMode {
                 // intakeControl.intakeSpin(gamepad1, gamepad2, intakeServo, telemetry);
 
                 intakeSampleColor = colorSensorFunctions.colorSensorGetColor(intakeColorSensor, isBlueAlliance, telemetry);
-
-
 
                 if (abs(slideMotor.getCurrentPosition() - slideMotor.getTargetPosition()) < 2){
                     slideMotor.setPower(0);
@@ -157,7 +154,7 @@ public class Main extends LinearOpMode {
     public void mapVariables(
             Map<java.lang.String, DcMotor> motors,
             Map<java.lang.String, Servo> servos,
-            Map<java.lang.String, TouchSensor> sensors
+            Map<java.lang.String, String> misc
     ) {
         // Mapping Motors
         leftFrontDrive = motors.get("leftFrontDrive");
@@ -171,8 +168,12 @@ public class Main extends LinearOpMode {
         wristServo = servos.get("wristServo");
         intakeServo = servos.get("intakeServo");
 
-        // Mapping TouchSensors
-        slideSafety = sensors.get("slideSafety");
+        /*
+        Mapping Miscellaneous
+        (since miscellaneous maps have multiple types of objects, we need to send them as strings and map them here
+        */
+        slideSafety = hardwareMap.get(TouchSensor.class, misc.get("slideSafety"));
+        intakeColorSensor = hardwareMap.get(NormalizedColorSensor.class, misc.get("intakeColorSensor"));
     }
 }
 
