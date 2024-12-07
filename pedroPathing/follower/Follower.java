@@ -168,8 +168,8 @@ public class Follower {
 
         // TODO: Make sure that this is the direction your motors need to be reversed in.
         //Done
-        leftFront.setDirection(DcMotor.Direction.REVERSE);
-        leftRear.setDirection(DcMotor.Direction.REVERSE);
+        leftFront.setDirection(DcMotor.Direction.FORWARD); // was reverse
+        leftRear.setDirection(DcMotor.Direction.FORWARD); // was reverse
         rightFront.setDirection(DcMotor.Direction.FORWARD);
         rightRear.setDirection(DcMotor.Direction.FORWARD);
 
