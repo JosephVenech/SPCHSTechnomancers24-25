@@ -46,9 +46,11 @@ public class StraightBackAndForth extends OpMode {
     @Override
     public void init() {
         follower = new Follower(hardwareMap);
+        follower.setMaxPower(1);
 
         forwards = new Path(new BezierLine(new Point(0,0, Point.CARTESIAN), new Point(DISTANCE,0, Point.CARTESIAN)));
         forwards.setConstantHeadingInterpolation(0);
+
         backwards = new Path(new BezierLine(new Point(DISTANCE,0, Point.CARTESIAN), new Point(0,0, Point.CARTESIAN)));
         backwards.setConstantHeadingInterpolation(0);
 
