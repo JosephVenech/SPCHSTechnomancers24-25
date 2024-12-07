@@ -4,6 +4,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+
+import org.firstinspires.ftc.teamcode.ObjectDeclarations.colorSensorVariables;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,11 +20,12 @@ public class Robot {
     public DcMotor armMotor;
     public Servo wristServo;
     public Servo intakeServo;
-    public TouchSensor slideSafety;
+    public String slideSafety;
+    public String intakeColorSensor;
 
     public Map<String, DcMotor> driveDictionary = new HashMap<>();
     public Map<String, Servo> servoDictionary = new HashMap<>();
-    public Map<String, TouchSensor> sensorDictionary = new HashMap<>();
+    public Map<String, String> miscDictionary = new HashMap<>();
 
     public Robot(HardwareMap hardwareMap) {
         appendDictionaries(hardwareMap);
@@ -29,6 +33,7 @@ public class Robot {
 
         setServos();
         setMotors();
+        setMisc(hardwareMap);
     }
 
     public void appendDictionaries(HardwareMap hardwareMap) {
@@ -42,7 +47,8 @@ public class Robot {
         servoDictionary.put("wristServo", hardwareMap.get(Servo.class, "wrist_servo"));
         servoDictionary.put("intakeServo", hardwareMap.get(Servo.class, "intake_servo"));
 
-        sensorDictionary.put("slideSafety", hardwareMap.get(TouchSensor.class, "slide_safety"));
+        miscDictionary.put("slideSafety", "slide_safety");
+        miscDictionary.put("intakeColorSensor", "sensor_color");
     }
 
     public void mapVariables() {
@@ -56,7 +62,8 @@ public class Robot {
         wristServo = servoDictionary.get("wristServo");
         intakeServo = servoDictionary.get("intakeServo");
 
-        slideSafety = sensorDictionary.get("slideSafety");
+        slideSafety = miscDictionary.get("slideSafety");
+        intakeColorSensor = miscDictionary.get("intakeColorSensor");
     }
 
     public void setMotors() {
@@ -73,8 +80,6 @@ public class Robot {
         leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -87,19 +92,17 @@ public class Robot {
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
-
     public void setServos() {
         wristServo.setPosition(0.3);
         intakeServo.setPosition(0.5);
     }
 
-    public Map<String, DcMotor> getDriveDictionary() {
-        return driveDictionary;
+    public void setMisc(HardwareMap hardwareMap) {
+        NormalizedColorSensor temp_intakeColorSensor = hardwareMap.get(NormalizedColorSensor.class, miscDictionary.get("intakeColorSensor"));
+        temp_intakeColorSensor.setGain(colorSensorVariables.gain);
     }
-    public Map<String, Servo> getServoDictionary() {
-        return servoDictionary;
-    }
-    public Map<String, TouchSensor> getSensorDictionary() {
-        return sensorDictionary;
-    }
+
+    public Map<String, DcMotor> getDriveDictionary() { return driveDictionary; }
+    public Map<String, Servo> getServoDictionary() { return servoDictionary; }
+    public Map<String, String> getMiscDictionary() { return miscDictionary; }
 }

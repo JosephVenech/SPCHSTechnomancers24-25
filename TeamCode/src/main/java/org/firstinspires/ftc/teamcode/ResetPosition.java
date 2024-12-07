@@ -3,9 +3,14 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import java.lang.Math;
+
+
+import org.firstinspires.ftc.teamcode.ObjectDeclarations.armPositions;
 
 /*
 This file runs arm motor backwards until it hits a touch sensor, then it zeroes out the encoder in
@@ -22,10 +27,13 @@ public class ResetPosition extends LinearOpMode {
 
     public ElapsedTime runtime = new ElapsedTime();
     public DcMotor armMotor = null;
+    public DcMotor slideMotor = null;
     public TouchSensor armSafety = null;
+    public TouchSensor slideSafety = null;
     public Servo wristServo = null;
     double motorSpeed = -0.8;
-    int defaultPosition = 3918;
+    double slideSpeed = 0.5;
+    int defaultPosition = 3750;
 
 
     @Override
@@ -37,7 +45,13 @@ public class ResetPosition extends LinearOpMode {
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        slideMotor = hardwareMap.get(DcMotor.class, "slide_motor");
+        slideMotor.setDirection(DcMotor.Direction.REVERSE);
+        slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         armSafety = hardwareMap.get(TouchSensor.class, "arm_safety");
+        slideSafety = hardwareMap.get(TouchSensor.class, "slide_safety");
 
         wristServo = hardwareMap.get(Servo.class, "wrist_servo");
         wristServo.setPosition(0.3);
@@ -57,6 +71,15 @@ public class ResetPosition extends LinearOpMode {
         }
 
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        while (!slideSafety.isPressed()){
+            armMotor.setPower(slideSpeed);
+            telemetry.addData("Slide position", armMotor.getCurrentPosition());
+            telemetry.update();
+        }
+
+        slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(-motorSpeed);
 
