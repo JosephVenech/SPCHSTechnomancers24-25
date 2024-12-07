@@ -25,18 +25,12 @@ public class ColorSensorFunctions {
         NormalizedRGBA colors = colorSensor.getNormalizedColors();
 
         // Compare to thresholds to detect color
-        if (colors.blue > colorSensorVariables.blueThreshold) {
-            detectedColor = "Blue";
-        }
-        else if (colors.green >= colorSensorVariables.yellowThreshold) {
-            detectedColor = "Yellow";
-        }
-        else if (colors.red >= colorSensorVariables.redThreshold) {
-            detectedColor = "Red";
-        }
+        if (colors.blue > colorSensorVariables.blueThreshold) { detectedColor = "Blue"; }
+        else if (colors.green >= colorSensorVariables.yellowThreshold) { detectedColor = "Yellow"; }
+        else if (colors.red >= colorSensorVariables.redThreshold) { detectedColor = "Red"; }
 
         // If wrong alliance sample color EJECT sample
-        if ((detectedColor == "Red" && !isBlueAlliance) || (detectedColor == "Blue" && isBlueAlliance)) {
+        if ((detectedColor.equals("Red") && !isBlueAlliance) || (detectedColor.equals("Blue") && isBlueAlliance)) {
             detectedColor = "EJECT_SAMPLE";
         }
 

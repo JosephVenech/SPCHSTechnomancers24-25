@@ -44,9 +44,9 @@ public class RiverMain extends LinearOpMode {
         Robot robot = new Robot(hardwareMap);
         Map<String, DcMotor> motors = robot.getDriveDictionary();
         Map<String, Servo> servos = robot.getServoDictionary();
-        Map<String, TouchSensor> sensors = robot.getSensorDictionary();
+        Map<String, String> misc = robot.getMiscDictionary();
 
-        mapVariables(motors, servos, sensors);
+        mapVariables(motors, servos, misc);
 
         leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -116,7 +116,7 @@ public class RiverMain extends LinearOpMode {
     public void mapVariables(
                 Map<java.lang.String, DcMotor> motors,
                 Map<java.lang.String, Servo> servos,
-                Map<java.lang.String, TouchSensor> sensors
+                Map<java.lang.String, String> sensors
     ) {
             // Mapping Motors
             leftFrontDrive = motors.get("leftFrontDrive");

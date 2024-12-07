@@ -51,7 +51,7 @@ public class StateMachineFunctions {
                     armMotor.setTargetPosition(armPositions.travelPosition);
                     intakeServo.setPosition(intakePositions.intakeOff);
 
-                    driveTrainVariables.driveTrainSpeed = 0.8;
+                    driveTrainVariables.driveTrainSpeedMultiplier = 0.8;
                 })
                 .transition( () -> (GetSampleColor(intakeColorSensor, isBlueAlliance, telemetry).equals("EJECT_SAMPLE")), States.EJECT_SAMPLE_PHASE_ONE)
                 .transition( () -> gamepad2.y, States.TRANSITION_TO_BASKET)
@@ -77,7 +77,7 @@ public class StateMachineFunctions {
                     slideMotor.setTargetPosition(slidePositions.sampleBasket);
                     armMotor.setTargetPosition(armPositions.sampleBasket);
 
-                    driveTrainVariables.driveTrainSpeed = 0.3;
+                    driveTrainVariables.driveTrainSpeedMultiplier = 0.3;
                 })
                 .transition( () -> gamepad2.right_trigger > 0, States.RELEASE_SAMPLE)
                 .transition( () ->  gamepad2.a, States.TRANSITION_FROM_BASKET)
@@ -107,7 +107,7 @@ public class StateMachineFunctions {
                     armMotor.setTargetPosition(armPositions.highSample);
                     intakeServo.setPosition(intakePositions.intakeOff);
 
-                    driveTrainVariables.driveTrainSpeed = 0.3;
+                    driveTrainVariables.driveTrainSpeedMultiplier = 0.3;
                 })
                 //.transition( () -> (armMotor.getCurrentPosition() >= armPositions.highSample - 10)  && intakeSampleColor.equals("EJECT_SAMPLE"),States.EJECT_SAMPLE)
 

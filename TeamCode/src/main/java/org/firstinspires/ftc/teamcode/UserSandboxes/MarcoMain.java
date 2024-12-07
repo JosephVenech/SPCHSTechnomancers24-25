@@ -1,20 +1,19 @@
 package org.firstinspires.ftc.teamcode.UserSandboxes;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.teamcode.ObjectDeclarations.driveTrainVariables;
 
-abstract class driveTrainFunctions {
-    abstract double[] driveTrainMath(double left_stick_y, double left_stick_x, double right_stick_x);
-}
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-class driveFunctions extends driveTrainFunctions {
+// Call to update current motor power
+public class MarcoMain {
+    boolean movingForward;
 
-    // Calculates the math for the joystick
-    double[] driveTrainMath(double left_stick_y, double left_stick_x, double right_stick_x) {
-        double max;
-
+    // Takes joystick inputs and calculates math for drivetrain motor power
+    public void driveTrainMath(double left_stick_y, double left_stick_x, double right_stick_x, ElapsedTime runtime) {
+        double max_speed;
         // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
         // Note: pushing stick forward gives negative value (-left_stick_y) = forward
         // Possible future change: replace game-pad inputs with inputs into function for
@@ -22,93 +21,77 @@ class driveFunctions extends driveTrainFunctions {
 
         // Combine the joystick requests for each axis-motion to determine each wheel's power.
         // Set up a variable for each drive wheel to save the power level for telemetry.
-        double leftFrontPower  = -left_stick_y + left_stick_x + right_stick_x;
-        double rightFrontPower = -left_stick_y - left_stick_x - right_stick_x;
-        double leftBackPower   = -left_stick_y - left_stick_x + right_stick_x;
-        double rightBackPower  = -left_stick_y + left_stick_x - right_stick_x;
+        double axial   = -left_stick_y;  // Note: pushing stick forward gives negative value
+        double lateral =  left_stick_x;
+        double yaw     =  right_stick_x;
+
+        // Combine the joystick requests for each axis-motion to determine each wheel's power.
+        // Set up a variable for each drive wheel to save the power level for telemetry.
+        double leftFrontPower  = axial - lateral + yaw;
+        double rightFrontPower = axial - lateral - yaw;
+        double leftBackPower   = axial + lateral + yaw;
+        double rightBackPower  = axial + lateral - yaw;
 
         // Normalize the values so no wheel power exceeds 100%
         // This ensures that the robot maintains the desired motion.
-        max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
-        max = Math.max(max, Math.abs(leftBackPower));
-        max = Math.max(max, Math.abs(rightBackPower));
+        max_speed = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+        max_speed = Math.max(max_speed, Math.abs(leftBackPower));
+        max_speed = Math.max(max_speed, Math.abs(rightBackPower));
 
-        if (max > 1.0) {
-            leftFrontPower  /= max;
-            rightFrontPower /= max;
-            leftBackPower   /= max;
-            rightBackPower  /= max;
+        movingForward = (axial < 0);
+        driveTrainVariables.current_time = runtime.milliseconds();
+
+        // Update acceleration depending on the last update - current time
+        if (driveTrainVariables.last_update - driveTrainVariables.current_time >= driveTrainVariables.update_period) {
+            driveTrainVariables.last_update = driveTrainVariables.current_time;
+
+            if (movingForward) {
+                // Gradually increase acceleration up to the max forward power
+                if (driveTrainVariables.driveTrainAcceleration < driveTrainVariables.max_forward_power) {
+                    driveTrainVariables.driveTrainAcceleration += driveTrainVariables.speed_increment;
+                    if (driveTrainVariables.driveTrainAcceleration > driveTrainVariables.max_forward_power) {
+                        driveTrainVariables.driveTrainAcceleration = driveTrainVariables.max_forward_power;
+                    }
+                }
+            } else {
+                // Gradually decrease acceleration down to the max reverse power
+                if (driveTrainVariables.driveTrainAcceleration > driveTrainVariables.max_reverse_power) {
+                    driveTrainVariables.driveTrainAcceleration -= driveTrainVariables.speed_increment;
+                    if (driveTrainVariables.driveTrainAcceleration < driveTrainVariables.max_reverse_power) {
+                        driveTrainVariables.driveTrainAcceleration = driveTrainVariables.max_reverse_power;
+                    }
+                }
+            }
         }
 
-        // Send calculated power to wheels
-        // leftFrontDrive.setPower(leftFrontPower);
-        // rightFrontDrive.setPower(rightFrontPower);
-        // leftBackDrive.setPower(leftBackPower);
-        // rightBackDrive.setPower(rightBackPower);
+        // Sets all powers to max power if they are above the max power
+        if (max_speed > driveTrainVariables.max_forward_power) {
+            leftFrontPower /= max_speed;
+            rightFrontPower /= max_speed;
+            leftBackPower /= max_speed;
+            rightBackPower /= max_speed;
+        }
 
-        double[] motorPower;
-        motorPower = new double[4];
-        motorPower[0] = leftFrontPower;
-        motorPower[1] = rightFrontPower;
-        motorPower[2] = leftBackPower;
-        motorPower[3] = rightBackPower;
-
-        return motorPower;
+        // Set driveTrainMotorPower to the new powers
+        driveTrainVariables.driveTrainMotorPower[0] = (leftFrontPower * driveTrainVariables.driveTrainAcceleration) * driveTrainVariables.driveTrainSpeedMultiplier;
+        driveTrainVariables.driveTrainMotorPower[1] = (rightFrontPower * driveTrainVariables.driveTrainAcceleration) * driveTrainVariables.driveTrainSpeedMultiplier;
+        driveTrainVariables.driveTrainMotorPower[2] = (leftBackPower * driveTrainVariables.driveTrainAcceleration) * driveTrainVariables.driveTrainSpeedMultiplier;
+        driveTrainVariables.driveTrainMotorPower[3] = (rightBackPower * driveTrainVariables.driveTrainAcceleration) * driveTrainVariables.driveTrainSpeedMultiplier;
     }
-}
 
-@TeleOp(name="Marco Main", group="User Sandboxes")
-public class MarcoMain extends LinearOpMode {
-    // Declare OpMode members for each of the 4 motors.
-    public ElapsedTime runtime = new ElapsedTime();
-    public DcMotor leftFrontDrive = null;
-    public DcMotor leftBackDrive = null;
-    public DcMotor rightFrontDrive = null;
-    public DcMotor rightBackDrive = null;
+    // Assigns power to the motors
+    public void fullDriveTrainControl(Gamepad gamepad1, Gamepad gamepad2, DcMotor leftFrontDrive, DcMotor leftBackDrive, DcMotor rightFrontDrive, DcMotor rightBackDrive, ElapsedTime runtime, Telemetry telemetry) {
 
-    driveTrainFunctions drivetrainFunctions = new driveFunctions();
+        driveTrainMath(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, runtime);
 
-    @Override
-    public void runOpMode() {
-        // Initialize the hardware variables. Note that the strings used here must correspond
-        // to the names assigned during the robot configuration step on the DS or RC devices.
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+        // Send calculated power to motors
+        leftFrontDrive.setPower(driveTrainVariables.driveTrainMotorPower[0]);
+        rightFrontDrive.setPower(driveTrainVariables.driveTrainMotorPower[1]);
+        leftBackDrive.setPower(driveTrainVariables.driveTrainMotorPower[2]);
+        rightBackDrive.setPower(driveTrainVariables.driveTrainMotorPower[3]);
 
-        // Set wheels to move forward
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-
-        // Wait for the game to start (driver presses PLAY)
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-
-        waitForStart();
-        runtime.reset();
-
-        // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
-            // Call the abstract function and update it
-            double[] motorPower = drivetrainFunctions.driveTrainMath(
-                    gamepad1.left_stick_y,
-                    gamepad1.left_stick_x,
-                    gamepad1.right_stick_x
-            );
-            // Send calculated power to wheels
-            leftFrontDrive.setPower(motorPower[0]);
-            rightFrontDrive.setPower(motorPower[1]);
-            leftBackDrive.setPower(motorPower[2]);
-            rightBackDrive.setPower(motorPower[3]);
-
-            // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Front left/Right", "%4.2f, %4.2f", motorPower[0], motorPower[1]);
-            telemetry.addData("Back  left/Right", "%4.2f, %4.2f", motorPower[2], motorPower[3]);
-            telemetry.update();
-        }
+        // Telemetry data
+        telemetry.addData("Front left/Right", "%4.2f, %4.2f", driveTrainVariables.driveTrainMotorPower[0], driveTrainVariables.driveTrainMotorPower[1]);
+        telemetry.addData("Back  left/Right", "%4.2f, %4.2f", driveTrainVariables.driveTrainMotorPower[2], driveTrainVariables.driveTrainMotorPower[3]);
     }
 }

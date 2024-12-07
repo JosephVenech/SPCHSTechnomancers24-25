@@ -52,6 +52,7 @@ public class StateMachineLegacy extends LinearOpMode {
     public DcMotor slideMotor = null;
     public DcMotor armMotor = null;
     public Servo intakeServo = null;
+    public TouchSensor slideSafety = null;
     public NormalizedColorSensor intakeColorSensor = null;
 
         @Override
@@ -61,9 +62,9 @@ public class StateMachineLegacy extends LinearOpMode {
             Robot robot = new Robot(hardwareMap);
             Map<String, DcMotor> motors = robot.getDriveDictionary();
             Map<String, Servo> servos = robot.getServoDictionary();
-            Map<String, TouchSensor> sensors = robot.getSensorDictionary();
+            Map<String, String> misc = robot.getMiscDictionary();
 
-            mapVariables(motors, servos, sensors);
+            mapVariables(motors, servos, misc);
 
             // Hardware map override
             slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -92,7 +93,7 @@ public class StateMachineLegacy extends LinearOpMode {
                         armMotor.setTargetPosition(armPositions.travelPosition);
                         intakeServo.setPosition(intakePositions.intakeOff);
 
-                        driveTrainVariables.driveTrainSpeed = 0.8;
+                        driveTrainVariables.driveTrainSpeedMultiplier = 0.8;
                     })
                     .transition( () -> gamepad2.y, States.TRANSITION_TO_BASKET)
                     .transition( () -> gamepad2.left_bumper, States.HIGH_SAMPLE)
@@ -117,7 +118,7 @@ public class StateMachineLegacy extends LinearOpMode {
                         slideMotor.setTargetPosition(slidePositions.sampleBasket);
                         armMotor.setTargetPosition(armPositions.sampleBasket);
 
-                        driveTrainVariables.driveTrainSpeed = 0.3;
+                        driveTrainVariables.driveTrainSpeedMultiplier = 0.3;
                     })
                     //.transition( () -> gamepad2.right_trigger > 0, States.RELEASE_SAMPLE)
                     .transition( () ->  gamepad2.a, States.TRANSITION_FROM_BASKET)
@@ -146,7 +147,7 @@ public class StateMachineLegacy extends LinearOpMode {
                         armMotor.setTargetPosition(armPositions.highSample);
                         //intakeServo.setPosition(intakePositions.intakeOn);
 
-                        driveTrainVariables.driveTrainSpeed = 0.3;
+                        driveTrainVariables.driveTrainSpeedMultiplier = 0.3;
                     })
                     .transition( () -> gamepad2.dpad_down, States.COLLECT_SAMPLE)
                     .transition( () -> gamepad2.a, States.TRAVEL)
@@ -159,7 +160,7 @@ public class StateMachineLegacy extends LinearOpMode {
                         armMotor.setTargetPosition(armPositions.collectSample);
                         //intakeServo.setPosition(intakePositions.intakeOn);
 
-                        driveTrainVariables.driveTrainSpeed = 0.5;
+                        driveTrainVariables.driveTrainSpeedMultiplier = 0.5;
                     })
                     .transition( () ->  gamepad2.dpad_up, States.HIGH_SAMPLE)
 
@@ -205,6 +206,7 @@ public class StateMachineLegacy extends LinearOpMode {
             machine.start();
             runtime.reset();
             MecanumFunctions driveTrain = new MecanumFunctions();
+            driveTrain.init(hardwareMap);
             IntakeFunctions intakeControl = new IntakeFunctions();
             ColorSensorFunctions colorSensorFunctions = new ColorSensorFunctions();
 
@@ -217,7 +219,8 @@ public class StateMachineLegacy extends LinearOpMode {
 
                 // Call functions and pass inputs to handle intake and drivetrain
                 // NOTE: intake should be part of state machine
-                driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry);
+                //driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, runtime, telemetry);
+                driveTrain.updateTeleOpMovement(gamepad1);
                 intakeControl.intakeSpin(gamepad1,gamepad2, intakeServo, telemetry);
                 //colorSensorFunctions.colorSensorGetColor(intakeColorSensor, telemetry);
 
@@ -250,7 +253,7 @@ public class StateMachineLegacy extends LinearOpMode {
     public void mapVariables(
             Map<java.lang.String, DcMotor> motors,
             Map<java.lang.String, Servo> servos,
-            Map<java.lang.String, TouchSensor> sensors
+            Map<java.lang.String, String> misc
     ) {
         // Mapping Motors
         leftFrontDrive = motors.get("leftFrontDrive");
@@ -263,5 +266,7 @@ public class StateMachineLegacy extends LinearOpMode {
         // Mapping Servos
         intakeServo = servos.get("intakeServo");
 
+        slideSafety = hardwareMap.get(TouchSensor.class, misc.get("slideSafety"));
+        intakeColorSensor = hardwareMap.get(NormalizedColorSensor.class, misc.get("intakeColorSensor"));
     }
     }

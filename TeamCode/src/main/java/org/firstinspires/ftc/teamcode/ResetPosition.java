@@ -80,10 +80,9 @@ public class ResetPosition extends LinearOpMode {
 
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        armMotor.setTargetPosition(defaultPosition);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(-motorSpeed);
-
-        armMotor.setTargetPosition(defaultPosition);
 
         while (Math.abs(armMotor.getCurrentPosition()-defaultPosition) > 10){
 
