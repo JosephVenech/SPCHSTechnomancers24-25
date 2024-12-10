@@ -3,14 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import java.lang.Math;
-
-
-import org.firstinspires.ftc.teamcode.ObjectDeclarations.armPositions;
 
 /*
 This file runs arm motor backwards until it hits a touch sensor, then it zeroes out the encoder in
@@ -79,11 +74,11 @@ public class ResetPosition extends LinearOpMode {
         }
 
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+        armMotor.setTargetPosition(defaultPosition);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(-motorSpeed);
 
-        armMotor.setTargetPosition(defaultPosition);
+        
 
         while (Math.abs(armMotor.getCurrentPosition()-defaultPosition) > 10){
 

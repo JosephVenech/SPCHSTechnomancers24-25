@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotFunctions.IntakeFunctions;
@@ -27,7 +26,7 @@ public class ManualTeleOp extends LinearOpMode {
     public DcMotor armMotor = null;
     public Servo wristServo = null;
     public Servo intakeServo = null;
-    public TouchSensor slideSafety = null;
+    public String slideSafety = null;
     public double driveTrainSpeed = 1;
 
 
@@ -37,10 +36,10 @@ public class ManualTeleOp extends LinearOpMode {
         Robot robot = new Robot(hardwareMap);
         Map<String, DcMotor> motors = robot.getDriveDictionary();
         Map<String, Servo> servos = robot.getServoDictionary();
-        Map<String, TouchSensor> sensors = robot.getSensorDictionary();
+        Map<String, String> misc = robot.getMiscDictionary();
 
 
-        mapVariables(motors, servos, sensors);
+        mapVariables(motors, servos, misc);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -70,9 +69,9 @@ public class ManualTeleOp extends LinearOpMode {
     }
 
     public void mapVariables(
-            Map<java.lang.String, DcMotor> motors,
-            Map<java.lang.String, Servo> servos,
-            Map<java.lang.String, TouchSensor> sensors
+            Map<String, DcMotor> motors,
+            Map<String, Servo> servos,
+            Map<String, String> sensors
     ) {
         // Mapping Motors
         leftFrontDrive = motors.get("leftFrontDrive");
@@ -90,6 +89,8 @@ public class ManualTeleOp extends LinearOpMode {
         slideSafety = sensors.get("slideSafety");
     }
 }
+
+
 
 
 

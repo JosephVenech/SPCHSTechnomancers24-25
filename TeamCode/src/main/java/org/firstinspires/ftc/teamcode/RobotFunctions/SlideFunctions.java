@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.RobotFunctions;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.TouchSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -13,7 +11,7 @@ This file handles manual control fo the slide and arm
 
 public class SlideFunctions {
 
-    public void SlidePosition(Gamepad gamepad1, Gamepad gamepad2, DcMotor slideMotor, TouchSensor slideSafety, Telemetry telemetry){
+    public void SlidePosition(Gamepad gamepad1, Gamepad gamepad2, DcMotor slideMotor, String slideSafety, Telemetry telemetry){
 
         double slidePowerConst = 0.95; // Set max speed of slide
         double slidePower = -gamepad2.left_stick_y; // Input for slide control

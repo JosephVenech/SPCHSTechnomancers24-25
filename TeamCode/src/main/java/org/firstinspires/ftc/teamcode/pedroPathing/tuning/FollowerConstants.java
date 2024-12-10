@@ -59,7 +59,7 @@ public class FollowerConstants {
 
     // Heading error PIDF coefficients
     public static CustomPIDFCoefficients headingPIDFCoefficients = new CustomPIDFCoefficients(
-            .9,
+            7,
             0,
             0.1,
             0);

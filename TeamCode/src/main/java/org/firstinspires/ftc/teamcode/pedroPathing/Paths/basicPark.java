@@ -10,20 +10,18 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 
 @Autonomous(name = "Park")
-public class Test extends OpMode {
+public class basicPark extends OpMode {
     private Follower follower;
-    private Path left;
-
-    private Path moveLeft;
-
-    private final Pose startPose = new Pose(9,36,Math.toRadians(270));
-    private final Pose parkingPose = new Pose(9,20,Math.toRadians(270));
+    private Path goPark;
+    private final Pose startPose = new Pose(4,36,Math.toRadians(270));
+    private final Pose park = new Pose(4,12,Math.toRadians(270));
 
     public void buildPaths(){
-        moveLeft = new Path(new BezierLine(new Point(startPose),new Point(parkingPose)));
-        moveLeft.setLinearHeadingInterpolation(startPose.getHeading(),parkingPose.getHeading());
+        /** Parking Path */
+        //Robot goes in a straight line down towards observation deck
+        goPark = new Path(new BezierLine(new Point(startPose),new Point(park)));
+        goPark.setLinearHeadingInterpolation(startPose.getHeading(), park.getHeading());
     }
-
 
     @Override
     public void init() {
@@ -31,25 +29,18 @@ public class Test extends OpMode {
         follower.setStartingPose(startPose);
 
         buildPaths();
-
-
-       /* left = new Path(new BezierLine(new Point(0, 0, Point.CARTESIAN), new Point(0, 10, Point.CARTESIAN)));
-
-        //    left = follower.pathBuilder().addPath(new BezierLine(new Point(0, 0, Point.CARTESIAN), new Point(10, 0, Point.CARTESIAN)));
-        left.setConstantHeadingInterpolation(0);
-
-
-
-        follower.followPath(left); */
     }
 
     @Override
     public void loop(){
         follower.update();
     }
+
     public void start(){
-        follower.setMaxPower(0.4);
-        follower.followPath(moveLeft);
+        //Setting Desired Speed
+        follower.setMaxPower(0.7);
+        //Telling Robot to follow Path
+        follower.followPath(goPark);
 
     }
 }

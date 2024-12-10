@@ -26,5 +26,5 @@ public class armPositions {
     public static int observationDeck = 1684;
     public static int collectSpecimen = 2184;
     public static int climbStageOne = -1105;
-    public static int stageOneLift = -4400;
+    public static int stageOneLift = -4600;
 }
