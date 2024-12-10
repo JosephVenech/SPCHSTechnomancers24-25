@@ -148,6 +148,8 @@ public class Main extends LinearOpMode {
                 telemetry.addData("Status", "Run Time: " + runtime.toString());
                 telemetry.addData("intake color sample reading main", intakeSampleColor);
                 telemetry.addData("Current State", machine.getState());
+                telemetry.addData("Max Speed", driveTrainVariables.driveTrainMaxPower);
+                telemetry.addData("Current Speed", driveTrainVariables.driveTrainMotorPower[0].getPower());
                 telemetry.update();
             }
         }

@@ -23,7 +23,8 @@ public class StateMachineFunctions {
         TRAVEL,
         TRANSITION_TO_BASKET,
         SAMPLE_BASKET,
-        TRANSITION_FROM_BASKET,
+        TRANSITION_FROM_BASKET_PHASE_ONE,
+        TRANSITION_FROM_BASKET_PHASE_TWO,
         HIGH_SAMPLE,
         RELEASE_SAMPLE,
         COLLECT_SAMPLE,
@@ -51,7 +52,7 @@ public class StateMachineFunctions {
                     armMotor.setTargetPosition(armPositions.travelPosition);
                     intakeServo.setPosition(intakePositions.intakeOff);
 
-                    driveTrainVariables.driveTrainSpeedMultiplier = 0.8;
+                    driveTrainVariables.driveTrainMaxPower = driveTrainVariables.driveTrainDefaultMaxPower;
                 })
                 .transition( () -> (GetSampleColor(intakeColorSensor, isBlueAlliance, telemetry).equals("EJECT_SAMPLE")), States.EJECT_SAMPLE_PHASE_ONE)
                 .transition( () -> gamepad2.y, States.TRANSITION_TO_BASKET)
@@ -77,10 +78,10 @@ public class StateMachineFunctions {
                     slideMotor.setTargetPosition(slidePositions.sampleBasket);
                     armMotor.setTargetPosition(armPositions.sampleBasket);
 
-                    driveTrainVariables.driveTrainSpeedMultiplier = 0.3;
+                    driveTrainVariables.driveTrainMaxPower = 0.1;
                 })
                 .transition( () -> gamepad2.right_trigger > 0, States.RELEASE_SAMPLE)
-                .transition( () ->  gamepad2.a, States.TRANSITION_FROM_BASKET)
+                .transition( () ->  gamepad2.a, States.TRANSITION_FROM_BASKET_PHASE_TWO)
 
                 // Releases sample before transitioning back to travel
                 // Timed transition, ADJUST FOR ACTUAL TIME REQUIRED TO RELEASE SAMPLE
@@ -88,16 +89,23 @@ public class StateMachineFunctions {
                 .onEnter( () -> {
                     intakeServo.setPosition(intakePositions.intakeReverse);
                 })
-                .transitionTimed(.75, States.TRANSITION_FROM_BASKET,
-                        () -> armMotor.setTargetPosition(armPositions.safeReturnTransition))
+                .transitionTimed(.75, States.TRANSITION_FROM_BASKET_PHASE_ONE)
+
+                .state(States.TRANSITION_FROM_BASKET_PHASE_ONE)
+                .onEnter( () -> {
+                    armMotor.setTargetPosition(armPositions.safeReturnTransition);
+                })
+                .transition( () -> (armMotor.getCurrentPosition() >= armPositions.safeReturnTransition), States.TRANSITION_FROM_BASKET_PHASE_TWO)
 
                 // Transition state: Closes slide before lowering arm to prevent bot from
                 // tipping over
-                .state(States.TRANSITION_FROM_BASKET)
+                .state(States.TRANSITION_FROM_BASKET_PHASE_TWO)
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.travelPosition);
                 })
-                .transition( () -> slideMotor.getCurrentPosition() < (slidePositions.travelPosition + 10), States.TRAVEL)
+                .transition( () -> slideMotor.getCurrentPosition() <= slidePositions.travelPosition, States.TRAVEL)
+                .transition( () ->  gamepad2.a, States.TRAVEL)
+
 
                 // Pickup sample position, higher up to not get caught on samples
                 // Use dpad to lower arm when you're above sample you want to pick up
@@ -107,13 +115,10 @@ public class StateMachineFunctions {
                     armMotor.setTargetPosition(armPositions.highSample);
                     intakeServo.setPosition(intakePositions.intakeOff);
 
-                    driveTrainVariables.driveTrainSpeedMultiplier = 0.3;
+                    driveTrainVariables.driveTrainMaxPower = 0.1;
                 })
-                //.transition( () -> (armMotor.getCurrentPosition() >= armPositions.highSample - 10)  && intakeSampleColor.equals("EJECT_SAMPLE"),States.EJECT_SAMPLE)
-
                 .transition( () -> gamepad2.dpad_down, States.COLLECT_SAMPLE)
                 .transition( () -> gamepad2.a, States.TRAVEL)
-
 
                 // Lower arm and spin intake to pick up sample
                 .state(States.COLLECT_SAMPLE)

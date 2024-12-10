@@ -1,3 +1,5 @@
+/*
+
 package org.firstinspires.ftc.teamcode.UserSandboxes;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -73,10 +75,10 @@ public class MarcoMain {
         }
 
         // Set driveTrainMotorPower to the new powers
-        driveTrainVariables.driveTrainMotorPower[0] = (leftFrontPower * driveTrainVariables.driveTrainAcceleration) * driveTrainVariables.driveTrainSpeedMultiplier;
-        driveTrainVariables.driveTrainMotorPower[1] = (rightFrontPower * driveTrainVariables.driveTrainAcceleration) * driveTrainVariables.driveTrainSpeedMultiplier;
-        driveTrainVariables.driveTrainMotorPower[2] = (leftBackPower * driveTrainVariables.driveTrainAcceleration) * driveTrainVariables.driveTrainSpeedMultiplier;
-        driveTrainVariables.driveTrainMotorPower[3] = (rightBackPower * driveTrainVariables.driveTrainAcceleration) * driveTrainVariables.driveTrainSpeedMultiplier;
+        //driveTrainVariables.driveTrainMotorPower[0] = (leftFrontPower * driveTrainVariables.driveTrainAcceleration) * driveTrainVariables.driveTrainSpeedMultiplier;
+        //driveTrainVariables.driveTrainMotorPower[1] = (rightFrontPower * driveTrainVariables.driveTrainAcceleration) * driveTrainVariables.driveTrainSpeedMultiplier;
+        //driveTrainVariables.driveTrainMotorPower[2] = (leftBackPower * driveTrainVariables.driveTrainAcceleration) * driveTrainVariables.driveTrainSpeedMultiplier;
+        //driveTrainVariables.driveTrainMotorPower[3] = (rightBackPower * driveTrainVariables.driveTrainAcceleration) * driveTrainVariables.driveTrainSpeedMultiplier;
     }
 
     // Assigns power to the motors
@@ -85,13 +87,15 @@ public class MarcoMain {
         driveTrainMath(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, runtime);
 
         // Send calculated power to motors
-        leftFrontDrive.setPower(driveTrainVariables.driveTrainMotorPower[0]);
-        rightFrontDrive.setPower(driveTrainVariables.driveTrainMotorPower[1]);
-        leftBackDrive.setPower(driveTrainVariables.driveTrainMotorPower[2]);
-        rightBackDrive.setPower(driveTrainVariables.driveTrainMotorPower[3]);
+        //leftFrontDrive.setPower(driveTrainVariables.driveTrainMotorPower[0]);
+        //rightFrontDrive.setPower(driveTrainVariables.driveTrainMotorPower[1]);
+        //leftBackDrive.setPower(driveTrainVariables.driveTrainMotorPower[2]);
+        //rightBackDrive.setPower(driveTrainVariables.driveTrainMotorPower[3]);
 
         // Telemetry data
         telemetry.addData("Front left/Right", "%4.2f, %4.2f", driveTrainVariables.driveTrainMotorPower[0], driveTrainVariables.driveTrainMotorPower[1]);
         telemetry.addData("Back  left/Right", "%4.2f, %4.2f", driveTrainVariables.driveTrainMotorPower[2], driveTrainVariables.driveTrainMotorPower[3]);
     }
 }
+
+ */
