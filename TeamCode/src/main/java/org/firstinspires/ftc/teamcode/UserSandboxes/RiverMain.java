@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotFunctions.Robot;
@@ -113,9 +114,9 @@ public class RiverMain extends LinearOpMode {
         */
     }
     public void mapVariables(
-            Map<String, DcMotor> motors,
-            Map<String, Servo> servos,
-            Map<String, String> sensors
+                Map<java.lang.String, DcMotor> motors,
+                Map<java.lang.String, Servo> servos,
+                Map<java.lang.String, String> sensors
     ) {
             // Mapping Motors
             leftFrontDrive = motors.get("leftFrontDrive");

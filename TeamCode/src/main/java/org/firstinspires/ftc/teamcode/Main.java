@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstants.leftFrontMotorName;
+import static org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstants.leftRearMotorName;
+import static org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstants.rightFrontMotorName;
+import static org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstants.rightRearMotorName;
 import static java.lang.Math.abs;
 
 import android.text.method.Touch;
@@ -8,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -26,6 +31,7 @@ import org.firstinspires.ftc.teamcode.RobotFunctions.ColorSensorFunctions;
 import org.firstinspires.ftc.teamcode.StateMachine.StateMachineFunctions;
 
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.*;
+import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 
 import com.sfdev.assembly.state.*;
 
@@ -61,6 +67,7 @@ public class Main extends LinearOpMode {
         mapVariables(motors, servos, misc);
 
         MecanumFunctions driveTrain = new MecanumFunctions();
+        driveTrain.init(hardwareMap);
         IntakeFunctions intakeControl = new IntakeFunctions();
         StateMachineFunctions stateMachine = new StateMachineFunctions();
         ColorSensorFunctions colorSensorFunctions = new ColorSensorFunctions();
@@ -106,7 +113,8 @@ public class Main extends LinearOpMode {
         if (opModeIsActive()) {
             while(opModeIsActive()){
                 // Functions - Comments can be found in individual files
-                driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry);
+                //driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, runtime, telemetry);
+                driveTrain.updateTeleOpMovement(gamepad1);
                 // intakeControl.intakeSpin(gamepad1, gamepad2, intakeServo, telemetry);
 
                 intakeSampleColor = colorSensorFunctions.colorSensorGetColor(intakeColorSensor, isBlueAlliance, telemetry);
@@ -126,26 +134,22 @@ public class Main extends LinearOpMode {
 
                 if (intakeSampleColor.equals("EJECT_SAMPLE")) {
                     telemetry.addData("Sample should be ejected", intakeSampleColor);
-                    //machine.setState(StateMachineFunctions.States.HIGH_SAMPLE);
-                    // Thread.sleep(1000);
-                    // machine.setState(StateMachineFunctions.States.EJECT_SAMPLE);
                 }
                 else if (!intakeSampleColor.equals("Null")) {
                     telemetry.addData("Should return to travel", intakeSampleColor);
-                    //machine.setState(StateMachineFunctions.States.TRAVEL);
                 }
                 else {
                     // intakeSampleState = 0;
                 }
 
-
                 machine.update();
-
 
                 // Telemetry data
                 telemetry.addData("Status", "Run Time: " + runtime.toString());
                 telemetry.addData("intake color sample reading main", intakeSampleColor);
                 telemetry.addData("Current State", machine.getState());
+                telemetry.addData("Max Speed", driveTrainVariables.driveTrainMaxPower);
+                telemetry.addData("Current Speed", driveTrainVariables.driveTrainMotorPower[0].getPower());
                 telemetry.update();
             }
         }

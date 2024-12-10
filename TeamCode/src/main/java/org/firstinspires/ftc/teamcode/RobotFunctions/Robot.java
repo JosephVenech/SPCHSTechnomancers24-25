@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.colorSensorVariables;
+import org.firstinspires.ftc.teamcode.ObjectDeclarations.driveTrainVariables;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -80,6 +81,14 @@ public class Robot {
         leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        driveTrainVariables.driveTrainMotorPower[0] = leftFrontDrive;
+        driveTrainVariables.driveTrainMotorPower[1] = rightFrontDrive;
+        driveTrainVariables.driveTrainMotorPower[2] = leftBackDrive;
+        driveTrainVariables.driveTrainMotorPower[3] = rightBackDrive;
 
         leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
