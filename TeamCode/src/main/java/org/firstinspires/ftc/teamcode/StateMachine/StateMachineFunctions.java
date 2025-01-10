@@ -91,11 +91,13 @@ public class StateMachineFunctions {
                 })
                 .transitionTimed(.75, States.TRANSITION_FROM_BASKET_PHASE_ONE)
 
+
                 .state(States.TRANSITION_FROM_BASKET_PHASE_ONE)
                 .onEnter( () -> {
                     armMotor.setTargetPosition(armPositions.safeReturnTransition);
                 })
-                .transition( () -> (armMotor.getCurrentPosition() >= armPositions.safeReturnTransition), States.TRANSITION_FROM_BASKET_PHASE_TWO)
+                .transition( () -> (armMotor.getCurrentPosition() <= armPositions.safeReturnTransition), States.TRANSITION_FROM_BASKET_PHASE_TWO)
+
 
                 // Transition state: Closes slide before lowering arm to prevent bot from
                 // tipping over
@@ -103,8 +105,8 @@ public class StateMachineFunctions {
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.travelPosition);
                 })
-                .transition( () -> slideMotor.getCurrentPosition() <= slidePositions.travelPosition, States.TRAVEL)
-                .transition( () ->  gamepad2.a, States.TRAVEL)
+                .transition( () -> (slideMotor.getCurrentPosition() >= -15 && slideMotor.getCurrentPosition() <= 15), States.TRAVEL)
+               // .transition( () ->  gamepad2.a, States.TRAVEL)
 
 
                 // Pickup sample position, higher up to not get caught on samples
