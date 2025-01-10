@@ -11,8 +11,18 @@ this reduces max speed but that is not a problem for us
  */
 
 public class intakePositions {
-    public static double intakeOn = 0;
-    public static double intakeOff = 0.5;
-    public static double intakeReverse = 1;
+
+    // Left servo, one with cut gecko wheel
+    // Continuous mode
+    public static double leftIntakeOn = 0;
+    public static double leftIntakeOff = 0.5;
+    public static double leftIntakeReverse = 1;
+
+
+    // Right servo, uncut gecko wheel and intake wheel
+    // Continuous mode
+    public static double rightIntakeOn = 0;
+    public static double rightIntakeOff = 0.5;
+    public static double rightIntakeReverse = 1;
 
 }

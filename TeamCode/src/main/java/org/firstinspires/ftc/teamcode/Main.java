@@ -46,8 +46,10 @@ public class Main extends LinearOpMode {
     public DcMotor rightBackDrive = null;
     public DcMotor slideMotor = null;
     public DcMotor armMotor = null;
-    public Servo wristServo = null;
-    public Servo intakeServo = null;
+    public Servo wristAngleServo = null;
+    public Servo leftIntakeServo = null;
+    public Servo rightIntakeServo = null;
+    public Servo intakeAngleServo = null;
     public TouchSensor slideSafety = null;
     public NormalizedColorSensor intakeColorSensor = null;
     public String intakeSampleColor = "Null";
@@ -96,7 +98,7 @@ public class Main extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        StateMachine machine = stateMachine.CreateStateDefinitions(gamepad1, gamepad2, armMotor, slideMotor, intakeServo, colorSensorFunctions, intakeColorSensor, isBlueAlliance, slideSafety, telemetry);
+        StateMachine machine = stateMachine.CreateStateDefinitions(gamepad1, gamepad2, armMotor, slideMotor, leftIntakeServo, rightIntakeServo, wristAngleServo, intakeAngleServo, colorSensorFunctions, intakeColorSensor, isBlueAlliance, slideSafety, telemetry);
 
         slideMotor.setTargetPosition(slidePositions.travelPosition);
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -169,8 +171,10 @@ public class Main extends LinearOpMode {
         armMotor = motors.get("armMotor");
 
         // Mapping Servos
-        wristServo = servos.get("wristServo");
-        intakeServo = servos.get("intakeServo");
+        wristAngleServo = servos.get("wristAngleServo");
+        leftIntakeServo = servos.get("leftIntakeServo");
+        rightIntakeServo = servos.get("rightIntakeServo");
+        intakeAngleServo = servos.get("intakeAngleServo");
 
         /*
         Mapping Miscellaneous

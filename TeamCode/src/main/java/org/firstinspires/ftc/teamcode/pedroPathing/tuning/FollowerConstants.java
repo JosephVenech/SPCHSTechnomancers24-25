@@ -23,10 +23,10 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.KalmanFilterParameters;
 public class FollowerConstants {
 
     // This section is for configuring your motors
-    public static String leftFrontMotorName = "left_back_drive";
+    public static String leftFrontMotorName = "left_rear_drive";
     public static String leftRearMotorName = "left_front_drive";
     public static String rightFrontMotorName = "right_front_drive";
-    public static String rightRearMotorName = "right_back_drive";
+    public static String rightRearMotorName = "right_rear_drive";
 
     // This section is for setting the actual drive vector for the front left wheel, if the robot
     // is facing a heading of 0 radians with the wheel centered at (0,0)

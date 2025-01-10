@@ -104,7 +104,7 @@ public class JosephMain extends OpMode {
             follower.followPath(basketClose);
 
             //Spits out Sample
-            intakeServo.setPosition(intakePositions.intakeReverse);
+            intakeServo.setPosition(intakePositions.leftIntakeReverse);
             //Parks in Observation
             follower.followPath(basketObservation);
 

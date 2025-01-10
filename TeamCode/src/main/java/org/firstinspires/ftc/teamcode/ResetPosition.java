@@ -30,10 +30,10 @@ public class ResetPosition extends LinearOpMode {
     public DcMotor slideMotor = null;
     public TouchSensor armSafety = null;
     public TouchSensor slideSafety = null;
-    public Servo wristServo = null;
+    public Servo wristAngleServo = null;
     double motorSpeed = -0.8;
     double slideSpeed = 0.5;
-    int defaultPosition = 3750;
+    int defaultPosition = -2000;
 
 
     @Override
@@ -41,7 +41,7 @@ public class ResetPosition extends LinearOpMode {
 
 
         armMotor = hardwareMap.get(DcMotor.class, "arm_motor");
-        armMotor.setDirection(DcMotor.Direction.FORWARD);
+        armMotor.setDirection(DcMotor.Direction.REVERSE);
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -53,8 +53,8 @@ public class ResetPosition extends LinearOpMode {
         armSafety = hardwareMap.get(TouchSensor.class, "arm_safety");
         slideSafety = hardwareMap.get(TouchSensor.class, "slide_safety");
 
-        wristServo = hardwareMap.get(Servo.class, "wrist_servo");
-        wristServo.setPosition(0.3);
+        wristAngleServo = hardwareMap.get(Servo.class, "wrist_angle_servo");
+        wristAngleServo.setPosition(0.3);
 
 
         waitForStart();
@@ -62,6 +62,14 @@ public class ResetPosition extends LinearOpMode {
         runtime.reset();
 
 
+
+        while (!slideSafety.isPressed()){
+            slideMotor.setPower(slideSpeed);
+            telemetry.addData("Slide position", slideMotor.getCurrentPosition());
+            telemetry.update();
+        }
+
+        slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
         while (!armSafety.isPressed()){
@@ -72,17 +80,9 @@ public class ResetPosition extends LinearOpMode {
 
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        while (!slideSafety.isPressed()){
-            armMotor.setPower(slideSpeed);
-            telemetry.addData("Slide position", armMotor.getCurrentPosition());
-            telemetry.update();
-        }
-
-        slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
         armMotor.setTargetPosition(defaultPosition);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        armMotor.setPower(-motorSpeed);
+        armMotor.setPower(motorSpeed);
 
         while (Math.abs(armMotor.getCurrentPosition()-defaultPosition) > 10){
 

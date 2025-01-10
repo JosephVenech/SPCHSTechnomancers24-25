@@ -19,8 +19,10 @@ public class Robot {
     public DcMotor rightBackDrive;
     public DcMotor slideMotor;
     public DcMotor armMotor;
-    public Servo wristServo;
-    public Servo intakeServo;
+    public Servo wristAngleServo;
+    public Servo leftIntakeServo;
+    public Servo rightIntakeServo;
+    public Servo intakeAngleServo;
     public String slideSafety;
     public String intakeColorSensor;
 
@@ -39,14 +41,19 @@ public class Robot {
 
     public void appendDictionaries(HardwareMap hardwareMap) {
         driveDictionary.put("leftFrontDrive", hardwareMap.get(DcMotor.class, "left_front_drive"));
-        driveDictionary.put("leftBackDrive", hardwareMap.get(DcMotor.class, "left_back_drive"));
+        driveDictionary.put("leftBackDrive", hardwareMap.get(DcMotor.class, "left_rear_drive"));
         driveDictionary.put("rightFrontDrive", hardwareMap.get(DcMotor.class, "right_front_drive"));
-        driveDictionary.put("rightBackDrive", hardwareMap.get(DcMotor.class, "right_back_drive"));
+        driveDictionary.put("rightBackDrive", hardwareMap.get(DcMotor.class, "right_rear_drive"));
         driveDictionary.put("slideMotor", hardwareMap.get(DcMotor.class, "slide_motor"));
         driveDictionary.put("armMotor", hardwareMap.get(DcMotor.class, "arm_motor"));
 
-        servoDictionary.put("wristServo", hardwareMap.get(Servo.class, "wrist_servo"));
-        servoDictionary.put("intakeServo", hardwareMap.get(Servo.class, "intake_servo"));
+        servoDictionary.put("wristAngleServo", hardwareMap.get(Servo.class, "wrist_angle_servo"));
+        servoDictionary.put("leftIntakeServo", hardwareMap.get(Servo.class, "left_intake_servo"));
+        servoDictionary.put("rightIntakeServo", hardwareMap.get(Servo.class, "right_intake_servo"));
+        servoDictionary.put("intakeAngleServo", hardwareMap.get(Servo.class, "intake_angle_servo"));
+
+
+
 
         miscDictionary.put("slideSafety", "slide_safety");
         miscDictionary.put("intakeColorSensor", "sensor_color");
@@ -60,8 +67,10 @@ public class Robot {
         slideMotor = driveDictionary.get("slideMotor");
         armMotor = driveDictionary.get("armMotor");
 
-        wristServo = servoDictionary.get("wristServo");
-        intakeServo = servoDictionary.get("intakeServo");
+        wristAngleServo = servoDictionary.get("wristServo");
+        leftIntakeServo = servoDictionary.get("leftIntakeServo");
+        rightIntakeServo = servoDictionary.get("rightIntakeServo");
+        intakeAngleServo = servoDictionary.get("intakeAngleServo");
 
         slideSafety = miscDictionary.get("slideSafety");
         intakeColorSensor = miscDictionary.get("intakeColorSensor");
@@ -102,8 +111,13 @@ public class Robot {
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
     public void setServos() {
-        wristServo.setPosition(0.3);
-        intakeServo.setPosition(0.5);
+        /*
+        wristAngleServo.setPosition(0.3);
+        leftIntakeServo.setPosition(0.5);
+        rightIntakeServo.setPosition(0.5);
+        intakeAngleServo.setPosition(0.3);
+
+         */
     }
 
     public void setMisc(HardwareMap hardwareMap) {

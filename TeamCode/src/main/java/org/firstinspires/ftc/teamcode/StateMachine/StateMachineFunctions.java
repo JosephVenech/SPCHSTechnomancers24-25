@@ -11,6 +11,8 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.armPositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.intakePositions;
+import org.firstinspires.ftc.teamcode.ObjectDeclarations.wristAnglePositions;
+import org.firstinspires.ftc.teamcode.ObjectDeclarations.intakeAnglePositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.slidePositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.driveTrainVariables;
 
@@ -36,7 +38,7 @@ public class StateMachineFunctions {
 
     public ColorSensorFunctions colorSensorFunctions = null;
 
-    public StateMachine CreateStateDefinitions(Gamepad gamepad1, Gamepad gamepad2, DcMotor armMotor, DcMotor slideMotor, Servo intakeServo, ColorSensorFunctions cF, NormalizedColorSensor intakeColorSensor, Boolean isBlueAlliance, TouchSensor slideSafety, Telemetry telemetry) {
+    public StateMachine CreateStateDefinitions(Gamepad gamepad1, Gamepad gamepad2, DcMotor armMotor, DcMotor slideMotor, Servo leftIntakeServo, Servo rightIntakeServo, Servo wristAngleServo, Servo intakeAngleServo, ColorSensorFunctions cF, NormalizedColorSensor intakeColorSensor, Boolean isBlueAlliance, TouchSensor slideSafety, Telemetry telemetry) {
         colorSensorFunctions = cF;
 
         return new StateMachineBuilder() // returns the state machine states
@@ -50,7 +52,8 @@ public class StateMachineFunctions {
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.travelPosition);
                     armMotor.setTargetPosition(armPositions.travelPosition);
-                    intakeServo.setPosition(intakePositions.intakeOff);
+                    leftIntakeServo.setPosition(intakePositions.leftIntakeOff);
+                    rightIntakeServo.setPosition(intakePositions.rightIntakeOff);
 
                     driveTrainVariables.driveTrainMaxPower = driveTrainVariables.driveTrainDefaultMaxPower;
                 })
@@ -77,6 +80,8 @@ public class StateMachineFunctions {
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.sampleBasket);
                     armMotor.setTargetPosition(armPositions.sampleBasket);
+                    wristAngleServo.setPosition(wristAnglePositions.placeSample);
+                    intakeAngleServo.setPosition(intakeAnglePositions.flat);
 
                     driveTrainVariables.driveTrainMaxPower = 0.1;
                 })
@@ -87,7 +92,8 @@ public class StateMachineFunctions {
                 // Timed transition, ADJUST FOR ACTUAL TIME REQUIRED TO RELEASE SAMPLE
                 .state(States.RELEASE_SAMPLE)
                 .onEnter( () -> {
-                    intakeServo.setPosition(intakePositions.intakeReverse);
+                    leftIntakeServo.setPosition(intakePositions.leftIntakeReverse);
+                    rightIntakeServo.setPosition(intakePositions.leftIntakeReverse);
                 })
                 .transitionTimed(.75, States.TRANSITION_FROM_BASKET_PHASE_ONE)
 
@@ -113,7 +119,10 @@ public class StateMachineFunctions {
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.highSample);
                     armMotor.setTargetPosition(armPositions.highSample);
-                    intakeServo.setPosition(intakePositions.intakeOff);
+                    wristAngleServo.setPosition(wristAnglePositions.collectSample);
+                    intakeAngleServo.setPosition(intakeAnglePositions.flat);
+                    leftIntakeServo.setPosition(intakePositions.leftIntakeOff);
+                    rightIntakeServo.setPosition(intakePositions.rightIntakeOff);
 
                     driveTrainVariables.driveTrainMaxPower = 0.1;
                 })
@@ -125,7 +134,9 @@ public class StateMachineFunctions {
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.collectSample);
                     armMotor.setTargetPosition(armPositions.collectSample);
-                    intakeServo.setPosition(intakePositions.intakeOn);
+                    leftIntakeServo.setPosition(intakePositions.leftIntakeOn);
+                    rightIntakeServo.setPosition(intakePositions.rightIntakeOn);
+
                 })
                 // .loop( () -> telemetry.addData("intake color sample reading state machine", intakeSampleState))
 
@@ -137,7 +148,8 @@ public class StateMachineFunctions {
                 .state(States.EJECT_SAMPLE_PHASE_ONE)
                 .onEnter( () -> {
                     armMotor.setTargetPosition(armPositions.highSample);
-                    intakeServo.setPosition(intakePositions.intakeOff);
+                    leftIntakeServo.setPosition(intakePositions.leftIntakeOff);
+                    rightIntakeServo.setPosition(intakePositions.rightIntakeOff);
                 })
                 // .transition( () -> armMotor.getCurrentPosition() >= (armPositions.highSample - 10), States.EJECT_SAMPLE_PHASE_TWO)
                 .transitionTimed(0.3, States.EJECT_SAMPLE_PHASE_TWO)
@@ -145,7 +157,8 @@ public class StateMachineFunctions {
                 // Eject Sample if it is the wrong color
                 .state(States.EJECT_SAMPLE_PHASE_TWO)
                 .onEnter( () -> {
-                    intakeServo.setPosition(intakePositions.intakeReverse);
+                    leftIntakeServo.setPosition(intakePositions.leftIntakeReverse);
+                    rightIntakeServo.setPosition(intakePositions.rightIntakeReverse);
                 })
                 .transitionTimed(0.6, States.HIGH_SAMPLE)
 

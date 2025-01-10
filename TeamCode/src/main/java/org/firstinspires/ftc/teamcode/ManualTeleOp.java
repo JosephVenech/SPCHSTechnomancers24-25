@@ -24,8 +24,8 @@ public class ManualTeleOp extends LinearOpMode {
     public DcMotor rightBackDrive = null;
     public DcMotor slideMotor = null;
     public DcMotor armMotor = null;
-    public Servo wristServo = null;
-    public Servo intakeServo = null;
+    //public Servo wristServo = null;
+    //public Servo intakeServo = null;
     public TouchSensor slideSafety = null;
     public NormalizedColorSensor intakeColorSensor = null;
 
@@ -49,7 +49,7 @@ public class ManualTeleOp extends LinearOpMode {
         MecanumFunctions driveTrain = new MecanumFunctions();
         driveTrain.init(hardwareMap);
         SlideFunctions slideControl = new SlideFunctions();
-        IntakeFunctions intakeControl = new IntakeFunctions();
+        //IntakeFunctions intakeControl = new IntakeFunctions();
 
         if (opModeIsActive()) {
             while(opModeIsActive()){
@@ -58,7 +58,7 @@ public class ManualTeleOp extends LinearOpMode {
                 slideControl.SlidePosition(gamepad1, gamepad2, slideMotor, slideSafety, telemetry);
                 slideControl.ArmPosition(gamepad1, gamepad2, armMotor, telemetry);
                 //intakeControl.intakeAngle(gamepad1, gamepad2, wristServo, telemetry);
-                intakeControl.intakeSpin(gamepad1, gamepad2, intakeServo, telemetry);
+                //intakeControl.intakeSpin(gamepad1, gamepad2, intakeServo, telemetry);
 
                 // Telemetry data
                 telemetry.addData("Status", "Run Time: " + runtime.toString());
@@ -81,8 +81,8 @@ public class ManualTeleOp extends LinearOpMode {
         armMotor = motors.get("armMotor");
 
         // Mapping Servos
-        wristServo = servos.get("wristServo");
-        intakeServo = servos.get("intakeServo");
+        //wristServo = servos.get("wristServo");
+        //intakeServo = servos.get("intakeServo");
 
         // Mapping TouchSensors
         slideSafety = hardwareMap.get(TouchSensor.class, misc.get("slideSafety"));
