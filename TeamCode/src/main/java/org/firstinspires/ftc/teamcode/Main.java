@@ -1,39 +1,28 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstants.leftFrontMotorName;
-import static org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstants.leftRearMotorName;
-import static org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstants.rightFrontMotorName;
-import static org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstants.rightRearMotorName;
 import static java.lang.Math.abs;
-
-import android.text.method.Touch;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.SwitchableLight;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.TouchSensor;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.sfdev.assembly.state.StateMachine;
+
+import org.firstinspires.ftc.teamcode.ObjectDeclarations.armPositions;
+import org.firstinspires.ftc.teamcode.ObjectDeclarations.driveTrainVariables;
+import org.firstinspires.ftc.teamcode.ObjectDeclarations.slidePositions;
+import org.firstinspires.ftc.teamcode.RobotFunctions.ColorSensorFunctions;
+import org.firstinspires.ftc.teamcode.RobotFunctions.IntakeFunctions;
+import org.firstinspires.ftc.teamcode.RobotFunctions.MecanumFunctions;
+import org.firstinspires.ftc.teamcode.RobotFunctions.Robot;
+import org.firstinspires.ftc.teamcode.StateMachine.StateMachineFunctions;
+import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
+import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 
 import java.util.Map;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.RobotFunctions.IntakeFunctions;
-import org.firstinspires.ftc.teamcode.RobotFunctions.Robot;
-import org.firstinspires.ftc.teamcode.RobotFunctions.MecanumFunctions;
-import org.firstinspires.ftc.teamcode.RobotFunctions.ColorSensorFunctions;
-import org.firstinspires.ftc.teamcode.StateMachine.StateMachineFunctions;
-
-import org.firstinspires.ftc.teamcode.ObjectDeclarations.*;
-import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
-
-import com.sfdev.assembly.state.*;
 
 
 @TeleOp(name="Main", group="Main")
@@ -58,6 +47,9 @@ public class Main extends LinearOpMode {
     public Boolean xButtonPreviouslyPressed = false;
     public double intakeSampleState = 0;
 
+    private Follower follower;
+    private final Pose startPose = new Pose(0,0,0);
+
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -77,6 +69,8 @@ public class Main extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+
+
 
         while (!opModeIsActive()) {
 
@@ -111,6 +105,7 @@ public class Main extends LinearOpMode {
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         machine.start();
+
 
         if (opModeIsActive()) {
             while(opModeIsActive()){
