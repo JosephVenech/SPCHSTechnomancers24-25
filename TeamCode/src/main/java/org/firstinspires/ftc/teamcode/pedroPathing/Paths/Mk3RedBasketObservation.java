@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
 
-@Autonomous(name = "redBasketAscent")
+@Autonomous(name = "redBasketObservation")
 public class Mk3RedBasketObservation extends OpMode {
 
     private Follower follower;

@@ -1,14 +1,10 @@
 package org.firstinspires.ftc.teamcode.RobotFunctions;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.driveTrainVariables;
-
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
-
-import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 // Call to update current motor power
 public class MecanumFunctions {
@@ -19,7 +15,7 @@ public class MecanumFunctions {
             follower.startTeleopDrive();
         }
         public void updateTeleOpMovement(Gamepad gamepad1) {
-            follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
+            follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
             follower.update();
 
             for (int i = 0; i < driveTrainVariables.driveTrainMotorPower.length; i++) {

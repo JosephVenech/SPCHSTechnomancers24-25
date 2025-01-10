@@ -37,7 +37,7 @@ public class PoseUpdater {
 
     private Vector currentAcceleration = new Vector();
 
-    private double xOffset = 0;
+    private double xOffset = 0; //Changed from zero
     private double yOffset = 0;
     private double headingOffset = 0;
 
