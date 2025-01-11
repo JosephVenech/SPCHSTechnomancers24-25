@@ -3,14 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import java.lang.Math;
-
-
-import org.firstinspires.ftc.teamcode.ObjectDeclarations.armPositions;
 
 /*
 This file runs arm motor backwards until it hits a touch sensor, then it zeroes out the encoder in
@@ -46,7 +41,7 @@ public class ResetPosition extends LinearOpMode {
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         slideMotor = hardwareMap.get(DcMotor.class, "slide_motor");
-        slideMotor.setDirection(DcMotor.Direction.REVERSE);
+        slideMotor.setDirection(DcMotor.Direction.FORWARD);
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -73,19 +68,21 @@ public class ResetPosition extends LinearOpMode {
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         while (!slideSafety.isPressed()){
-            armMotor.setPower(slideSpeed);
-            telemetry.addData("Slide position", armMotor.getCurrentPosition());
+            slideMotor.setPower(slideSpeed);
+            telemetry.addData("Slide position", slideMotor.getCurrentPosition());
             telemetry.update();
         }
 
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slideMotor.setTargetPosition(0);
+        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         armMotor.setTargetPosition(defaultPosition);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(-motorSpeed);
 
         while (Math.abs(armMotor.getCurrentPosition()-defaultPosition) > 10){
-
+            telemetry.addData("Slide position", slideMotor.getCurrentPosition());
             telemetry.addData("Arm position", armMotor.getCurrentPosition());
             telemetry.update();
         }

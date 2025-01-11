@@ -145,6 +145,8 @@ public class Main extends LinearOpMode {
                 telemetry.addData("Current State", machine.getState());
                 telemetry.addData("Max Speed", driveTrainVariables.driveTrainMaxPower);
                 telemetry.addData("Current Speed", driveTrainVariables.driveTrainMotorPower[0].getPower());
+                telemetry.addData("Current Position",slideMotor.getCurrentPosition());
+                telemetry.addData("Target Position", slideMotor.getTargetPosition());
                 telemetry.update();
             }
         }
