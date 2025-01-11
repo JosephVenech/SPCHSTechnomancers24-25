@@ -7,4 +7,5 @@ public class driveTrainVariables {
     public static final double acceleration_rate = 0.08; // The higher it is the faster the robot will accelerate to max speed
     public static final double driveTrainDefaultMaxPower = 0.8;
     public static double driveTrainMaxPower = driveTrainDefaultMaxPower;
+    public static double minimumAccelerationSpeed = 0.1;
 }
