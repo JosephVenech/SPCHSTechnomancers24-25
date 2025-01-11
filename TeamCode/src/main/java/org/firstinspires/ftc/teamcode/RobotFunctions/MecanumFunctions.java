@@ -20,27 +20,8 @@ public class MecanumFunctions {
         follower.startTeleopDrive();
     }
 
-    public void updateOldMotorPowers() {
-        for (int i = 0; i < driveTrainVariables.driveTrainMotorPower.length; i++) {
-            oldDriveTrainMotorPowers[i] = driveTrainVariables.driveTrainMotorPower[i].getPower();
-        }
-    }
-    public void updateTeleOpMovement(Gamepad gamepad1) {
-        updateOldMotorPowers();
-
-        follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
-        follower.update();
-
-        if (driveTrainVariables.driveTrainMaxPower <= driveTrainVariables.minimumAccelerationSpeed) {
-            // No Acceleration
-            for (int i = 0; i < driveTrainVariables.driveTrainMotorPower.length; i++) {
-                if (driveTrainVariables.driveTrainMotorPower[i].getPower() > driveTrainVariables.driveTrainMaxPower) {
-                    driveTrainVariables.driveTrainMotorPower[i].setPower(driveTrainVariables.driveTrainMaxPower);
-                } else if (driveTrainVariables.driveTrainMotorPower[i].getPower() < -driveTrainVariables.driveTrainMaxPower) {
-                    driveTrainVariables.driveTrainMotorPower[i].setPower(-driveTrainVariables.driveTrainMaxPower);
-                }
-            }
-        } else {
+    public void determineMovement(boolean canAccelerate) {
+        if (canAccelerate) {
             // Acceleration
             for (int i = 0; i < driveTrainVariables.driveTrainMotorPower.length; i++) {
                 double targetPower = driveTrainVariables.driveTrainMotorPower[i].getPower();
@@ -61,6 +42,28 @@ public class MecanumFunctions {
                 );
                 driveTrainVariables.driveTrainMotorPower[i].setPower(adjustedPower);
             }
+        } else {
+            // No Acceleration
+            for (int i = 0; i < driveTrainVariables.driveTrainMotorPower.length; i++) {
+                if (driveTrainVariables.driveTrainMotorPower[i].getPower() > driveTrainVariables.driveTrainMaxPower) {
+                    driveTrainVariables.driveTrainMotorPower[i].setPower(driveTrainVariables.driveTrainMaxPower);
+                } else if (driveTrainVariables.driveTrainMotorPower[i].getPower() < -driveTrainVariables.driveTrainMaxPower) {
+                    driveTrainVariables.driveTrainMotorPower[i].setPower(-driveTrainVariables.driveTrainMaxPower);
+                }
+            }
         }
+    }
+    public void updateOldMotorPowers() {
+        for (int i = 0; i < driveTrainVariables.driveTrainMotorPower.length; i++) {
+            oldDriveTrainMotorPowers[i] = driveTrainVariables.driveTrainMotorPower[i].getPower();
+        }
+    }
+    public void updateTeleOpMovement(Gamepad gamepad1) {
+        updateOldMotorPowers();
+
+        follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
+        follower.update();
+
+        determineMovement(driveTrainVariables.driveTrainMaxPower <= driveTrainVariables.minimumAccelerationSpeed);
     }
 }
