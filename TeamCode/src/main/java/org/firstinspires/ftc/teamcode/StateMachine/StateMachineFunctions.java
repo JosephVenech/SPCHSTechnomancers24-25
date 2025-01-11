@@ -10,13 +10,11 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.armPositions;
+import org.firstinspires.ftc.teamcode.ObjectDeclarations.driveTrainVariables;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.intakePositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.slidePositions;
-import org.firstinspires.ftc.teamcode.ObjectDeclarations.driveTrainVariables;
-
 import org.firstinspires.ftc.teamcode.RobotFunctions.ColorSensorFunctions;
-
-import java.util.Map;
+import java.lang.Math;
 
 public class StateMachineFunctions {
     public enum States {
@@ -105,8 +103,10 @@ public class StateMachineFunctions {
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.travelPosition);
                 })
-                .transition( () -> (slideMotor.getCurrentPosition() >= -15 && slideMotor.getCurrentPosition() <= 15), States.TRAVEL)
-               // .transition( () ->  gamepad2.a, States.TRAVEL)
+                .transition( () -> ((Math.abs(slideMotor.getCurrentPosition() - slideMotor.getTargetPosition())) <= 15), States.TRAVEL)
+                .transition( () -> gamepad2.left_trigger > 0, States.TRAVEL)
+
+                // .transition( () ->  gamepad2.a, States.TRAVEL)
 
 
                 // Pickup sample position, higher up to not get caught on samples
