@@ -9,9 +9,10 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotFunctions.IntakeFunctions;
-import org.firstinspires.ftc.teamcode.RobotFunctions.MecanumFunctions;
+import org.firstinspires.ftc.teamcode.RobotFunctions.OldMecanumFunctions;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Robot;
 import org.firstinspires.ftc.teamcode.RobotFunctions.SlideFunctions;
+import org.firstinspires.ftc.teamcode.RobotFunctions.LiftSystemFunctions;
 
 import java.util.Map;
 
@@ -24,8 +25,12 @@ public class ManualTeleOp extends LinearOpMode {
     public DcMotor rightBackDrive = null;
     public DcMotor slideMotor = null;
     public DcMotor armMotor = null;
-    //public Servo wristServo = null;
-    //public Servo intakeServo = null;
+    public DcMotor leftLiftSystem = null;
+    public DcMotor rightLiftSystem = null;
+    public Servo wristAngleServo = null;
+    public Servo intakeAngleServo = null;
+    public Servo leftIntakeServo = null;
+    public Servo rightIntakeServo = null;
     public TouchSensor slideSafety = null;
     public NormalizedColorSensor intakeColorSensor = null;
 
@@ -46,19 +51,22 @@ public class ManualTeleOp extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        MecanumFunctions driveTrain = new MecanumFunctions();
-        driveTrain.init(hardwareMap);
+        OldMecanumFunctions driveTrain = new OldMecanumFunctions();
         SlideFunctions slideControl = new SlideFunctions();
+        LiftSystemFunctions liftSystemFunctions = new LiftSystemFunctions();
         //IntakeFunctions intakeControl = new IntakeFunctions();
 
         if (opModeIsActive()) {
             while(opModeIsActive()){
                 // Functions - Comments can be found in individual files
-                driveTrain.updateTeleOpMovement(gamepad1);
+                driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry);
                 slideControl.SlidePosition(gamepad1, gamepad2, slideMotor, slideSafety, telemetry);
                 slideControl.ArmPosition(gamepad1, gamepad2, armMotor, telemetry);
+                //liftSystemFunctions.LiftSystemControl(gamepad1, gamepad2, leftLiftSystem, rightLiftSystem, telemetry);
                 //intakeControl.intakeAngle(gamepad1, gamepad2, wristServo, telemetry);
                 //intakeControl.intakeSpin(gamepad1, gamepad2, intakeServo, telemetry);
+
+
 
                 // Telemetry data
                 telemetry.addData("Status", "Run Time: " + runtime.toString());
