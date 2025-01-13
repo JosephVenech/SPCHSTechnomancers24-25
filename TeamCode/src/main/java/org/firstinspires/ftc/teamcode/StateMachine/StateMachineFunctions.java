@@ -87,7 +87,7 @@ public class StateMachineFunctions {
                 .onEnter( () -> {
                     intakeServo.setPosition(intakePositions.intakeReverse);
                 })
-                .transitionTimed(.75, States.TRANSITION_FROM_BASKET_PHASE_ONE)
+                .transitionTimed(.75, States.TRANSITION_FROM_BASKET_PHASE_TWO)
 
 
                 .state(States.TRANSITION_FROM_BASKET_PHASE_ONE)
