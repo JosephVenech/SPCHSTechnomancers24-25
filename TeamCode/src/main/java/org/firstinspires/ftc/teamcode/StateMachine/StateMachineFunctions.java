@@ -85,7 +85,7 @@ public class StateMachineFunctions {
                     wristAngleServo.setPosition(wristAnglePositions.placeSample);
                     intakeAngleServo.setPosition(intakeAnglePositions.vertical);
 
-                    driveTrainVariables.driveTrainMaxPower = 0.1;
+                    driveTrainVariables.driveTrainMaxPower = 0.2;
                 })
                 .transition( () -> gamepad2.right_trigger > 0, States.RELEASE_SAMPLE)
                 .transition( () ->  gamepad2.a, States.TRANSITION_FROM_BASKET_PHASE_TWO)
@@ -126,7 +126,7 @@ public class StateMachineFunctions {
                     leftIntakeServo.setPosition(intakePositions.leftIntakeOff);
                     rightIntakeServo.setPosition(intakePositions.rightIntakeOff);
 
-                    driveTrainVariables.driveTrainMaxPower = 0.1;
+                    driveTrainVariables.driveTrainMaxPower = 0.3;
                 })
                 .transition( () -> gamepad2.dpad_down, States.COLLECT_SAMPLE)
                 .transition( () -> gamepad2.a, States.TRAVEL)
