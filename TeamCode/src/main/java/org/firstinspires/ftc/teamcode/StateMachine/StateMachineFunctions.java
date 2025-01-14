@@ -99,6 +99,7 @@ public class StateMachineFunctions {
                 })
                 .transitionTimed(.75, States.TRANSITION_FROM_BASKET_PHASE_ONE)
 
+                // TODO: Should be safe remove, make sure then remove it if so
                 .state(States.TRANSITION_FROM_BASKET_PHASE_ONE)
                 .onEnter( () -> {
                     armMotor.setTargetPosition(armPositions.safeReturnTransition);
@@ -164,8 +165,7 @@ public class StateMachineFunctions {
                 })
                 .transitionTimed(0.6, States.HIGH_SAMPLE)
 
-                // Set arm and slide in position allowing driver to drive to submersible to set
-                // up stage one climb
+                // TODO: Change to lift system instead of arms doing climb
                 .state(States.CLIMB_STAGE_ONE)
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.climbStageOne);
