@@ -48,6 +48,11 @@ public class ManualTeleOp extends LinearOpMode {
         leftLiftSystem = hardwareMap.get(DcMotor.class, "left_linear");
         rightLiftSystem = hardwareMap.get(DcMotor.class, "right_linear");
 
+        wristAngleServo = hardwareMap.get(Servo.class, "wrist_angle_servo");
+        intakeAngleServo = hardwareMap.get(Servo.class, "intake_angle_servo");
+        leftIntakeServo = hardwareMap.get(Servo.class, "left_intake_servo");
+        rightIntakeServo = hardwareMap.get(Servo.class, "right_intake_servo");
+
         leftLiftSystem.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightLiftSystem.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftLiftSystem.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -63,7 +68,7 @@ public class ManualTeleOp extends LinearOpMode {
         OldMecanumFunctions driveTrain = new OldMecanumFunctions();
         SlideFunctions slideControl = new SlideFunctions();
         LiftSystemFunctions liftSystemFunctions = new LiftSystemFunctions();
-        //IntakeFunctions intakeControl = new IntakeFunctions();
+        IntakeFunctions intakeControl = new IntakeFunctions();
 
         if (opModeIsActive()) {
             while(opModeIsActive()){
@@ -72,8 +77,16 @@ public class ManualTeleOp extends LinearOpMode {
                 slideControl.SlidePosition(gamepad1, gamepad2, slideMotor, slideSafety, telemetry);
                 slideControl.ArmPosition(gamepad1, gamepad2, armMotor, telemetry);
                 liftSystemFunctions.LiftSystemControl(gamepad1, gamepad2, leftLiftSystem, rightLiftSystem, telemetry);
-                //intakeControl.intakeAngle(gamepad1, gamepad2, wristServo, telemetry);
+                //intakeControl.intakeAngle(gamepad1, gamepad2, wristAngleServo, intakeAngleServo, telemetry);
                 //intakeControl.intakeSpin(gamepad1, gamepad2, intakeServo, telemetry);
+
+
+                if (gamepad1.a == true) wristAngleServo.setPosition(0.3);
+                if (gamepad1.b == true) wristAngleServo.setPosition(0); // 0.52 flat
+                if (gamepad1.x == true) wristAngleServo.setPosition(0.6); // above 0.5 pull in
+                if (gamepad1.y == true) wristAngleServo.setPosition(1); // above 0.5 push out
+
+
 
 
 

@@ -29,6 +29,7 @@ import org.firstinspires.ftc.teamcode.RobotFunctions.Robot;
 import org.firstinspires.ftc.teamcode.RobotFunctions.MecanumFunctions;
 import org.firstinspires.ftc.teamcode.RobotFunctions.ColorSensorFunctions;
 import org.firstinspires.ftc.teamcode.StateMachine.StateMachineFunctions;
+import org.firstinspires.ftc.teamcode.RobotFunctions.OldMecanumFunctions;
 
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.*;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
@@ -73,6 +74,7 @@ public class Main extends LinearOpMode {
         IntakeFunctions intakeControl = new IntakeFunctions();
         StateMachineFunctions stateMachine = new StateMachineFunctions();
         ColorSensorFunctions colorSensorFunctions = new ColorSensorFunctions();
+        OldMecanumFunctions oldMecanumFunctions = new OldMecanumFunctions();
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -115,8 +117,8 @@ public class Main extends LinearOpMode {
         if (opModeIsActive()) {
             while(opModeIsActive()){
                 // Functions - Comments can be found in individual files
-                //driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, runtime, telemetry);
-                driveTrain.updateTeleOpMovement(gamepad1);
+                oldMecanumFunctions.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry);
+                //driveTrain.updateTeleOpMovement(gamepad1);
                 // intakeControl.intakeSpin(gamepad1, gamepad2, intakeServo, telemetry);
 
                 intakeSampleColor = colorSensorFunctions.colorSensorGetColor(intakeColorSensor, isBlueAlliance, telemetry);
@@ -134,15 +136,6 @@ public class Main extends LinearOpMode {
                     armMotor.setPower(armPositions.motorSpeed);
                 }
 
-                if (intakeSampleColor.equals("EJECT_SAMPLE")) {
-                    telemetry.addData("Sample should be ejected", intakeSampleColor);
-                }
-                else if (!intakeSampleColor.equals("Null")) {
-                    telemetry.addData("Should return to travel", intakeSampleColor);
-                }
-                else {
-                    // intakeSampleState = 0;
-                }
 
                 machine.update();
 
@@ -169,6 +162,7 @@ public class Main extends LinearOpMode {
         rightBackDrive = motors.get("rightBackDrive");
         slideMotor = motors.get("slideMotor");
         armMotor = motors.get("armMotor");
+
 
         // Mapping Servos
         wristAngleServo = servos.get("wristAngleServo");

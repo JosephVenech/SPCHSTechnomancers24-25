@@ -16,27 +16,32 @@ to release game element
  */
 
 public class IntakeFunctions {
-    public void intakeAngle (Gamepad gamepad1, Gamepad gamepad2, Servo wrist, Telemetry telemetry){
+    public void intakeAngle (Gamepad gamepad1, Gamepad gamepad2, Servo wristAngle, Servo intakeAngle, Telemetry telemetry){
 
         // When a is pressed go to vertical position to place specimen
         if (gamepad1.a) {
-            wrist.setPosition(0.82);
+            wristAngle.setPosition(0.82);
+            intakeAngle.setPosition(0.5);
         }
 
         // When b is pressed go to horizontal position: used for picking up game elements and
         // placing samples in basket
         if (gamepad1.b) {
-            wrist.setPosition(0.3);
+            wristAngle.setPosition(0.3);
+            intakeAngle.setPosition(0.3);
         }
 
         // Minimum position used for testing purposes
         if (gamepad1.y) {
-            wrist.setPosition(0);
+            wristAngle.setPosition(0);
+            intakeAngle.setPosition(0);
         }
 
         // Get position of the wrist and display on driver station for feedback
-        double wristPosition = wrist.getPosition();
+        double wristPosition = wristAngle.getPosition();
+        double intakePosition = intakeAngle.getPosition();
         telemetry.addData("Wrist Position", wristPosition);
+        telemetry.addData("Intake Angle", intakePosition);
     }
 
     public void intakeSpin (Gamepad gamepad1, Gamepad gamepad2, Servo intake, Telemetry telemetry){

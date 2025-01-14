@@ -16,15 +16,15 @@ readability.
  */
 public class armPositions {
     public static double motorSpeed = 0.95;
-    public static int travelPosition = -1429;
-    public static int startingPosition = -3750;
-    public static int hangSpecimen = -4108;
-    public static int sampleBasket = -3040;
-    public static int safeReturnTransition = -3100;
-    public static int highSample = -346;
-    public static int collectSample = 50;
+    public static int travelPosition = 1429;
+    public static int startingPosition = 3750;
+    public static int hangSpecimen = 4108;
+    public static int sampleBasket = 3040;
+    public static int safeReturnTransition = 3100;
+    public static int highSample = 250;
+    public static int collectSample = -50;
     public static int observationDeck = 1684;
     public static int collectSpecimen = 2184;
-    public static int climbStageOne = -1105;
-    public static int stageOneLift = -4600;
+    public static int climbStageOne = 1105;
+    public static int stageOneLift = 4600;
 }

@@ -54,6 +54,8 @@ public class StateMachineFunctions {
                     armMotor.setTargetPosition(armPositions.travelPosition);
                     leftIntakeServo.setPosition(intakePositions.leftIntakeOff);
                     rightIntakeServo.setPosition(intakePositions.rightIntakeOff);
+                    wristAngleServo.setPosition(wristAnglePositions.travel);
+                    intakeAngleServo.setPosition(intakeAnglePositions.flat);
 
                     driveTrainVariables.driveTrainMaxPower = driveTrainVariables.driveTrainDefaultMaxPower;
                 })
@@ -81,7 +83,7 @@ public class StateMachineFunctions {
                     slideMotor.setTargetPosition(slidePositions.sampleBasket);
                     armMotor.setTargetPosition(armPositions.sampleBasket);
                     wristAngleServo.setPosition(wristAnglePositions.placeSample);
-                    intakeAngleServo.setPosition(intakeAnglePositions.flat);
+                    intakeAngleServo.setPosition(intakeAnglePositions.vertical);
 
                     driveTrainVariables.driveTrainMaxPower = 0.1;
                 })
@@ -93,7 +95,7 @@ public class StateMachineFunctions {
                 .state(States.RELEASE_SAMPLE)
                 .onEnter( () -> {
                     leftIntakeServo.setPosition(intakePositions.leftIntakeReverse);
-                    rightIntakeServo.setPosition(intakePositions.leftIntakeReverse);
+                    rightIntakeServo.setPosition(intakePositions.rightIntakeReverse);
                 })
                 .transitionTimed(.75, States.TRANSITION_FROM_BASKET_PHASE_ONE)
 
@@ -109,8 +111,8 @@ public class StateMachineFunctions {
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.travelPosition);
                 })
-                .transition( () -> slideMotor.getCurrentPosition() <= slidePositions.travelPosition, States.TRAVEL)
-                .transition( () ->  gamepad2.a, States.TRAVEL)
+                .transition( () -> (Math.abs(slideMotor.getCurrentPosition() - slidePositions.travelPosition) <= 20), States.TRAVEL)
+                // .transition( () ->  gamepad2.a, States.TRAVEL)
 
 
                 // Pickup sample position, higher up to not get caught on samples

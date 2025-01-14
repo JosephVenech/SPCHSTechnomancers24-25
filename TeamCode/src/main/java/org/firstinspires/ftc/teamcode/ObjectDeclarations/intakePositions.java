@@ -14,9 +14,9 @@ public class intakePositions {
 
     // Left servo, one with cut gecko wheel
     // Continuous mode
-    public static double leftIntakeOn = 0;
+    public static double leftIntakeOn = 1;
     public static double leftIntakeOff = 0.5;
-    public static double leftIntakeReverse = 1;
+    public static double leftIntakeReverse = 0;
 
 
     // Right servo, uncut gecko wheel and intake wheel

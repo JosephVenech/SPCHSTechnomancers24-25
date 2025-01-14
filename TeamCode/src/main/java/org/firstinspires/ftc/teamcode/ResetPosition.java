@@ -54,7 +54,7 @@ public class ResetPosition extends LinearOpMode {
         slideSafety = hardwareMap.get(TouchSensor.class, "slide_safety");
 
         wristAngleServo = hardwareMap.get(Servo.class, "wrist_angle_servo");
-        wristAngleServo.setPosition(0.3);
+        // wristAngleServo.setPosition(0.3);
 
 
         waitForStart();
