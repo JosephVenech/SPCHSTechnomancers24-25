@@ -97,7 +97,7 @@ public class StateMachineFunctions {
                     leftIntakeServo.setPosition(intakePositions.leftIntakeReverse);
                     rightIntakeServo.setPosition(intakePositions.rightIntakeReverse);
                 })
-                .transitionTimed(.75, States.TRANSITION_FROM_BASKET_PHASE_ONE)
+                .transitionTimed(.75, States.TRANSITION_FROM_BASKET_PHASE_TWO)
 
                 // TODO: Should be safe remove, make sure then remove it if so
                 .state(States.TRANSITION_FROM_BASKET_PHASE_ONE)
