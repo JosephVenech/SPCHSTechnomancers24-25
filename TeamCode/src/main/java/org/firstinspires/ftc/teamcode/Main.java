@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -68,6 +69,8 @@ public class Main extends LinearOpMode {
         Map<String, String> misc = robot.getMiscDictionary();
 
         mapVariables(motors, servos, misc);
+
+        //leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
         MecanumFunctions driveTrain = new MecanumFunctions();
         driveTrain.init(hardwareMap);
@@ -136,6 +139,18 @@ public class Main extends LinearOpMode {
                     armMotor.setPower(armPositions.motorSpeed);
                 }
 
+                if (gamepad1.a) {
+                    leftFrontDrive.setPower(1);
+                }
+                if (gamepad1.b) {
+                    leftBackDrive.setPower(-1);
+                }
+                if (gamepad1.x) {
+                    rightFrontDrive.setPower(1);
+                }
+                if (gamepad1.y) {
+                    rightBackDrive.setPower(1);
+                }
 
                 machine.update();
 

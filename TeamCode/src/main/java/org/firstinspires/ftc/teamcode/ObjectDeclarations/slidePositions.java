@@ -15,7 +15,7 @@ readability.
  */
 
 public class slidePositions {
-    public static double motorSpeed = 0.7;
+    public static double motorSpeed = 1;
     public static int startingPosition = 0; // -224
     public static int travelPosition = 0;
     public static int hangSpecimen = 2720;

@@ -57,6 +57,7 @@ public class ManualTeleOp extends LinearOpMode {
         rightLiftSystem.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftLiftSystem.setDirection(DcMotorSimple.Direction.FORWARD);
         rightLiftSystem.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -81,10 +82,22 @@ public class ManualTeleOp extends LinearOpMode {
                 //intakeControl.intakeSpin(gamepad1, gamepad2, intakeServo, telemetry);
 
 
-                if (gamepad1.a == true) wristAngleServo.setPosition(0.3);
-                if (gamepad1.b == true) wristAngleServo.setPosition(0); // 0.52 flat
-                if (gamepad1.x == true) wristAngleServo.setPosition(0.6); // above 0.5 pull in
-                if (gamepad1.y == true) wristAngleServo.setPosition(1); // above 0.5 push out
+                if (gamepad1.a == true) {
+                    wristAngleServo.setPosition(0.3);
+                    leftFrontDrive.setPower(1);
+                }
+                if (gamepad1.b == true) {
+                    wristAngleServo.setPosition(0); // 0.52 flat
+                    leftBackDrive.setPower(1);
+                }
+                if (gamepad1.x == true) {
+                    wristAngleServo.setPosition(0.6); // above 0.5 pull in
+                    rightFrontDrive.setPower(1);
+                }
+                if (gamepad1.y == true) {
+                    wristAngleServo.setPosition(1); // above 0.5 push out
+                    rightBackDrive.setPower(1);
+                }
 
 
 

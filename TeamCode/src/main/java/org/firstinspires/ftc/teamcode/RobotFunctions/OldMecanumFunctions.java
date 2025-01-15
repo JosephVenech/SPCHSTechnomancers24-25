@@ -73,7 +73,7 @@ public class OldMecanumFunctions {
         // Send calculated power to motors
         leftFrontDrive.setPower(motorPower[0] * driveTrainVariables.driveTrainSpeed);
         rightFrontDrive.setPower(motorPower[1] * driveTrainVariables.driveTrainSpeed);
-        leftBackDrive.setPower(motorPower[2] * driveTrainVariables.driveTrainSpeed);
+        leftBackDrive.setPower(motorPower[2] * -driveTrainVariables.driveTrainSpeed);
         rightBackDrive.setPower(motorPower[3] * driveTrainVariables.driveTrainSpeed);
 
         // Telemetry data
