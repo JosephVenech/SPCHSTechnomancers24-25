@@ -30,5 +30,7 @@ public class LiftSystemFunctions {
 
         telemetry.addData("Left lift power:", leftLiftSystem.getPower());
         telemetry.addData("Right lift power:", rightLiftSystem.getPower());
+        telemetry.addData("Left lift position:", leftLiftSystem.getCurrentPosition());
+        telemetry.addData("Right lift position:", rightLiftSystem.getCurrentPosition());
     }
 }

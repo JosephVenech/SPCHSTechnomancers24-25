@@ -25,6 +25,11 @@ public class armPositions {
     public static int collectSample = -50;
     public static int observationDeck = 1684;
     public static int collectSpecimen = 2184;
-    public static int climbStageOne = 1105;
-    public static int stageOneLift = 4600;
+    public static int climbStageOne = 2372;
+    public static int climbStageTwo = 1715;
+    public static int climbStageThree = 1835;
+    public static int climbStageFour = 1400;
+    public static int climbStageFive = 2388;
+    public static int climbStageSix = 4899;
+    public static int climbStageSeven = 5839;
 }

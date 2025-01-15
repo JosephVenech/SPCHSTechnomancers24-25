@@ -48,6 +48,8 @@ public class Main extends LinearOpMode {
     public DcMotor rightBackDrive = null;
     public DcMotor slideMotor = null;
     public DcMotor armMotor = null;
+    public DcMotor leftLiftSystem = null;
+    public DcMotor rightLiftSystem = null;
     public Servo wristAngleServo = null;
     public Servo leftIntakeServo = null;
     public Servo rightIntakeServo = null;
@@ -69,6 +71,14 @@ public class Main extends LinearOpMode {
         Map<String, String> misc = robot.getMiscDictionary();
 
         mapVariables(motors, servos, misc);
+
+        leftLiftSystem = hardwareMap.get(DcMotor.class, "left_linear");
+        rightLiftSystem = hardwareMap.get(DcMotor.class, "right_linear");
+
+        leftLiftSystem.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightLiftSystem.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftLiftSystem.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightLiftSystem.setDirection(DcMotorSimple.Direction.FORWARD);
 
         //leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -103,7 +113,7 @@ public class Main extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        StateMachine machine = stateMachine.CreateStateDefinitions(gamepad1, gamepad2, armMotor, slideMotor, leftIntakeServo, rightIntakeServo, wristAngleServo, intakeAngleServo, colorSensorFunctions, intakeColorSensor, isBlueAlliance, slideSafety, telemetry);
+        StateMachine machine = stateMachine.CreateStateDefinitions(gamepad1, gamepad2, armMotor, slideMotor, leftLiftSystem, rightLiftSystem, leftIntakeServo, rightIntakeServo, wristAngleServo, intakeAngleServo, colorSensorFunctions, intakeColorSensor, isBlueAlliance, slideSafety, telemetry);
 
         slideMotor.setTargetPosition(slidePositions.travelPosition);
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -114,6 +124,16 @@ public class Main extends LinearOpMode {
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(armPositions.motorSpeed);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        leftLiftSystem.setTargetPosition(liftSystemPositions.liftClosed);
+        leftLiftSystem.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftLiftSystem.setPower(liftSystemPositions.liftMotorPower);
+        leftLiftSystem.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        rightLiftSystem.setTargetPosition(liftSystemPositions.liftClosed);
+        rightLiftSystem.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightLiftSystem.setPower(liftSystemPositions.liftMotorPower);
+        rightLiftSystem.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         machine.start();
 
@@ -158,6 +178,10 @@ public class Main extends LinearOpMode {
                 telemetry.addData("Status", "Run Time: " + runtime.toString());
                 telemetry.addData("intake color sample reading main", intakeSampleColor);
                 telemetry.addData("Current State", machine.getState());
+                telemetry.addData("Arm Current Position", armMotor.getCurrentPosition());
+                telemetry.addData("Arm Target Position", armMotor.getTargetPosition());
+                telemetry.addData("Slide Current Position", slideMotor.getCurrentPosition());
+                telemetry.addData("Slide Target Position", slideMotor.getTargetPosition());
                 telemetry.addData("Max Speed", driveTrainVariables.driveTrainMaxPower);
                 telemetry.addData("Current Speed", driveTrainVariables.driveTrainMotorPower[0].getPower());
                 telemetry.update();

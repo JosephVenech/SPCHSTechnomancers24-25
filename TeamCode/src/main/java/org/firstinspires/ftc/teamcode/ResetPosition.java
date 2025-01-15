@@ -28,8 +28,12 @@ public class ResetPosition extends LinearOpMode {
     public ElapsedTime runtime = new ElapsedTime();
     public DcMotor armMotor = null;
     public DcMotor slideMotor = null;
+    public DcMotor leftLiftMotor = null;
+    public DcMotor rightLiftMotor = null;
     public TouchSensor armSafety = null;
     public TouchSensor slideSafety = null;
+    public TouchSensor leftLiftReset = null;
+    public TouchSensor rightLiftReset = null;
     public Servo wristAngleServo = null;
     double motorSpeed = 0.8;
     double slideSpeed = 0.5;
@@ -50,8 +54,16 @@ public class ResetPosition extends LinearOpMode {
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        leftLiftMotor = hardwareMap.get(DcMotor.class, "left_linear");
+        rightLiftMotor = hardwareMap.get(DcMotor.class, "right_linear");
+        leftLiftMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightLiftMotor.setDirection(DcMotor.Direction.FORWARD);
+
+
         armSafety = hardwareMap.get(TouchSensor.class, "arm_safety");
         slideSafety = hardwareMap.get(TouchSensor.class, "slide_safety");
+        leftLiftReset = hardwareMap.get(TouchSensor.class, "left_lift_reset");
+        rightLiftReset = hardwareMap.get(TouchSensor.class, "right_lift_reset");
 
         wristAngleServo = hardwareMap.get(Servo.class, "wrist_angle_servo");
         // wristAngleServo.setPosition(0.3);
@@ -79,6 +91,17 @@ public class ResetPosition extends LinearOpMode {
         }
 
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        while (!leftLiftReset.isPressed()){
+            leftLiftMotor.setPower(-motorSpeed);
+        }
+        leftLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        while (!rightLiftReset.isPressed()){
+            rightLiftMotor.setPower(-motorSpeed);
+        }
+        rightLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
         armMotor.setTargetPosition(defaultPosition);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
