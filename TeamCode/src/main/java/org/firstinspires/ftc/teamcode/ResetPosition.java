@@ -37,7 +37,7 @@ public class ResetPosition extends LinearOpMode {
     public Servo wristAngleServo = null;
     double motorSpeed = 0.8;
     double slideSpeed = 0.5;
-    int defaultPosition = -2000;
+    int defaultPosition = -2700;
 
 
     @Override

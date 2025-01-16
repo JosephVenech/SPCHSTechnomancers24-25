@@ -39,7 +39,8 @@ public class StateMachineFunctions {
         CLIMB_STAGE_FOUR,
         CLIMB_STAGE_FIVE,
         CLIMB_STAGE_SIX,
-        CLIMB_STAGE_SEVEN
+        CLIMB_STAGE_SEVEN,
+        CLIMB_STAGE_EIGHT
     }
 
     public ColorSensorFunctions colorSensorFunctions = null;
@@ -227,6 +228,7 @@ public class StateMachineFunctions {
                 .transition( () ->  (
                         (Math.abs(slideMotor.getCurrentPosition() - slideMotor.getTargetPosition()) <= liftSystemPositions.threshold) &&
                         (Math.abs(armMotor.getCurrentPosition() - armMotor.getTargetPosition()) <= liftSystemPositions.threshold)), States.CLIMB_STAGE_SIX)
+                .transition( () -> gamepad2.a, States.CLIMB_STAGE_SIX)
 
                 .state(States.CLIMB_STAGE_SIX)
                 .onEnter( () -> {
@@ -241,6 +243,16 @@ public class StateMachineFunctions {
                 .onEnter( () -> {
                     armMotor.setTargetPosition(armPositions.climbStageSeven);
                     slideMotor.setTargetPosition(slidePositions.climbStageSeven);
+                })
+                .transition( () ->  (
+                        (Math.abs(slideMotor.getCurrentPosition() - slideMotor.getTargetPosition()) <= liftSystemPositions.threshold) &&
+                        (Math.abs(armMotor.getCurrentPosition() - armMotor.getTargetPosition()) <= liftSystemPositions.threshold)), States.CLIMB_STAGE_EIGHT)
+                .transition( () -> gamepad2.b, States.CLIMB_STAGE_EIGHT)
+
+                .state(States.CLIMB_STAGE_EIGHT)
+                .onEnter( () -> {
+                    armMotor.setTargetPosition(armPositions.climbStageEight);
+                    slideMotor.setTargetPosition(slidePositions.climbStageEight);
                 })
 
 

@@ -24,11 +24,12 @@ public class slidePositions {
     public static int collectSample = 3300;
     public static int observationDeck = 2230;
     public static int collectSpecimen = 2230;
-    public static int climbStageOne = 5;
+    public static int climbStageOne = 5; //1.399
     public static int climbStageTwo = 5;
-    public static int climbStageThree = 2340;
-    public static int climbStageFour = 2389;
-    public static int climbStageFive = 854;
-    public static int climbStageSix = 500;
-    public static int climbStageSeven = 500;
+    public static int climbStageThree = 4015;
+    public static int climbStageFour = 4127;
+    public static int climbStageFive = 2609;
+    public static int climbStageSix = 734;
+    public static int climbStageSeven = 700;
+    public static int climbStageEight = 185;
 }
