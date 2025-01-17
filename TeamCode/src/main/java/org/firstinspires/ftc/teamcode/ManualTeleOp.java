@@ -83,20 +83,20 @@ public class ManualTeleOp extends LinearOpMode {
 
 
                 if (gamepad1.a == true) {
-                    wristAngleServo.setPosition(0.3);
-                    leftFrontDrive.setPower(1);
+                    wristAngleServo.setPosition(0.4);
+                    //intakeAngleServo.setPosition(0.3); // Vertical 0.3
                 }
                 if (gamepad1.b == true) {
-                    wristAngleServo.setPosition(0); // 0.52 flat
-                    leftBackDrive.setPower(1);
+                    wristAngleServo.setPosition(0.2); // 0.52 flat
+                    //intakeAngleServo.setPosition(0.02); // 0.02 flat
                 }
                 if (gamepad1.x == true) {
                     wristAngleServo.setPosition(0.6); // above 0.5 pull in
-                    rightFrontDrive.setPower(1);
+                    //intakeAngleServo.setPosition(0.58); // 0.58 flat
                 }
                 if (gamepad1.y == true) {
-                    wristAngleServo.setPosition(1); // above 0.5 push out
-                    rightBackDrive.setPower(1);
+                    wristAngleServo.setPosition(0.8); // above 0.5 push out
+                    //intakeAngleServo.setPosition(0.87); // 0.87 vertical
                 }
 
 

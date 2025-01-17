@@ -33,6 +33,12 @@ public class StateMachineFunctions {
         COLLECT_SAMPLE,
         EJECT_SAMPLE_PHASE_ONE,
         EJECT_SAMPLE_PHASE_TWO,
+        OBSERVATION_ZONE,
+        COLLECT_SPECIMEN,
+        COLLECT_SPECIMEN_TWO,
+        PLACE_SPECIMEN,
+        LOCK_SPECIMEN,
+        RELEASE_SPECIMEN,
         CLIMB_STAGE_ONE,
         CLIMB_STAGE_TWO,
         CLIMB_STAGE_THREE,
@@ -72,6 +78,8 @@ public class StateMachineFunctions {
                 .transition( () -> gamepad2.y, States.TRANSITION_TO_BASKET)
                 .transition( () -> gamepad2.left_bumper, States.HIGH_SAMPLE)
                 .transition( () -> gamepad2.dpad_up, States.CLIMB_STAGE_ONE)
+                .transition( () -> gamepad2.b, States.PLACE_SPECIMEN)
+                .transition( () -> gamepad2.x, States.OBSERVATION_ZONE)
 
                 // Intermediate stage, raises arm first then once arm is in position moves to
                 // next state where slide extends to necessary position.
@@ -108,7 +116,7 @@ public class StateMachineFunctions {
                 })
                 .transitionTimed(.75, States.TRANSITION_FROM_BASKET_PHASE_TWO)
 
-                // TODO: Should be safe remove, make sure then remove it if so
+                // Raises arm flips wrist to prevent it from catching on basket
                 .state(States.TRANSITION_FROM_BASKET_PHASE_ONE)
                 .onEnter( () -> {
                     armMotor.setTargetPosition(armPositions.safeReturnTransition);
@@ -175,7 +183,61 @@ public class StateMachineFunctions {
                 })
                 .transitionTimed(0.6, States.HIGH_SAMPLE)
 
-                // TODO: Change to lift system instead of arms doing climb
+                .state(States.OBSERVATION_ZONE)
+                .onEnter( () -> {
+                    slideMotor.setTargetPosition(slidePositions.observationDeck);
+                    armMotor.setTargetPosition(armPositions.observationDeck);
+                    intakeAngleServo.setPosition(intakeAnglePositions.collectSpecimen);
+                    wristAngleServo.setPosition(wristAnglePositions.collectSpecimen);
+                    leftIntakeServo.setPosition(intakePositions.leftIntakeReverse);
+                    rightIntakeServo.setPosition(intakePositions.rightIntakeReverse);
+                })
+                .transition( () -> gamepad2.dpad_up, States.COLLECT_SPECIMEN)
+                .transition( () -> gamepad2.a, States.TRAVEL)
+
+                .state(States.COLLECT_SPECIMEN)
+                .onEnter( () -> {
+                    slideMotor.setTargetPosition(slidePositions.collectSpecimen);
+                    armMotor.setTargetPosition(armPositions.collectSpecimen);
+                    leftIntakeServo.setPosition(intakePositions.leftIntakeOn);
+                    rightIntakeServo.setPosition(intakePositions.rightIntakeOn);
+                })
+                .transition( () -> (!GetSampleColor(intakeColorSensor, isBlueAlliance, telemetry).equals("Null") && !GetSampleColor(intakeColorSensor, isBlueAlliance, telemetry).equals("EJECT_SAMPLE")), States.COLLECT_SPECIMEN_TWO)
+                .transition( () -> gamepad2.a, States.COLLECT_SPECIMEN_TWO)
+
+                .state(States.COLLECT_SPECIMEN_TWO)
+                .onEnter( () -> {
+                    armMotor.setTargetPosition(armPositions.collectSpecimenTwo);
+                })
+                .transitionTimed(0.2, States.TRAVEL)
+
+                .state(States.PLACE_SPECIMEN)
+                .onEnter( () -> {
+                    slideMotor.setTargetPosition(slidePositions.hangSpecimen);
+                    armMotor.setTargetPosition(armPositions.hangSpecimen);
+                    intakeAngleServo.setPosition(intakeAnglePositions.placeSpecimen);
+                    wristAngleServo.setPosition(wristAnglePositions.placeSpecimen);
+                })
+                .transition( () -> gamepad2.a, States.TRAVEL)
+                .transition( () -> gamepad2.dpad_down, States.LOCK_SPECIMEN)
+
+                .state(States.LOCK_SPECIMEN)
+                .onEnter( () -> {
+                    armMotor.setTargetPosition(armPositions.lockSpecimen);
+                    slideMotor.setTargetPosition(slidePositions.lockSpecimen);
+                })
+                .transitionTimed(1.5, States.RELEASE_SPECIMEN)
+
+                .state(States.RELEASE_SPECIMEN)
+                .onEnter( () -> {
+                    leftIntakeServo.setPosition(intakePositions.leftIntakeReverse);
+                    rightIntakeServo.setPosition(intakePositions.rightIntakeReverse);
+                    armMotor.setTargetPosition(armPositions.travelPosition);
+                    slideMotor.setTargetPosition(slidePositions.travelPosition);
+                })
+                .transitionTimed(0.3, States.TRAVEL)
+
+                // Stage to grab the bar
                 .state(States.CLIMB_STAGE_ONE)
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.climbStageOne);
