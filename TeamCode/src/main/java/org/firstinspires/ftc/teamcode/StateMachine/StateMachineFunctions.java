@@ -102,7 +102,7 @@ public class StateMachineFunctions {
                     wristAngleServo.setPosition(wristAnglePositions.placeSample);
                     intakeAngleServo.setPosition(intakeAnglePositions.vertical);
 
-                    driveTrainVariables.driveTrainMaxPower = 0.2;
+                    driveTrainVariables.driveTrainMaxPower = 0.1;
                 })
                 .transition( () -> gamepad2.right_trigger > 0, States.RELEASE_SAMPLE)
                 .transition( () ->  gamepad2.a, States.TRANSITION_FROM_BASKET_PHASE_TWO)
@@ -141,11 +141,11 @@ public class StateMachineFunctions {
                     slideMotor.setTargetPosition(slidePositions.highSample);
                     armMotor.setTargetPosition(armPositions.highSample);
                     wristAngleServo.setPosition(wristAnglePositions.collectSample);
-                    intakeAngleServo.setPosition(intakeAnglePositions.flat);
+                    intakeAngleServo.setPosition(intakeAnglePositions.collectSample);
                     leftIntakeServo.setPosition(intakePositions.leftIntakeOff);
                     rightIntakeServo.setPosition(intakePositions.rightIntakeOff);
 
-                    driveTrainVariables.driveTrainMaxPower = 0.3;
+                    driveTrainVariables.driveTrainMaxPower = 0.15;
                 })
                 .transition( () -> gamepad2.dpad_down, States.COLLECT_SAMPLE)
                 .transition( () -> gamepad2.a, States.TRAVEL)
@@ -191,6 +191,8 @@ public class StateMachineFunctions {
                     wristAngleServo.setPosition(wristAnglePositions.collectSpecimen);
                     leftIntakeServo.setPosition(intakePositions.leftIntakeReverse);
                     rightIntakeServo.setPosition(intakePositions.rightIntakeReverse);
+
+                    driveTrainVariables.driveTrainMaxPower = 0.1;
                 })
                 .transition( () -> gamepad2.dpad_up, States.COLLECT_SPECIMEN)
                 .transition( () -> gamepad2.a, States.TRAVEL)
@@ -201,6 +203,8 @@ public class StateMachineFunctions {
                     armMotor.setTargetPosition(armPositions.collectSpecimen);
                     leftIntakeServo.setPosition(intakePositions.leftIntakeOn);
                     rightIntakeServo.setPosition(intakePositions.rightIntakeOn);
+
+                    driveTrainVariables.driveTrainMaxPower = 0.1;
                 })
                 .transition( () -> (!GetSampleColor(intakeColorSensor, isBlueAlliance, telemetry).equals("Null") && !GetSampleColor(intakeColorSensor, isBlueAlliance, telemetry).equals("EJECT_SAMPLE")), States.COLLECT_SPECIMEN_TWO)
                 .transition( () -> gamepad2.a, States.COLLECT_SPECIMEN_TWO)
@@ -217,6 +221,8 @@ public class StateMachineFunctions {
                     armMotor.setTargetPosition(armPositions.hangSpecimen);
                     intakeAngleServo.setPosition(intakeAnglePositions.placeSpecimen);
                     wristAngleServo.setPosition(wristAnglePositions.placeSpecimen);
+
+                    driveTrainVariables.driveTrainMaxPower = -0.1;
                 })
                 .transition( () -> gamepad2.a, States.TRAVEL)
                 .transition( () -> gamepad2.dpad_down, States.LOCK_SPECIMEN)
@@ -234,6 +240,8 @@ public class StateMachineFunctions {
                     rightIntakeServo.setPosition(intakePositions.rightIntakeReverse);
                     armMotor.setTargetPosition(armPositions.travelPosition);
                     slideMotor.setTargetPosition(slidePositions.travelPosition);
+
+                    driveTrainVariables.driveTrainMaxPower = -1;
                 })
                 .transitionTimed(0.3, States.TRAVEL)
 

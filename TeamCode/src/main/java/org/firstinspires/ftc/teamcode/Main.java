@@ -55,6 +55,8 @@ public class Main extends LinearOpMode {
     public Servo rightIntakeServo = null;
     public Servo intakeAngleServo = null;
     public TouchSensor slideSafety = null;
+    public TouchSensor leftSafety = null;
+    public TouchSensor rightSafety = null;
     public NormalizedColorSensor intakeColorSensor = null;
     public String intakeSampleColor = "Null";
     public Boolean isBlueAlliance = false; // Default team is red alliance
@@ -74,6 +76,9 @@ public class Main extends LinearOpMode {
 
         leftLiftSystem = hardwareMap.get(DcMotor.class, "left_linear");
         rightLiftSystem = hardwareMap.get(DcMotor.class, "right_linear");
+
+        leftSafety = hardwareMap.get(TouchSensor.class, "left_lift_reset");
+        rightSafety = hardwareMap.get(TouchSensor.class, "right_lift_reset");
 
         leftLiftSystem.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightLiftSystem.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -157,6 +162,20 @@ public class Main extends LinearOpMode {
                 }
                 else {
                     armMotor.setPower(armPositions.motorSpeed);
+                }
+
+                if ((leftLiftSystem.getTargetPosition() == 0) && leftSafety.isPressed()){
+                    leftLiftSystem.setPower(0);
+                }
+                else {
+                    leftLiftSystem.setPower(liftSystemPositions.liftMotorPower);
+                }
+
+                if ((rightLiftSystem.getTargetPosition() == 0) && rightSafety.isPressed()){
+                    rightLiftSystem.setPower(0);
+                }
+                else {
+                    rightLiftSystem.setPower(liftSystemPositions.liftMotorPower);
                 }
 
                 if (gamepad1.a) {

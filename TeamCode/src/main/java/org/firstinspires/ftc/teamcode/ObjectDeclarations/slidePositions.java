@@ -20,7 +20,7 @@ public class slidePositions {
     public static int travelPosition = 0;
     public static int hangSpecimen = 400;
     public static int lockSpecimen = -10;
-    public static int sampleBasket = 4150;
+    public static int sampleBasket = 3350;
     public static int highSample = 3300;
     public static int collectSample = 3300;
     public static int observationDeck = 692;
