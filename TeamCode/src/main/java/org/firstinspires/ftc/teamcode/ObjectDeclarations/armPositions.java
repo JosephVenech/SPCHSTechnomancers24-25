@@ -19,7 +19,7 @@ public class armPositions {
     public static int travelPosition = 1429;
     public static int startingPosition = 3750;
     public static int hangSpecimen = 4031;
-    public static int lockSpecimen = 10050;
+    public static int lockSpecimen = 8050;
     public static int sampleBasket = 4084; //4084
     public static int safeReturnTransition = 3900;
     public static int highSample = 400;

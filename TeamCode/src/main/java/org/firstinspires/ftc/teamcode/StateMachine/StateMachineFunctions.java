@@ -141,11 +141,15 @@ public class StateMachineFunctions {
                     slideMotor.setTargetPosition(slidePositions.highSample);
                     armMotor.setTargetPosition(armPositions.highSample);
                     wristAngleServo.setPosition(wristAnglePositions.collectSample);
-                    intakeAngleServo.setPosition(intakeAnglePositions.collectSample);
+                    intakeAngleServo.setPosition(intakeAnglePositions.flat);
                     leftIntakeServo.setPosition(intakePositions.leftIntakeOff);
                     rightIntakeServo.setPosition(intakePositions.rightIntakeOff);
 
                     driveTrainVariables.driveTrainMaxPower = 0.15;
+                })
+                .loop( () -> {
+                    if (gamepad2.right_bumper) intakeAngleServo.setPosition(intakeAnglePositions.vertical);
+                    if (gamepad2.left_bumper) intakeAngleServo.setPosition(intakeAnglePositions.flat);
                 })
                 .transition( () -> gamepad2.dpad_down, States.COLLECT_SAMPLE)
                 .transition( () -> gamepad2.a, States.TRAVEL)
@@ -243,7 +247,7 @@ public class StateMachineFunctions {
 
                     driveTrainVariables.driveTrainMaxPower = -1;
                 })
-                .transitionTimed(0.3, States.TRAVEL)
+                .transition( () -> gamepad2.a, States.TRAVEL)
 
                 // Stage to grab the bar
                 .state(States.CLIMB_STAGE_ONE)
