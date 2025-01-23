@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.KalmanFilterParameters;
 public class FollowerConstants {
 
     // This section is for configuring your motors
-    public static String leftFrontMotorName = "left_rear_drive";
-    public static String leftRearMotorName = "left_front_drive";
+    public static String leftFrontMotorName = "left_front_drive";
+    public static String leftRearMotorName = "left_rear_drive";
     public static String rightFrontMotorName = "right_front_drive";
     public static String rightRearMotorName = "right_rear_drive";
 
@@ -38,7 +38,7 @@ public class FollowerConstants {
 
     // Translational PIDF coefficients (don't use integral)
     public static CustomPIDFCoefficients translationalPIDFCoefficients = new CustomPIDFCoefficients(
-            0.1,
+            3.1,
             0,
             0,
             0);
