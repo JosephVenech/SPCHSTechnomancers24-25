@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.ObjectDeclarations.wristAnglePositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.intakeAnglePositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.slidePositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.driveTrainVariables;
+import org.firstinspires.ftc.teamcode.ObjectDeclarations.liftSystemPositions;
 
 import org.firstinspires.ftc.teamcode.RobotFunctions.ColorSensorFunctions;
 
@@ -32,13 +33,25 @@ public class StateMachineFunctions {
         COLLECT_SAMPLE,
         EJECT_SAMPLE_PHASE_ONE,
         EJECT_SAMPLE_PHASE_TWO,
+        OBSERVATION_ZONE,
+        COLLECT_SPECIMEN,
+        COLLECT_SPECIMEN_TWO,
+        PLACE_SPECIMEN,
+        LOCK_SPECIMEN,
+        RELEASE_SPECIMEN,
         CLIMB_STAGE_ONE,
-        STAGE_ONE_LIFT
+        CLIMB_STAGE_TWO,
+        CLIMB_STAGE_THREE,
+        CLIMB_STAGE_FOUR,
+        CLIMB_STAGE_FIVE,
+        CLIMB_STAGE_SIX,
+        CLIMB_STAGE_SEVEN,
+        CLIMB_STAGE_EIGHT
     }
 
     public ColorSensorFunctions colorSensorFunctions = null;
 
-    public StateMachine CreateStateDefinitions(Gamepad gamepad1, Gamepad gamepad2, DcMotor armMotor, DcMotor slideMotor, Servo leftIntakeServo, Servo rightIntakeServo, Servo wristAngleServo, Servo intakeAngleServo, ColorSensorFunctions cF, NormalizedColorSensor intakeColorSensor, Boolean isBlueAlliance, TouchSensor slideSafety, Telemetry telemetry) {
+    public StateMachine CreateStateDefinitions(Gamepad gamepad1, Gamepad gamepad2, DcMotor armMotor, DcMotor slideMotor, DcMotor leftLiftSystem, DcMotor rightLiftSystem, Servo leftIntakeServo, Servo rightIntakeServo, Servo wristAngleServo, Servo intakeAngleServo, ColorSensorFunctions cF, NormalizedColorSensor intakeColorSensor, Boolean isBlueAlliance, TouchSensor slideSafety, Telemetry telemetry) {
         colorSensorFunctions = cF;
 
         return new StateMachineBuilder() // returns the state machine states
@@ -54,6 +67,10 @@ public class StateMachineFunctions {
                     armMotor.setTargetPosition(armPositions.travelPosition);
                     leftIntakeServo.setPosition(intakePositions.leftIntakeOff);
                     rightIntakeServo.setPosition(intakePositions.rightIntakeOff);
+                    wristAngleServo.setPosition(wristAnglePositions.travel);
+                    intakeAngleServo.setPosition(intakeAnglePositions.flat);
+                    leftLiftSystem.setTargetPosition(liftSystemPositions.liftClosed);
+                    rightLiftSystem.setTargetPosition(liftSystemPositions.liftClosed);
 
                     driveTrainVariables.driveTrainMaxPower = driveTrainVariables.driveTrainDefaultMaxPower;
                 })
@@ -61,6 +78,8 @@ public class StateMachineFunctions {
                 .transition( () -> gamepad2.y, States.TRANSITION_TO_BASKET)
                 .transition( () -> gamepad2.left_bumper, States.HIGH_SAMPLE)
                 .transition( () -> gamepad2.dpad_up, States.CLIMB_STAGE_ONE)
+                .transition( () -> gamepad2.b, States.PLACE_SPECIMEN)
+                .transition( () -> gamepad2.x, States.OBSERVATION_ZONE)
 
                 // Intermediate stage, raises arm first then once arm is in position moves to
                 // next state where slide extends to necessary position.
@@ -81,7 +100,7 @@ public class StateMachineFunctions {
                     slideMotor.setTargetPosition(slidePositions.sampleBasket);
                     armMotor.setTargetPosition(armPositions.sampleBasket);
                     wristAngleServo.setPosition(wristAnglePositions.placeSample);
-                    intakeAngleServo.setPosition(intakeAnglePositions.flat);
+                    intakeAngleServo.setPosition(intakeAnglePositions.vertical);
 
                     driveTrainVariables.driveTrainMaxPower = 0.1;
                 })
@@ -93,10 +112,11 @@ public class StateMachineFunctions {
                 .state(States.RELEASE_SAMPLE)
                 .onEnter( () -> {
                     leftIntakeServo.setPosition(intakePositions.leftIntakeReverse);
-                    rightIntakeServo.setPosition(intakePositions.leftIntakeReverse);
+                    rightIntakeServo.setPosition(intakePositions.rightIntakeReverse);
                 })
-                .transitionTimed(.75, States.TRANSITION_FROM_BASKET_PHASE_ONE)
+                .transitionTimed(.75, States.TRANSITION_FROM_BASKET_PHASE_TWO)
 
+                // Raises arm flips wrist to prevent it from catching on basket
                 .state(States.TRANSITION_FROM_BASKET_PHASE_ONE)
                 .onEnter( () -> {
                     armMotor.setTargetPosition(armPositions.safeReturnTransition);
@@ -107,10 +127,11 @@ public class StateMachineFunctions {
                 // tipping over
                 .state(States.TRANSITION_FROM_BASKET_PHASE_TWO)
                 .onEnter( () -> {
+                    wristAngleServo.setPosition(wristAnglePositions.travel);
                     slideMotor.setTargetPosition(slidePositions.travelPosition);
                 })
-                .transition( () -> slideMotor.getCurrentPosition() <= slidePositions.travelPosition, States.TRAVEL)
-                .transition( () ->  gamepad2.a, States.TRAVEL)
+                .transition( () -> (Math.abs(slideMotor.getCurrentPosition() - slidePositions.travelPosition) <= 20), States.TRAVEL)
+                // .transition( () ->  gamepad2.a, States.TRAVEL)
 
 
                 // Pickup sample position, higher up to not get caught on samples
@@ -124,7 +145,11 @@ public class StateMachineFunctions {
                     leftIntakeServo.setPosition(intakePositions.leftIntakeOff);
                     rightIntakeServo.setPosition(intakePositions.rightIntakeOff);
 
-                    driveTrainVariables.driveTrainMaxPower = 0.1;
+                    driveTrainVariables.driveTrainMaxPower = 0.15;
+                })
+                .loop( () -> {
+                    if (gamepad2.right_bumper) intakeAngleServo.setPosition(intakeAnglePositions.vertical);
+                    if (gamepad2.left_bumper) intakeAngleServo.setPosition(intakeAnglePositions.flat);
                 })
                 .transition( () -> gamepad2.dpad_down, States.COLLECT_SAMPLE)
                 .transition( () -> gamepad2.a, States.TRAVEL)
@@ -162,23 +187,148 @@ public class StateMachineFunctions {
                 })
                 .transitionTimed(0.6, States.HIGH_SAMPLE)
 
-                // Set arm and slide in position allowing driver to drive to submersible to set
-                // up stage one climb
+                .state(States.OBSERVATION_ZONE)
+                .onEnter( () -> {
+                    slideMotor.setTargetPosition(slidePositions.observationDeck);
+                    armMotor.setTargetPosition(armPositions.observationDeck);
+                    intakeAngleServo.setPosition(intakeAnglePositions.collectSpecimen);
+                    wristAngleServo.setPosition(wristAnglePositions.collectSpecimen);
+                    leftIntakeServo.setPosition(intakePositions.leftIntakeReverse);
+                    rightIntakeServo.setPosition(intakePositions.rightIntakeReverse);
+
+                    driveTrainVariables.driveTrainMaxPower = 0.1;
+                })
+                .transition( () -> gamepad2.dpad_up, States.COLLECT_SPECIMEN)
+                .transition( () -> gamepad2.a, States.TRAVEL)
+
+                .state(States.COLLECT_SPECIMEN)
+                .onEnter( () -> {
+                    slideMotor.setTargetPosition(slidePositions.collectSpecimen);
+                    armMotor.setTargetPosition(armPositions.collectSpecimen);
+                    leftIntakeServo.setPosition(intakePositions.leftIntakeOn);
+                    rightIntakeServo.setPosition(intakePositions.rightIntakeOn);
+
+                    driveTrainVariables.driveTrainMaxPower = 0.1;
+                })
+                .transition( () -> (!GetSampleColor(intakeColorSensor, isBlueAlliance, telemetry).equals("Null") && !GetSampleColor(intakeColorSensor, isBlueAlliance, telemetry).equals("EJECT_SAMPLE")), States.COLLECT_SPECIMEN_TWO)
+                .transition( () -> gamepad2.a, States.COLLECT_SPECIMEN_TWO)
+
+                .state(States.COLLECT_SPECIMEN_TWO)
+                .onEnter( () -> {
+                    armMotor.setTargetPosition(armPositions.collectSpecimenTwo);
+                })
+                .transitionTimed(0.2, States.TRAVEL)
+
+                .state(States.PLACE_SPECIMEN)
+                .onEnter( () -> {
+                    slideMotor.setTargetPosition(slidePositions.hangSpecimen);
+                    armMotor.setTargetPosition(armPositions.hangSpecimen);
+                    intakeAngleServo.setPosition(intakeAnglePositions.placeSpecimen);
+                    wristAngleServo.setPosition(wristAnglePositions.placeSpecimen);
+
+                    driveTrainVariables.driveTrainMaxPower = -0.1;
+                })
+                .transition( () -> gamepad2.a, States.TRAVEL)
+                .transition( () -> gamepad2.dpad_down, States.LOCK_SPECIMEN)
+
+                .state(States.LOCK_SPECIMEN)
+                .onEnter( () -> {
+                    armMotor.setTargetPosition(armPositions.lockSpecimen);
+                    slideMotor.setTargetPosition(slidePositions.lockSpecimen);
+                })
+                .transitionTimed(1.5, States.RELEASE_SPECIMEN)
+
+                .state(States.RELEASE_SPECIMEN)
+                .onEnter( () -> {
+                    leftIntakeServo.setPosition(intakePositions.leftIntakeReverse);
+                    rightIntakeServo.setPosition(intakePositions.rightIntakeReverse);
+                    armMotor.setTargetPosition(armPositions.travelPosition);
+                    slideMotor.setTargetPosition(slidePositions.travelPosition);
+
+                    driveTrainVariables.driveTrainMaxPower = -1;
+                })
+                .transition( () -> gamepad2.a, States.TRAVEL)
+
+                // Stage to grab the bar
                 .state(States.CLIMB_STAGE_ONE)
                 .onEnter( () -> {
                     slideMotor.setTargetPosition(slidePositions.climbStageOne);
                     armMotor.setTargetPosition(armPositions.climbStageOne);
+                    leftLiftSystem.setTargetPosition(liftSystemPositions.liftOpen);
+                    rightLiftSystem.setTargetPosition(liftSystemPositions.liftOpen);
                 })
-                .transition( () -> gamepad2.dpad_down, States.STAGE_ONE_LIFT)
+                .transition( () -> gamepad2.dpad_down, States.CLIMB_STAGE_TWO)
                 .transition( () ->  gamepad2.a, States.TRAVEL)
 
                 // Lowers arm to life bot off ground for stage one climb
-                .state(States.STAGE_ONE_LIFT)
+                .state(States.CLIMB_STAGE_TWO)
                 .onEnter( () -> {
-                    slideMotor.setTargetPosition(slidePositions.stageOneLift);
-                    armMotor.setTargetPosition(armPositions.stageOneLift);
+                    leftLiftSystem.setTargetPosition(liftSystemPositions.liftClosed);
+                    rightLiftSystem.setTargetPosition(liftSystemPositions.liftClosed);
+
+                    slideMotor.setTargetPosition(slidePositions.climbStageTwo);
+                    armMotor.setTargetPosition(armPositions.climbStageTwo);
                 })
                 .transition( () ->  gamepad2.dpad_up, States.CLIMB_STAGE_ONE)
+                .transition( () ->  (
+                        (Math.abs(leftLiftSystem.getCurrentPosition() - leftLiftSystem.getTargetPosition()) <= liftSystemPositions.threshold) &&
+                                (Math.abs(slideMotor.getCurrentPosition() - slideMotor.getTargetPosition()) <= liftSystemPositions.threshold) &&
+                                (Math.abs(armMotor.getCurrentPosition() - armMotor.getTargetPosition()) <= liftSystemPositions.threshold)), States.CLIMB_STAGE_THREE)
+
+
+                .state(States.CLIMB_STAGE_THREE)
+                .onEnter( () -> {
+                    armMotor.setTargetPosition(armPositions.climbStageThree);
+                    slideMotor.setTargetPosition(slidePositions.climbStageThree);
+                })
+                .transition( () ->  (
+                        (Math.abs(slideMotor.getCurrentPosition() - slideMotor.getTargetPosition()) <= liftSystemPositions.threshold) &&
+                        (Math.abs(armMotor.getCurrentPosition() - armMotor.getTargetPosition()) <= liftSystemPositions.threshold)), States.CLIMB_STAGE_FOUR)
+
+                .state(States.CLIMB_STAGE_FOUR)
+                .onEnter( () -> {
+                    armMotor.setTargetPosition(armPositions.climbStageFour);
+                    slideMotor.setTargetPosition(slidePositions.climbStageFour);
+                })
+                .transition( () ->  (
+                        (Math.abs(slideMotor.getCurrentPosition() - slideMotor.getTargetPosition()) <= liftSystemPositions.threshold) &&
+                        (Math.abs(armMotor.getCurrentPosition() - armMotor.getTargetPosition()) <= liftSystemPositions.threshold)), States.CLIMB_STAGE_FIVE)
+
+                .state(States.CLIMB_STAGE_FIVE)
+                .onEnter( () -> {
+                    armMotor.setTargetPosition(armPositions.climbStageFive);
+                    slideMotor.setTargetPosition(slidePositions.climbStageFive);
+                })
+                .transition( () ->  (
+                        (Math.abs(slideMotor.getCurrentPosition() - slideMotor.getTargetPosition()) <= liftSystemPositions.threshold) &&
+                        (Math.abs(armMotor.getCurrentPosition() - armMotor.getTargetPosition()) <= liftSystemPositions.threshold)), States.CLIMB_STAGE_SIX)
+                .transition( () -> gamepad2.a, States.CLIMB_STAGE_SIX)
+
+                .state(States.CLIMB_STAGE_SIX)
+                .onEnter( () -> {
+                    armMotor.setTargetPosition(armPositions.climbStageSix);
+                    slideMotor.setTargetPosition(slidePositions.climbStageSix);
+                })
+                .transition( () ->  (
+                        (Math.abs(slideMotor.getCurrentPosition() - slideMotor.getTargetPosition()) <= liftSystemPositions.threshold) &&
+                        (Math.abs(armMotor.getCurrentPosition() - armMotor.getTargetPosition()) <= liftSystemPositions.threshold)), States.CLIMB_STAGE_SEVEN)
+
+                .state(States.CLIMB_STAGE_SEVEN)
+                .onEnter( () -> {
+                    armMotor.setTargetPosition(armPositions.climbStageSeven);
+                    slideMotor.setTargetPosition(slidePositions.climbStageSeven);
+                })
+                .transition( () ->  (
+                        (Math.abs(slideMotor.getCurrentPosition() - slideMotor.getTargetPosition()) <= liftSystemPositions.threshold) &&
+                        (Math.abs(armMotor.getCurrentPosition() - armMotor.getTargetPosition()) <= liftSystemPositions.threshold)), States.CLIMB_STAGE_EIGHT)
+                .transition( () -> gamepad2.b, States.CLIMB_STAGE_EIGHT)
+
+                .state(States.CLIMB_STAGE_EIGHT)
+                .onEnter( () -> {
+                    armMotor.setTargetPosition(armPositions.climbStageEight);
+                    slideMotor.setTargetPosition(slidePositions.climbStageEight);
+                })
+
 
                 .build();
 

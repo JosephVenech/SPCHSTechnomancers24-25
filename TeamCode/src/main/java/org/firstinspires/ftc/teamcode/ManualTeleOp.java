@@ -3,15 +3,17 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotFunctions.IntakeFunctions;
-import org.firstinspires.ftc.teamcode.RobotFunctions.MecanumFunctions;
+import org.firstinspires.ftc.teamcode.RobotFunctions.OldMecanumFunctions;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Robot;
 import org.firstinspires.ftc.teamcode.RobotFunctions.SlideFunctions;
+import org.firstinspires.ftc.teamcode.RobotFunctions.LiftSystemFunctions;
 
 import java.util.Map;
 
@@ -24,8 +26,12 @@ public class ManualTeleOp extends LinearOpMode {
     public DcMotor rightBackDrive = null;
     public DcMotor slideMotor = null;
     public DcMotor armMotor = null;
-    //public Servo wristServo = null;
-    //public Servo intakeServo = null;
+    public DcMotor leftLiftSystem = null;
+    public DcMotor rightLiftSystem = null;
+    public Servo wristAngleServo = null;
+    public Servo intakeAngleServo = null;
+    public Servo leftIntakeServo = null;
+    public Servo rightIntakeServo = null;
     public TouchSensor slideSafety = null;
     public NormalizedColorSensor intakeColorSensor = null;
 
@@ -39,6 +45,20 @@ public class ManualTeleOp extends LinearOpMode {
 
         mapVariables(motors, servos, misc);
 
+        leftLiftSystem = hardwareMap.get(DcMotor.class, "left_linear");
+        rightLiftSystem = hardwareMap.get(DcMotor.class, "right_linear");
+
+        wristAngleServo = hardwareMap.get(Servo.class, "wrist_angle_servo");
+        intakeAngleServo = hardwareMap.get(Servo.class, "intake_angle_servo");
+        leftIntakeServo = hardwareMap.get(Servo.class, "left_intake_servo");
+        rightIntakeServo = hardwareMap.get(Servo.class, "right_intake_servo");
+
+        leftLiftSystem.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightLiftSystem.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftLiftSystem.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightLiftSystem.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -46,19 +66,42 @@ public class ManualTeleOp extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        MecanumFunctions driveTrain = new MecanumFunctions();
-        driveTrain.init(hardwareMap);
+        OldMecanumFunctions driveTrain = new OldMecanumFunctions();
         SlideFunctions slideControl = new SlideFunctions();
-        //IntakeFunctions intakeControl = new IntakeFunctions();
+        LiftSystemFunctions liftSystemFunctions = new LiftSystemFunctions();
+        IntakeFunctions intakeControl = new IntakeFunctions();
 
         if (opModeIsActive()) {
             while(opModeIsActive()){
                 // Functions - Comments can be found in individual files
-                driveTrain.updateTeleOpMovement(gamepad1);
+                driveTrain.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry);
                 slideControl.SlidePosition(gamepad1, gamepad2, slideMotor, slideSafety, telemetry);
                 slideControl.ArmPosition(gamepad1, gamepad2, armMotor, telemetry);
-                //intakeControl.intakeAngle(gamepad1, gamepad2, wristServo, telemetry);
+                liftSystemFunctions.LiftSystemControl(gamepad1, gamepad2, leftLiftSystem, rightLiftSystem, telemetry);
+                //intakeControl.intakeAngle(gamepad1, gamepad2, wristAngleServo, intakeAngleServo, telemetry);
                 //intakeControl.intakeSpin(gamepad1, gamepad2, intakeServo, telemetry);
+
+
+                if (gamepad1.a == true) {
+                    wristAngleServo.setPosition(0.4);
+                    //intakeAngleServo.setPosition(0.3); // Vertical 0.3
+                }
+                if (gamepad1.b == true) {
+                    wristAngleServo.setPosition(0.2); // 0.52 flat
+                    //intakeAngleServo.setPosition(0.02); // 0.02 flat
+                }
+                if (gamepad1.x == true) {
+                    wristAngleServo.setPosition(0.6); // above 0.5 pull in
+                    //intakeAngleServo.setPosition(0.58); // 0.58 flat
+                }
+                if (gamepad1.y == true) {
+                    wristAngleServo.setPosition(0.8); // above 0.5 push out
+                    //intakeAngleServo.setPosition(0.87); // 0.87 vertical
+                }
+
+
+
+
 
                 // Telemetry data
                 telemetry.addData("Status", "Run Time: " + runtime.toString());

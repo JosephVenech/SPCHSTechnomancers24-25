@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotFunctions;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -18,6 +19,8 @@ public class Robot {
     public DcMotor rightBackDrive;
     public DcMotor slideMotor;
     public DcMotor armMotor;
+    public DcMotor leftLiftSystem;
+    public DcMotor rightLiftSystem;
     public Servo wristAngleServo;
     public Servo leftIntakeServo;
     public Servo rightIntakeServo;
@@ -45,6 +48,8 @@ public class Robot {
         driveDictionary.put("rightBackDrive", hardwareMap.get(DcMotor.class, "right_rear_drive"));
         driveDictionary.put("slideMotor", hardwareMap.get(DcMotor.class, "slide_motor"));
         driveDictionary.put("armMotor", hardwareMap.get(DcMotor.class, "arm_motor"));
+        driveDictionary.put("leftLiftSystem", hardwareMap.get(DcMotor.class, "left_linear"));
+        driveDictionary.put("rightLiftSystem", hardwareMap.get(DcMotor.class, "right_linear"));
 
         servoDictionary.put("wristAngleServo", hardwareMap.get(Servo.class, "wrist_angle_servo"));
         servoDictionary.put("leftIntakeServo", hardwareMap.get(Servo.class, "left_intake_servo"));
@@ -65,6 +70,8 @@ public class Robot {
         rightBackDrive = driveDictionary.get("rightBackDrive");
         slideMotor = driveDictionary.get("slideMotor");
         armMotor = driveDictionary.get("armMotor");
+        leftLiftSystem = driveDictionary.get("leftLiftSystem");
+        rightLiftSystem = driveDictionary.get("rightLiftSystem");
 
         wristAngleServo = servoDictionary.get("wristServo");
         leftIntakeServo = servoDictionary.get("leftIntakeServo");
@@ -78,11 +85,13 @@ public class Robot {
     public void setMotors() {
         // Set wheels to move forward
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        slideMotor.setDirection(DcMotor.Direction.REVERSE);
-        armMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        slideMotor.setDirection(DcMotor.Direction.FORWARD);
+        armMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftLiftSystem.setDirection(DcMotor.Direction.FORWARD);
+        rightLiftSystem.setDirection(DcMotor.Direction.FORWARD);
 
         // Motor encoders
         leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -104,6 +113,8 @@ public class Robot {
         rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftLiftSystem.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightLiftSystem.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Zero Power Behaviour
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

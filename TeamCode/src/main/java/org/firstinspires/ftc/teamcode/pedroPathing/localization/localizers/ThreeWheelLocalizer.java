@@ -55,9 +55,9 @@ public class ThreeWheelLocalizer extends Localizer {
     private Pose rightEncoderPose;
     private Pose strafeEncoderPose;
     private double totalHeading;
-    public static double FORWARD_TICKS_TO_INCHES = 0.0013;//8192 * 1.37795 * 2 * Math.PI * 0.5008239963;
-    public static double STRAFE_TICKS_TO_INCHES = 0.00125;//8192 * 1.37795 * 2 * Math.PI * 0.5018874659;
-    public static double TURN_TICKS_TO_RADIANS = 0.0019;//8192 * 1.37795 * 2 * Math.PI * 0.5;
+    public static double FORWARD_TICKS_TO_INCHES = 0.00138;//8192 * 1.37795 * 2 * Math.PI * 0.5008239963;
+    public static double STRAFE_TICKS_TO_INCHES = 0.0013;//8192 * 1.37795 * 2 * Math.PI * 0.5018874659;
+    public static double TURN_TICKS_TO_RADIANS = .00216;//8192 * 1.37795 * 2 * Math.PI * 0.5;
     //Joseph -- Since negative may need to reverse some encoders
 
     /**
@@ -79,20 +79,20 @@ public class ThreeWheelLocalizer extends Localizer {
      */
     public ThreeWheelLocalizer(HardwareMap map, Pose setStartPose) {
         // TODO: replace these with your encoder positions
-        leftEncoderPose = new Pose(4.5, 2.75, 0);
-        rightEncoderPose = new Pose(4.5, -2.625, 0);
-        strafeEncoderPose = new Pose(4.5, 0, Math.toRadians(90));
+        leftEncoderPose = new Pose(-4.25, 2.1, 0);
+        rightEncoderPose = new Pose(-4.25, -2.1, 0);
+        strafeEncoderPose = new Pose(-4.25, 0.1, Math.toRadians(90));
 
         hardwareMap = map;
 
         // TODO: replace these with your encoder ports
-        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "left_back_drive"));
-        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "right_back_drive"));
+        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "right_rear_drive"));
+        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "right_front_drive"));
         strafeEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "left_front_drive"));
 
         // TODO: reverse any encoders necessary
-        leftEncoder.setDirection(Encoder.REVERSE);
-        rightEncoder.setDirection(Encoder.REVERSE);
+        leftEncoder.setDirection(Encoder.FORWARD);
+        rightEncoder.setDirection(Encoder.FORWARD);
         strafeEncoder.setDirection(Encoder.REVERSE);
 
         setStartPose(setStartPose);

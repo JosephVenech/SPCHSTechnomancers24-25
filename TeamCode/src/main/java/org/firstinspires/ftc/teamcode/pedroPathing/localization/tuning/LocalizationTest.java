@@ -60,8 +60,6 @@ public class LocalizationTest extends OpMode {
 
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightRear.setDirection(DcMotorSimple.Direction.FORWARD);
 
         motors = Arrays.asList(leftFront, leftRear, rightFront, rightRear);
 
@@ -101,8 +99,8 @@ public class LocalizationTest extends OpMode {
         // This ensures all the powers maintain the same ratio, but only when
         // at least one is out of the range [-1, 1]
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        double leftFrontPower = (y + x + rx) / denominator;
-        double leftRearPower = (y - x + rx) / denominator;
+        double leftFrontPower = (y - x + rx) / denominator;
+        double leftRearPower = (y + x + rx) / denominator;
         double rightFrontPower = (y - x - rx) / denominator;
         double rightRearPower = (y + x - rx) / denominator;
 
