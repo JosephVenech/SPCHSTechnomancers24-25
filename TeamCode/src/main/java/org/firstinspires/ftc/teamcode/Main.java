@@ -145,8 +145,8 @@ public class Main extends LinearOpMode {
         if (opModeIsActive()) {
             while(opModeIsActive()){
                 // Functions - Comments can be found in individual files
-                oldMecanumFunctions.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry);
-                //driveTrain.updateTeleOpMovement(gamepad1);
+                // oldMecanumFunctions.fullDriveTrainControl(gamepad1, gamepad2, leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive, telemetry);
+                driveTrain.updateTeleOpMovement(gamepad1);
                 // intakeControl.intakeSpin(gamepad1, gamepad2, intakeServo, telemetry);
 
                 intakeSampleColor = colorSensorFunctions.colorSensorGetColor(intakeColorSensor, isBlueAlliance, telemetry);

@@ -56,9 +56,6 @@ public class Robot {
         servoDictionary.put("rightIntakeServo", hardwareMap.get(Servo.class, "right_intake_servo"));
         servoDictionary.put("intakeAngleServo", hardwareMap.get(Servo.class, "intake_angle_servo"));
 
-
-
-
         miscDictionary.put("slideSafety", "slide_safety");
         miscDictionary.put("intakeColorSensor", "sensor_color");
     }

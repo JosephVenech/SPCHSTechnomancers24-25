@@ -26,7 +26,7 @@ public class MecanumFunctions {
             }
         }
         public void updateTeleOpMovement(Gamepad gamepad1) {
-            updateOldMotorPowers();
+            // updateOldMotorPowers();
 
             follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
             follower.update();
@@ -37,7 +37,7 @@ public class MecanumFunctions {
                 } else if (driveTrainVariables.driveTrainMotorPower[i].getPower() < -driveTrainVariables.driveTrainMaxPower) {
                     driveTrainVariables.driveTrainMotorPower[i].setPower(-driveTrainVariables.driveTrainMaxPower);
                 }
-            }*/
+            }
 
             for (int i = 0; i < driveTrainVariables.driveTrainMotorPower.length; i++) {
                 double targetPower = driveTrainVariables.driveTrainMotorPower[i].getPower();
@@ -54,6 +54,6 @@ public class MecanumFunctions {
 
                 double adjustedPower = Math.max( -driveTrainVariables.driveTrainMaxPower, Math.min( driveTrainVariables.driveTrainMaxPower, oldDriveTrainMotorPowers[i] ) );
                 driveTrainVariables.driveTrainMotorPower[i].setPower(adjustedPower);
-            }
+            }*/
         }
     }
