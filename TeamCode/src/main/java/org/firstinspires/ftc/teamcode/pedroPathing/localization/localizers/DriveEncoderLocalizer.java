@@ -38,9 +38,9 @@ public class DriveEncoderLocalizer extends Localizer {
     private Encoder leftRear;
     private Encoder rightRear;
     private double totalHeading;
-    public static double FORWARD_TICKS_TO_INCHES = 0.0213;
-    public static double STRAFE_TICKS_TO_INCHES = -0.0207;
-    public static double TURN_TICKS_TO_RADIANS = 0.0787;
+    public static double FORWARD_TICKS_TO_INCHES = 0.00138;
+    public static double STRAFE_TICKS_TO_INCHES = 0.0013;
+    public static double TURN_TICKS_TO_RADIANS = 0.00216;
     public static double ROBOT_WIDTH = 14.75;
     public static double ROBOT_LENGTH = 13;
 
