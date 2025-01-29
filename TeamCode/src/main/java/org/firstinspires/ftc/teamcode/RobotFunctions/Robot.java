@@ -3,9 +3,8 @@ package org.firstinspires.ftc.teamcode.RobotFunctions;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.colorSensorVariables;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.driveTrainVariables;
@@ -56,9 +55,6 @@ public class Robot {
         servoDictionary.put("leftIntakeServo", hardwareMap.get(Servo.class, "left_intake_servo"));
         servoDictionary.put("rightIntakeServo", hardwareMap.get(Servo.class, "right_intake_servo"));
         servoDictionary.put("intakeAngleServo", hardwareMap.get(Servo.class, "intake_angle_servo"));
-
-
-
 
         miscDictionary.put("slideSafety", "slide_safety");
         miscDictionary.put("intakeColorSensor", "sensor_color");
