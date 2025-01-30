@@ -79,8 +79,8 @@ public class LateralZeroPowerAccelerationTuner extends OpMode {
 
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
         rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
 
         motors = Arrays.asList(leftFront, leftRear, rightFront, rightRear);
 
