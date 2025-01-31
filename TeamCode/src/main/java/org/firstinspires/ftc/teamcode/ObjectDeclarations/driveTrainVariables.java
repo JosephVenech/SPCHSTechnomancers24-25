@@ -7,5 +7,5 @@ public class driveTrainVariables {
     public static final double driveTrainDefaultMaxPower = 0.8;
     public static final double acceleration_rate = 0.05;
     public static double driveTrainMaxPower = driveTrainDefaultMaxPower;
-    public static double driveTrainSpeed = 1;
+    public static double driveTrainSpeed = driveTrainMaxPower;
 }

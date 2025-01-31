@@ -67,7 +67,7 @@ public class OldMecanumFunctions {
 
     public void fullDriveTrainControl(Gamepad gamepad1, Gamepad gamepad2, DcMotor leftFrontDrive, DcMotor leftBackDrive, DcMotor rightFrontDrive, DcMotor rightBackDrive, Telemetry telemetry) {
 
-        double[] motorPower = driveTrainMath(gamepad1.left_stick_y,gamepad1.left_stick_x,gamepad1.right_stick_x);
+        double[] motorPower = driveTrainMath(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         // End of function calls //
 
         // Send calculated power to motors
