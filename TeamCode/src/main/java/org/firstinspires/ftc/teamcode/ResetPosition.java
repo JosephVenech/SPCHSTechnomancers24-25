@@ -42,8 +42,6 @@ public class ResetPosition extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-
-
         armMotor = hardwareMap.get(DcMotor.class, "arm_motor");
         armMotor.setDirection(DcMotor.Direction.REVERSE);
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -59,7 +57,6 @@ public class ResetPosition extends LinearOpMode {
         leftLiftMotor.setDirection(DcMotor.Direction.FORWARD);
         rightLiftMotor.setDirection(DcMotor.Direction.FORWARD);
 
-
         armSafety = hardwareMap.get(TouchSensor.class, "arm_safety");
         slideSafety = hardwareMap.get(TouchSensor.class, "slide_safety");
         leftLiftReset = hardwareMap.get(TouchSensor.class, "left_lift_reset");
@@ -68,12 +65,8 @@ public class ResetPosition extends LinearOpMode {
         wristAngleServo = hardwareMap.get(Servo.class, "wrist_angle_servo");
         // wristAngleServo.setPosition(0.3);
 
-
         waitForStart();
-
         runtime.reset();
-
-
 
         while (!slideSafety.isPressed()){
             slideMotor.setPower(slideSpeed);
@@ -82,7 +75,6 @@ public class ResetPosition extends LinearOpMode {
         }
 
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
 
         while (!armSafety.isPressed()){
             armMotor.setPower(motorSpeed);
@@ -107,13 +99,11 @@ public class ResetPosition extends LinearOpMode {
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(motorSpeed);
 
-        while (Math.abs(armMotor.getCurrentPosition()-defaultPosition) > 10){
-
+        while (Math.abs(armMotor.getCurrentPosition()-defaultPosition) > 10) {
             telemetry.addData("Arm position", armMotor.getCurrentPosition());
             telemetry.update();
         }
 
     }
-
 
 }
