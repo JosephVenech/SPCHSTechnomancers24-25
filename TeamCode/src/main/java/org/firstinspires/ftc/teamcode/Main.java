@@ -151,41 +151,9 @@ public class Main extends LinearOpMode {
 
                 intakeSampleColor = colorSensorFunctions.colorSensorGetColor(intakeColorSensor, isBlueAlliance, telemetry);
 
-                if (abs(slideMotor.getCurrentPosition() - slideMotor.getTargetPosition()) < 2){
-                    slideMotor.setPower(0);
-                } else {
-                    slideMotor.setPower(slidePositions.motorSpeed);
-                }
-                if (abs(armMotor.getCurrentPosition() - armMotor.getTargetPosition()) < 2){
-                    armMotor.setPower(0);
-                } else {
-                    armMotor.setPower(armPositions.motorSpeed);
-                }
-
-                if ((leftLiftSystem.getTargetPosition() == 0) && leftSafety.isPressed()){
-                    leftLiftSystem.setPower(0);
-                } else {
-                    leftLiftSystem.setPower(liftSystemPositions.liftMotorPower);
-                }
-
-                if ((rightLiftSystem.getTargetPosition() == 0) && rightSafety.isPressed()){
-                    rightLiftSystem.setPower(0);
-                } else {
-                    rightLiftSystem.setPower(liftSystemPositions.liftMotorPower);
-                }
-
-                if (slideMotor.getTargetPosition() < 20 && ((slideMotor.getCurrentPosition() > 20 && slideSafety.isPressed()) || gamepad2.guide)) {
-                    slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                }
-                if (slideMotor.getTargetPosition() < 20 && (abs(slideMotor.getTargetPosition() - slideMotor.getCurrentPosition()) > 2)) {
-                    gamepad2.rumble(gamepad2.left_trigger, gamepad2.right_trigger, Gamepad.RUMBLE_DURATION_CONTINUOUS);
-                } else {
-                    gamepad2.stopRumble();
-                }
+                driveTrain.driveTrainSafety(slideMotor, armMotor, leftLiftSystem, rightLiftSystem, slideSafety, leftSafety, rightSafety, gamepad2);
 
                 /*
-                /
                 if (gamepad1.a) {
                     leftFrontDrive.setPower(1);
                 }
@@ -198,8 +166,7 @@ public class Main extends LinearOpMode {
                 if (gamepad1.y) {
                     rightBackDrive.setPower(1);
                 }
-
-                 */
+                */
 
                 machine.update();
 

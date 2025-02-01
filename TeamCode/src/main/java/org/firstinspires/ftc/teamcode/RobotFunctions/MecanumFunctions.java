@@ -1,25 +1,22 @@
 package org.firstinspires.ftc.teamcode.RobotFunctions;
 
+import static java.lang.Math.abs;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.teamcode.ObjectDeclarations.armPositions;
 import org.firstinspires.ftc.teamcode.ObjectDeclarations.driveTrainVariables;
+import org.firstinspires.ftc.teamcode.ObjectDeclarations.liftSystemPositions;
+import org.firstinspires.ftc.teamcode.ObjectDeclarations.slidePositions;
+
 public class MecanumFunctions {
-        public DcMotor leftFrontDrive = null;
-        public DcMotor leftBackDrive = null;
-        public DcMotor rightFrontDrive = null;
-        public DcMotor rightBackDrive = null;
-        // private Follower follower;
         private static double[] oldDriveTrainMotorPowers = new double[driveTrainVariables.driveTrainMotorPower.length];
 
         public void init(HardwareMap hardwareMap) {
-            // follower = new Follower(hardwareMap);
-            // follower.startTeleopDrive();
 
-            leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
-            leftBackDrive = hardwareMap.get(DcMotor.class, "left_rear_drive");
-            rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
-            rightBackDrive = hardwareMap.get(DcMotor.class, "right_rear_drive");
         }
         public double[] driveTrainMath(double left_stick_y, double left_stick_x, double right_stick_x) {
             double max;
@@ -86,6 +83,45 @@ public class MecanumFunctions {
 
                 double adjustedPower = Math.max( -driveTrainVariables.driveTrainMaxPower, Math.min( driveTrainVariables.driveTrainMaxPower, oldDriveTrainMotorPowers[i] ) );
                 driveTrainVariables.driveTrainMotorPower[i].setPower(adjustedPower);
+            }
+        }
+
+        public void driveTrainSafety(DcMotor slideMotor, DcMotor armMotor, DcMotor leftLiftSystem, DcMotor rightLiftSystem, TouchSensor slideSafety, TouchSensor leftSafety, TouchSensor rightSafety, Gamepad gamepad2) {
+            /*if (abs(slideMotor.getCurrentPosition() - slideMotor.getTargetPosition()) < 2){
+                    slideMotor.setPower(0);
+                } else {
+                    slideMotor.setPower(slidePositions.motorSpeed);
+                }
+                /if (abs(armMotor.getCurrentPosition() - armMotor.getTargetPosition()) < 2){
+                    armMotor.setPower(0);
+                } else {
+                    armMotor.setPower(armPositions.motorSpeed);
+                }
+
+                if ((leftLiftSystem.getTargetPosition() == 0) && leftSafety.isPressed()){
+                    leftLiftSystem.setPower(0);
+                } else {
+                    leftLiftSystem.setPower(liftSystemPositions.liftMotorPower);
+                }
+
+                if ((rightLiftSystem.getTargetPosition() == 0) && rightSafety.isPressed()){
+                    rightLiftSystem.setPower(0);
+                } else {
+                    rightLiftSystem.setPower(liftSystemPositions.liftMotorPower);
+            }*/
+            slideMotor.setPower( ( abs(slideMotor.getCurrentPosition() - slideMotor.getTargetPosition()) < 2 ) ? 0 : slidePositions.motorSpeed);
+            armMotor.setPower( ( abs(armMotor.getCurrentPosition() - armMotor.getTargetPosition()) < 2 ) ? 0 : armPositions.motorSpeed);
+            leftLiftSystem.setPower( ( (leftLiftSystem.getTargetPosition() == 0) && leftSafety.isPressed() ) ? 0 : liftSystemPositions.liftMotorPower);
+            rightLiftSystem.setPower( ( (rightLiftSystem.getTargetPosition() == 0) && rightSafety.isPressed() ) ? 0 : liftSystemPositions.liftMotorPower);
+
+            if (slideMotor.getTargetPosition() < 20 && ((slideMotor.getCurrentPosition() > 20 && slideSafety.isPressed()) || gamepad2.guide)) {
+                slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+            if (slideMotor.getTargetPosition() < 20 && (abs(slideMotor.getTargetPosition() - slideMotor.getCurrentPosition()) > 2)) {
+                gamepad2.rumble(gamepad2.left_trigger, gamepad2.right_trigger, Gamepad.RUMBLE_DURATION_CONTINUOUS);
+            } else {
+                gamepad2.stopRumble();
             }
         }
     }
